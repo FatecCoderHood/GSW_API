@@ -11,7 +11,7 @@
 ## MVP
 
   Mapear portais, extrair notícias, modelar o banco de dados, identificar as entidades e atributos de maneira consistente (sem foco no front-end).
-Desenvolver documentação detalhada, incluindo Swagger.
+Desenvolver documentação detalhada, podendo incluir Swagger como modelo.
 Implementar capacidade de consulta ao banco de dados, histórico de consultas e cruzamento de dados.
 Catalogar notícias, armazená-las no banco de dados, com atenção aos regionalismos e foco em notícias brasileiras.
 Permitir ao usuário buscar notícias por palavras-chave, transformando palavras-chave em tags.

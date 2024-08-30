@@ -51,9 +51,9 @@ por exemplo, previsão do tempo.
 
 ## :page_with_curl: Requisitos Não Funcionais
 
-• Prever um grande volume de notícias armazenas
-• Utilizar softwares livres
-• Java (linguagem de programação, frameworks e APIs)
+* Prever um grande volume de notícias armazenas
+* Utilizar softwares livres
+* Java (linguagem de programação, frameworks e APIs)
 * Deverá ser uma aplicação web.
 * O front-end deve ser desenvolvido de forma minimalista. 
 * Documentação: manual de usuário, diagrama entidade-relacionamento e instruções de instalação.

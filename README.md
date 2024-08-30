@@ -62,12 +62,12 @@ por exemplo, previsão do tempo.
 
 | Sprint  | Nome | Data inicio  | Data Fim | Status |
 | ------------- | ------------- | ------------- | ------------- | ------------- |
-| --  | KickOff   | 04/03   | 08/03 | Ok |
-|  1  | Sprint 1   | 25/03   | 14/04 | Ok |
-|  2  | Sprint 2   | 15/04   | 05/05 |    |
-|  3  | Sprint 3   | 06/05   | 26/05 |    |
-|  4  | Sprint 4   | 27/05   | 16/06 |    |
-|  5  | Feira de Soluções  | 27/06 |    |
+| --  | KickOff   | 00/00   | 00/00 | Ok |
+|  1  | Sprint 1   | 00/00   | 00/00 |    |
+|  2  | Sprint 2   | 00/00   | 00/00 |    |
+|  3  | Sprint 3   | 00/00   | 00/00 |    |
+|  4  | Sprint 4   | 00/00   | 00/00 |    |
+|  5  | Feira de Soluções  | 00/00 |    |
 
 
 ## :date: Product BackLog
@@ -87,21 +87,21 @@ por exemplo, previsão do tempo.
         <td>Eu como usuário administrador, eu quero cadastrar portais de notícias no sistema, para que eu possa definir as fontes das quais o sistema irá capturar informações.</td>
         <td>Cadastro de Portais de Notícias</td>
         <td>1</td>
-        <td>1</td>
+        <td>?</td>
     </tr>
     <tr>
         <td>2</td>
         <td>Eu como usuário administrador, eu quero cadastrar APIs externas no sistema, para que o sistema possa consumir dados estratégicos dessas fontes.</td>
         <td>Cadastro de APIs</td>
         <td>1</td>
-        <td>1</td>
+        <td>?</td>
     </tr>
     <tr>
         <td>3</td>
         <td>Eu como usuário administrador, eu quero cadastrar tags no sistema, para categorizar as notícias e facilitar a busca e análise posterior.</td>
         <td>Cadastro de Tags</td>
         <td>2</td>
-        <td>2</td>
+        <td>?</td>
     </tr>
     <tr>
         <td>4</td>
@@ -109,35 +109,35 @@ por exemplo, previsão do tempo.
         </td>
         <td>Cadastro de Jornalistas</td>
         <td>2</td>
-        <td>2</td>
+        <td>?</td>
     </tr>
     <tr>
         <td>5</td>
         <td>Eu como usuário do sistema, eu quero capturar dados de notícias e APIs através de web scraping, para armazená-los em um banco de dados e permitir sua consulta posterior.</td>
         <td>Processo de Web Scraping</td>
         <td>2</td>
-        <td>2</td>
+        <td>?</td>
     </tr>
     <tr>
         <td>6</td>
         <td>Eu como um usuário, eu quero que o sistema me sugira tags relacionadas a uma notícia, para facilitar a categorização e análise das informações.</td>
         <td>Indicação de Tags Relacionadas</td>
         <td>3</td>
-        <td>2</td>
+        <td>?</td>
     </tr>
     <tr>
         <td>7</td>
         <td>Eu como um usuário, eu quero consultar as notícias armazenadas no sistema com a possibilidade de aplicar filtros, para encontrar informações específicas rapidamente.</td>
         <td>Tela de Consulta de Notícias com Filtros</td>
         <td>3</td>
-        <td>2</td>
+        <td>?</td>
     </tr>
     <tr>
         <td>8</td>
         <td>Eu como um usuário, eu quero consultar as APIs cadastradas no sistema com a possibilidade de aplicar filtros, para encontrar APIs específicas rapidamente.</td>
         <td>8. Tela de Consulta de APIs com Filtros</td>
         <td>4</td>
-        <td>3</td>
+        <td>?</td>
     </tr>
     </tbody>
 </table>

@@ -39,35 +39,39 @@ o negócio.
 Essa estrutura e conceito deve ser aplicada para APIs de fornecimento de dados estratégicos, como 
 por exemplo, previsão do tempo.
 ## :page_facing_up: Requisitos Funcionais
-* Cadastro de Portais de notícias
-* Cadastro de APIs
-* Cadastro de Tags
-* Cadastro de Jornalistas
-* Processo de web scraping (capturar os dados de notícias e apis e armazenar em banco de dados)
-* Indicação de tags que estão relacionadas
-* Tela de consulta de notícias, com filtros de pesquisa
-* Tela de APIs, com filtros de pesquisa
+| **Descrição** | **Requisito** |
+|-------- | :--------: |
+| Cadastro de Portais de Notícias | 1 |
+| Cadastro de APIs | 2 |
+| Cadastro de Tags | 3 |
+| Cadastro de Jornalistas | 4 |
+| Processo de web scraping (capturar os dados de notícias e APIs e armazenar em banco de dados) | 5 |
+| Indicação de tags que estão relacionadas | 6 |
+| Tela de consulta de notícias, com filtros de pesquisa | 7 |
+| Tela de APIs, com filtros de pesquisa | 8 |
 
 
 ## :page_with_curl: Requisitos Não Funcionais
 
-* Prever um grande volume de notícias armazenas
-* Utilizar softwares livres
-* Java (linguagem de programação, frameworks e APIs)
-* Deverá ser uma aplicação web.
-* O front-end deve ser desenvolvido de forma minimalista. 
-* Documentação: manual de usuário, diagrama entidade-relacionamento e instruções de instalação.
+| **Descrição** | **Requisito** |
+|-------- | :--------: |
+| Prever um grande volume de notícias armazenadas | 9 |
+| Utilizar softwares livres | 10 |
+| Java (linguagem de programação, frameworks e APIs) | 11 |
+| Deverá ser uma aplicação web | 12 |
+| O front-end deve ser desenvolvido de forma minimalista | 13 |
+| Documentação: manual de usuário, diagrama entidade-relacionamento e instruções de instalação | 14 |
 
 ## :calendar: Cronograma
 
 | Sprint  | Nome | Data inicio  | Data Fim | Status |
 | ------------- | ------------- | ------------- | ------------- | ------------- |
-| --  | KickOff   | 00/00   | 00/00 | Ok |
-|  1  | Sprint 1   | 00/00   | 00/00 |    |
-|  2  | Sprint 2   | 00/00   | 00/00 |    |
-|  3  | Sprint 3   | 00/00   | 00/00 |    |
-|  4  | Sprint 4   | 00/00   | 00/00 |    |
-|  5  | Feira de Soluções  | 00/00 |    |
+| --  | KickOff   | 26/08   | 30/08 | Ok |
+|  1  | Sprint 1   | 09/09   | 29/09 |    |
+|  2  | Sprint 2   | 30/09   | 20/10 |    |
+|  3  | Sprint 3   | 21/10   | 10/11 |    |
+|  4  | Sprint 4   | 11/11   | 01/12 |    |
+|  5  | Feira de Soluções  | 12/12 |    |
 
 
 ## :date: Product BackLog
@@ -79,66 +83,66 @@ por exemplo, previsão do tempo.
         <th>Épico</th>
         <th>Sprint</th>
         <th>Prioridade</th>
+        <th>Requisito do Parceiro</th>
     </tr>
     </thead>
     <tbody>
     <tr>
-        <td>1</td>
-        <td>Eu como usuário administrador, eu quero cadastrar portais de notícias no sistema, para que eu possa definir as fontes das quais o sistema irá capturar informações.</td>
-        <td>Cadastro de Portais de Notícias</td>
-        <td>1</td>
-        <td>?</td>
-    </tr>
-    <tr>
-        <td>2</td>
-        <td>Eu como usuário administrador, eu quero cadastrar APIs externas no sistema, para que o sistema possa consumir dados estratégicos dessas fontes.</td>
-        <td>Cadastro de APIs</td>
-        <td>1</td>
-        <td>?</td>
-    </tr>
-    <tr>
-        <td>3</td>
-        <td>Eu como usuário administrador, eu quero cadastrar tags no sistema, para categorizar as notícias e facilitar a busca e análise posterior.</td>
-        <td>Cadastro de Tags</td>
-        <td>2</td>
-        <td>?</td>
-    </tr>
-    <tr>
-        <td>4</td>
-        <td>Eu como usuário administrador, eu quero cadastrar jornalistas no sistema, para identificar e associar os autores das notícias capturadas.
-        </td>
-        <td>Cadastro de Jornalistas</td>
-        <td>2</td>
-        <td>?</td>
-    </tr>
-    <tr>
-        <td>5</td>
-        <td>Eu como usuário do sistema, eu quero capturar dados de notícias e APIs através de web scraping, para armazená-los em um banco de dados e permitir sua consulta posterior.</td>
-        <td>Processo de Web Scraping</td>
-        <td>2</td>
-        <td>?</td>
-    </tr>
-    <tr>
-        <td>6</td>
-        <td>Eu como um usuário, eu quero que o sistema me sugira tags relacionadas a uma notícia, para facilitar a categorização e análise das informações.</td>
-        <td>Indicação de Tags Relacionadas</td>
-        <td>3</td>
-        <td>?</td>
-    </tr>
-    <tr>
-        <td>7</td>
-        <td>Eu como um usuário, eu quero consultar as notícias armazenadas no sistema com a possibilidade de aplicar filtros, para encontrar informações específicas rapidamente.</td>
-        <td>Tela de Consulta de Notícias com Filtros</td>
-        <td>3</td>
-        <td>?</td>
-    </tr>
-    <tr>
-        <td>8</td>
-        <td>Eu como um usuário, eu quero consultar as APIs cadastradas no sistema com a possibilidade de aplicar filtros, para encontrar APIs específicas rapidamente.</td>
-        <td>8. Tela de Consulta de APIs com Filtros</td>
-        <td>4</td>
-        <td>?</td>
-    </tr>
+    <td>1</td>
+    <td>Eu como usuário administrador, eu quero cadastrar portais de notícias no sistema, para que eu possa definir as fontes das quais o sistema irá capturar informações.</td>
+    <td>Cadastro de Portais de Notícias</td>
+    <td>1</td>
+    <td>Média</td>
+    <td>1,4,13</td>
+</tr>
+<tr>
+    <td>2</td>
+    <td>Eu como um usuário, eu quero consultar as notícias armazenadas no sistema com a possibilidade de aplicar filtros, para encontrar informações específicas rapidamente.</td>
+    <td>Tela de Consulta de Notícias com Filtros</td>
+    <td>1</td>
+    <td>Alta</td>
+    <td>7,13</td>
+</tr>
+<tr>
+    <td>3</td>
+    <td>Eu como usuário do sistema, eu quero capturar dados de notícias e APIs através de web scraping, para armazená-los em um banco de dados e permitir sua consulta posterior.</td>
+    <td>Processo de Web Scraping</td>
+    <td>2</td>
+    <td>Alta</td>
+    <td>4,5,13</td>
+</tr>
+<tr>
+    <td>4</td>
+    <td>Eu como usuário administrador, eu quero cadastrar APIs externas no sistema, para que o sistema possa consumir dados estratégicos dessas fontes.</td>
+    <td>Cadastro de APIs</td>
+    <td>2</td>
+    <td>Média</td>
+    <td>2,13</td>
+</tr>
+<tr>
+    <td>5</td>
+    <td>Eu como um usuário, eu quero consultar as APIs cadastradas no sistema com a possibilidade de aplicar filtros, para encontrar APIs específicas rapidamente.</td>
+    <td>Tela de Consulta de APIs com Filtros</td>
+    <td>3</td>
+    <td>Alta</td>
+    <td>8,13</td>
+</tr>
+<tr>
+    <td>6</td>
+    <td>Eu como usuário administrador, eu quero cadastrar tags no sistema, para categorizar as notícias e facilitar a busca e análise posterior.</td>
+    <td>Cadastro de Tags</td>
+    <td>3</td>
+    <td>Média</td>
+    <td>3,13</td>
+</tr>
+<tr>
+    <td>7</td>
+    <td>Eu como um usuário, eu quero que o sistema me sugira tags relacionadas a uma notícia, para facilitar a categorização e análise das informações.</td>
+    <td>Indicação de Tags Relacionadas</td>
+    <td>4</td>
+    <td>Alta</td>
+    <td>6,13</td>
+</tr>
     </tbody>
 </table>
 

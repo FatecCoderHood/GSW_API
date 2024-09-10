@@ -92,7 +92,7 @@ por exemplo, previsão do tempo.
     <td>Eu como usuário administrador, eu quero cadastrar portais de notícias no sistema, para que eu possa definir as fontes das quais o sistema irá capturar informações.</td>
     <td>Cadastro de Portais de Notícias</td>
     <td>1</td>
-    <td>Média</td>
+    <td>Alta</td>
     <td>1,4,13</td>
 </tr>
 <tr>
@@ -100,7 +100,7 @@ por exemplo, previsão do tempo.
     <td>Eu como um usuário, eu quero consultar as notícias armazenadas no sistema com a possibilidade de aplicar filtros, para encontrar informações específicas rapidamente.</td>
     <td>Tela de Consulta de Notícias com Filtros</td>
     <td>1</td>
-    <td>Alta</td>
+    <td>Média</td>
     <td>7,13</td>
 </tr>
 <tr>

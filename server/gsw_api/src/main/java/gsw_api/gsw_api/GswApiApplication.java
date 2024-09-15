@@ -1,17 +1,21 @@
 package gsw_api.gsw_api;
 
-import model.PortalNoticia;
-
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import model.Noticia;
+import model.PortalNoticia;
 
 @SpringBootApplication
 public class GswApiApplication {
@@ -24,9 +28,10 @@ public class GswApiApplication {
 
 @RestController
 @CrossOrigin
-@RequestMapping("/portais")
+@RequestMapping("/gsw_api")
 class RestGSW_APIController {
 	private List<PortalNoticia> portais = new ArrayList<>();
+	private List<Noticia> noticias = new ArrayList<>();
 
 	public RestGSW_APIController() {
 		portais.addAll(List.of(
@@ -35,58 +40,32 @@ class RestGSW_APIController {
 				new PortalNoticia("Aggro"),
 				new PortalNoticia("CNN")
 		));
-	}
+		noticias.addAll(List.of(
+            new Noticia("Agronegócio em alta", "O mercado de agronegócio está em crescimento...", LocalDate.now(), "João Silva", getPortalIdByName("Globo News")),
+            new Noticia("Nova tecnologia agrícola", "Novas inovações tecnológicas para o campo...", LocalDate.now(), "Maria Santos", getPortalIdByName("UOL")),
+            new Noticia("Previsão de safra recorde", "A safra de soja deste ano será recorde...", LocalDate.now(), "Carlos Oliveira", getPortalIdByName("Aggro")),
+            new Noticia("Impactos climáticos", "Como o clima está afetando a produção...", LocalDate.now(), "Ana Pereira", getPortalIdByName("CNN"))
+        ));
+    }
 
-	@GetMapping
+    private String getPortalIdByName(String portalName) {
+        Optional<PortalNoticia> portal = portais.stream()
+            .filter(p -> p.getName().equals(portalName))
+            .findFirst();
+        return portal.map(PortalNoticia::getId).orElse(null);
+    };
+
+	@GetMapping("/portais")
 	Iterable<PortalNoticia> getPortais() {
 		return portais;
 	}
+	@GetMapping("/noticias")
+	Iterable<Noticia> getNoticias() {
+		return noticias;
+	}
+	@PostMapping("/noticias")
+	public Noticia addNoticia(@RequestBody Noticia noticia) {
+		noticias.add(noticia);
+		return noticia;
+	}
 }
-
-// class Portal {
-// 	private String id;
-// 	private String name;
-// 	private String url;
-// 	private String parametrizacao; //json
-
-// 	public Portal(String id, String name) {
-// 		this.id = id;
-// 		this.name = name;
-// 	}
-
-// 	public Portal( String name) {
-// 		this(UUID.randomUUID().toString(), name);
-// 	}
-
-// 	public String getId() {
-// 		return id;
-// 	}
-
-// 	public void setId(String id) {
-// 		this.id = id;
-// 	}
-
-// 	public String getName() {
-// 		return name;
-// 	}
-
-// 	public void setName(String name) {
-// 		this.name = name;
-// 	}
-
-// 	public String getUrl() {
-// 		return url;
-// 	}
-
-// 	public void setUrl(String url) {
-// 		this.url = url;
-// 	}
-
-// 	public String getParametrizacao() {
-// 		return parametrizacao;
-// 	}
-
-// 	public void setParametrizacao(String parametrizacao) {
-// 		this.parametrizacao = parametrizacao;
-// 	}
-// }

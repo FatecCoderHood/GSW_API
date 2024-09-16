@@ -76,4 +76,10 @@ class RestGSW_APIController {
             .findFirst()
             .orElse(null); // Você pode retornar uma exceção personalizada se preferir
     }
+	public PortalNoticia getPortalById(@PathVariable String id) {
+        return portais.stream()
+            .filter(portal -> portal.getId().equals(id))
+            .findFirst()
+            .orElse(null); // ou lançar exceção personalizada
+    }
 }

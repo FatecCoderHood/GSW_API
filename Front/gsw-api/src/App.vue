@@ -2,20 +2,18 @@
 
 <template>
   <v-app>
-    <v-app-bar :elevation="2" height="70">
-      <template v-slot:prepend>
-      </template>
+    <v-app-bar :elevation="2" height="50">
       <v-app-bar-title>CoderHood</v-app-bar-title>
     </v-app-bar>
     
-    <v-navigation-drawer location="top" app absolute>
+    <v-navigation-drawer location="top" app>
       <NavMenu />
     </v-navigation-drawer>
-    
-    <v-main>
-      <v-container>
+
+    <v-main class="mt-n16">
+      <v-container class="mt-n16">
+        <router-view class="mt-n16" />
         <!-- Adicione as novas págias aqui -->
-        <router-view></router-view>
       </v-container>
     </v-main>
   </v-app>

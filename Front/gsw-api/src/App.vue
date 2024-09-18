@@ -8,7 +8,7 @@
       <v-app-bar-title>CoderHood</v-app-bar-title>
     </v-app-bar>
     
-    <v-navigation-drawer location="top" app absolute="true">
+    <v-navigation-drawer location="top" app absolute>
       <NavMenu />
     </v-navigation-drawer>
     

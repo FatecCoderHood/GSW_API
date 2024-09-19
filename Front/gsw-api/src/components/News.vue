@@ -8,54 +8,31 @@
     <v-text-field
       v-model="search"
       density="compact"
-      label="Search"
+      label="Pesquise"
       prepend-inner-icon="mdi-magnify"
       variant="solo-filled"
       flat
       hide-details
       single-line
+      clearable
+      @input="filterItems"
     ></v-text-field>
   </v-container>
 
-  <v-card flat>
-    <v-data-table v-model:search="search" :items="items" items-per-page="3">
-      <template v-slot:header.stock>
-        <div class="text-end">Stock</div>
-      </template>
-
-      <template v-slot:item.image="{ item }">
-        <v-card class="my-2" elevation="2" rounded>
-          <v-img
-            :src="`https://cdn.vuetifyjs.com/docs/images/graphics/gpus/${item.image}`"
-            height="64"
-            cover
-          ></v-img>
+    <v-container>
+      <v-row v-for="item in filteredItems" :key="item.id">
+        <v-col >
+          <v-card elevation="2" rounded>
+                <v-card-title position-static>
+                  {{ item.title }}
+                </v-card-title>
+                <v-card-text>
+                  {{ item.name }}
+                </v-card-text>
         </v-card>
-      </template>
-
-      <template v-slot:item.rating="{ item }">
-        <v-rating
-          :model-value="item.rating"
-          color="orange-darken-2"
-          density="compact"
-          size="small"
-          readonly
-        ></v-rating>
-      </template>
-
-      <template v-slot:item.stock="{ item }">
-        <div class="text-end">
-          <v-chip
-            :color="item.stock ? 'green' : 'red'"
-            :text="item.stock ? 'In stock' : 'Out of stock'"
-            class="text-uppercase"
-            size="small"
-            label
-          ></v-chip>
-        </div>
-      </template>
-    </v-data-table>
-  </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
 </template>
 <script>
   export default {
@@ -64,42 +41,52 @@
         search: '',
         items: [
           {
-            name: 'Nebula GTX 3080',
+            id: 1,
+            title: 'Graphics Card - 1',
             image: '1.png',
-            price: 699.99,
-            rating: 5,
-            stock: true,
+            name: 'Nebula GTX 3080',
           },
           {
-            name: 'Galaxy RTX 3080',
+            id: 2,
+            title: 'Graphics Card - 2',
             image: '2.png',
-            price: 799.99,
-            rating: 4,
-            stock: false,
+            name: 'Galaxy RTX 3080',
           },
           {
-            name: 'Orion RX 6800 XT',
+            id: 3,
+            title: 'Graphics Card - 3',
             image: '3.png',
-            price: 649.99,
-            rating: 3,
-            stock: true,
+            name: 'Orion RX 6800 XT',
           },
           {
-            name: 'Vortex RTX 3090',
+            id: 4,
+            title: 'Graphics Card - 4',
             image: '4.png',
-            price: 1499.99,
-            rating: 4,
-            stock: true,
+            name: 'Vortex RTX 3090',
           },
           {
-            name: 'Cosmos GTX 1660 Super',
+            id: 5,
+            title: 'Graphics Card - 5',
             image: '5.png',
-            price: 299.99,
-            rating: 4,
-            stock: false,
+            name: 'Cosmos GTX 1660 Super',
           },
         ],
+        filteredItems: [],
       }
     },
-  }
+    mounted() {
+      this.filteredItems = this.items;
+    },
+    methods: {
+      filterItems()
+      {
+        const searchTerm = this.search.toLowerCase();
+        
+        this.filteredItems = this.items.filter(item =>
+          item.title.toLowerCase().includes(searchTerm) ||
+          item.name.toLowerCase().includes(searchTerm)
+      );
+      },
+    },
+  };
 </script>

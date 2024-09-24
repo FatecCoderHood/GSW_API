@@ -1,3 +1,8 @@
 <template>
-    <h1>Fontes</h1><!-- IMPORT AQUI SEU COMPONENT -->
-</template>
+    <Sources />
+  </template>
+  
+  <script setup>
+    import Sources from '@/components/Sources.vue';
+  </script>
+  

@@ -105,7 +105,7 @@ por exemplo, previsão do tempo.
 </tr>
 <tr>
     <td>3</td>
-    <td>Eu como usuário do sistema, eu quero capturar dados de notícias e APIs através de web scraping, para armazená-los em um banco de dados e permitir sua consulta posterior.</td>
+    <td>Eu, como usuário do sistema, quero coletar informações de sites de notícias, armazená-las em um banco de dados e depois poder consultá-las sempre que precisar.</td>
     <td>Processo de Web Scraping</td>
     <td>2</td>
     <td>Alta</td>

@@ -1,8 +1,13 @@
 package model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDate;
 import java.util.UUID;
 
+@Getter
+@Setter
 public class Noticia {
 
     private String idNoticia;
@@ -21,40 +26,5 @@ public class Noticia {
         this.autor = autor;
         this.portalNoticiaId = portalNoticiaId;
     }
-    public String getIdNoticia() {
-        return idNoticia;
-    }
-    public void setIdNoticia(String idNoticia) {
-        this.idNoticia = idNoticia;
-    }
-    public String getTitulo() {
-        return titulo;
-    }
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
-    }
-    public String getConteudo() {
-        return conteudo;
-    }
-    public void setConteudo(String conteudo) {
-        this.conteudo = conteudo;
-    }
-    public LocalDate getDataPublicacao() {
-        return dataPublicacao;
-    }
-    public void setDataPublicacao(LocalDate dataPublicacao) {
-        this.dataPublicacao = dataPublicacao;
-    }
-    public String getAutor() {
-        return autor;
-    }
-    public void setAutor(String autor) {
-        this.autor = autor;
-    }
-    public String getProtalNoticiaId() {
-        return portalNoticiaId;
-    }
-    public void setProtalNoticiaId(String protalNoticiaId) {
-        this.portalNoticiaId = protalNoticiaId;
-    }
+
 }

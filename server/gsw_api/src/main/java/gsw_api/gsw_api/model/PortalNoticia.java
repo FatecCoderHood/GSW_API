@@ -1,4 +1,4 @@
-package model;
+package gsw_api.gsw_api.model;
 
 import java.util.UUID;
 
@@ -9,13 +9,11 @@ public class PortalNoticia {
 	private String url;
 	private String parametrizacao; //json
 
-	public PortalNoticia(String id, String name) {
-		this.id = id;
+	public PortalNoticia(String name, String url,String parametrizacao){
+		this.id = UUID.randomUUID().toString();
 		this.name = name;
-	}
-
-	public PortalNoticia( String name) {
-		this(UUID.randomUUID().toString(), name);
+		this.url = url;
+		this.parametrizacao = parametrizacao;
 	}
 
 	public String getId() {

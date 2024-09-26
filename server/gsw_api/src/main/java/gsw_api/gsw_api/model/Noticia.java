@@ -1,4 +1,4 @@
-package model;
+package gsw_api.gsw_api.model;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -51,10 +51,10 @@ public class Noticia {
     public void setAutor(String autor) {
         this.autor = autor;
     }
-    public String getProtalNoticiaId() {
+    public String getPortalNoticiaId() {
         return portalNoticiaId;
     }
-    public void setProtalNoticiaId(String protalNoticiaId) {
-        this.portalNoticiaId = protalNoticiaId;
+    public void setPortalNoticiaId(String portalNoticiaId) {
+        this.portalNoticiaId = portalNoticiaId;
     }
 }

@@ -11,3 +11,5 @@ public class GswApiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(GswApiApplication.class, args);
 	}
+
+}

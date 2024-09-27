@@ -1,54 +1,35 @@
 package gsw_api.gsw_api.model;
 
-import java.util.UUID;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
+@Entity
+@Table(name = "tb_portal_noticia")
 public class PortalNoticia {
 
-    private String id;
-	private String name;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@Column(name = "nome", nullable = false)
+	private String nome;
+
+	@Column(name = "url", nullable = false)
 	private String url;
-	private String parametrizacao; //json
 
-	public PortalNoticia(String name, String url,String parametrizacao){
-		this.id = UUID.randomUUID().toString();
-		this.name = name;
+	@Column(name = "parametrizacao")
+	private String parametrizacao;
+
+
+	// Construtores
+	public PortalNoticia() {}
+
+	public PortalNoticia(String nome, String url, String parametrizacao) {
+		this.nome = nome;
 		this.url = url;
 		this.parametrizacao = parametrizacao;
 	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
-	public String getParametrizacao() {
-		return parametrizacao;
-	}
-
-	public void setParametrizacao(String parametrizacao) {
-		this.parametrizacao = parametrizacao;
-	}
-
 }
-
-
-

@@ -1,34 +1,49 @@
 package gsw_api.gsw_api.controller;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import gsw_api.gsw_api.dto.DadosPortalNoticia;
 import gsw_api.gsw_api.model.PortalNoticia;
 import gsw_api.gsw_api.service.PortalNoticiaService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/portais")
 public class PortalNoticiaController {
-    private PortalNoticiaService portalNoticiaService = new PortalNoticiaService();
 
-    @GetMapping()
-	Iterable<PortalNoticia> getPortais() {
-		return portalNoticiaService.getPortais();
-	}
+	@Autowired
+	private PortalNoticiaService portalNoticiaService;
 
-	@PostMapping()
-	public PortalNoticia addNoticia(@RequestBody PortalNoticia portalNoticia) {
-		return portalNoticiaService.addPortalNoticia(portalNoticia);
+	@PostMapping
+	public ResponseEntity<PortalNoticia> create(@RequestBody DadosPortalNoticia dados) {
+		PortalNoticia portal = portalNoticiaService.create(dados);
+		return ResponseEntity.ok(portal);
 	}
 
 	@GetMapping("/{id}")
-    public PortalNoticia getPortalNoticiaById(@PathVariable String id) {
-        return portalNoticiaService.getPortalNoticiaById(id);
-    }
+	public ResponseEntity<PortalNoticia> findById(@PathVariable Long id) {
+		return portalNoticiaService.findById(id)
+				.map(ResponseEntity::ok)
+				.orElse(ResponseEntity.notFound().build());
+	}
+
+	@GetMapping
+	public ResponseEntity<List<PortalNoticia>> findAll() {
+		List<PortalNoticia> portais = portalNoticiaService.findAll();
+		return ResponseEntity.ok(portais);
+	}
+
+	@PutMapping("/{id}")
+	public ResponseEntity<PortalNoticia> update(@PathVariable Long id, @RequestBody DadosPortalNoticia dados) {
+		PortalNoticia portal = portalNoticiaService.update(id, dados);
+		return portal != null ? ResponseEntity.ok(portal) : ResponseEntity.notFound().build();
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> delete(@PathVariable Long id) {
+		portalNoticiaService.delete(id);
+		return ResponseEntity.noContent().build();
+	}
 }

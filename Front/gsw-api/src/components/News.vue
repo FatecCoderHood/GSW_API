@@ -51,7 +51,7 @@ export default {
   methods: {
     async fetchNoticias() {
       try {
-        const response = await axios.get('http://localhost:8080/gsw_api/noticias'); 
+        const response = await axios.get('http://localhost:8080/noticias'); 
         console.log(response.data); // 
         this.items = response.data; 
         this.filteredItems = this.items; 

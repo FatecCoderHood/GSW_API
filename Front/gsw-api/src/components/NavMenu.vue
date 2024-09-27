@@ -13,7 +13,7 @@
           </v-btn>
         </v-col>
         <v-col cols="12" md="4" sm="6">
-          <v-btn variant="text">
+          <v-btn variant="text" :to="{ name: '/Settings' }">
             Configurações
           </v-btn>
         </v-col>

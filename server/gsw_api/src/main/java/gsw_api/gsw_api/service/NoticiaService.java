@@ -1,37 +1,78 @@
 package gsw_api.gsw_api.service;
 
+import gsw_api.gsw_api.dao.NoticiaRepository;
+import gsw_api.gsw_api.dto.DadosNoticia;
+import gsw_api.gsw_api.dto.FiltroNoticia;
 import gsw_api.gsw_api.model.Noticia;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+@Service
 public class NoticiaService {
-    private List<Noticia> noticias = new ArrayList<>();
-    
 
-    public NoticiaService(){
-        noticias.addAll(List.of(
-            new Noticia("Agronegócio em alta", "O mercado de agronegócio está em crescimento...", LocalDate.now(), "João Silva",null),
-            new Noticia("Nova tecnologia agrícola", "Novas inovações tecnológicas para o campo...", LocalDate.now(), "Maria Santos", null),
-            new Noticia("Previsão de safra recorde", "A safra de soja deste ano será recorde...", LocalDate.now(), "Carlos Oliveira", null),
-            new Noticia("Impactos climáticos", "Como o clima está afetando a produção...", LocalDate.now(), "Ana Pereira", null)
-        ));
+    @Autowired
+    private NoticiaRepository noticiaRepository;
+
+    @Transactional
+    public Noticia create(DadosNoticia dadosNoticia) {
+        Noticia noticia = new Noticia();
+        noticia.setTitulo(dadosNoticia.titulo());
+        noticia.setConteudo(dadosNoticia.conteudo());
+        noticia.setDataPublicacao(dadosNoticia.dataPublicacao());
+        noticia.setAutor(dadosNoticia.autor());
+        // Defina tags aqui, se necessário
+
+        return noticiaRepository.save(noticia);
     }
 
-	public Iterable<Noticia> getNoticias() {
-		return noticias;
-	}
-
-	public Noticia addNoticia( Noticia noticia) {
-		noticias.add(noticia);
-		return noticia;
-	}
-
-    public Noticia getNoticiaById( String id) {
-        return noticias.stream()
-            .filter(noticia -> noticia.getIdNoticia().equals(id))
-            .findFirst()
-            .orElse(null); // Você pode retornar uma exceção personalizada se preferir
+    public Optional<Noticia> findById(Long id) {
+        return noticiaRepository.findById(id);
     }
+
+    public List<Noticia> findAll() {
+        return noticiaRepository.findAll();
+    }
+
+    @Transactional
+    public Noticia update(Long id, DadosNoticia dadosNoticia) {
+        Optional<Noticia> optionalNoticia = noticiaRepository.findById(id);
+        if (optionalNoticia.isPresent()) {
+            Noticia noticia = optionalNoticia.get();
+            noticia.setTitulo(dadosNoticia.titulo());
+            noticia.setConteudo(dadosNoticia.conteudo());
+            noticia.setDataPublicacao(dadosNoticia.dataPublicacao());
+            noticia.setAutor(dadosNoticia.autor());
+            // Atualize tags aqui, se necessário
+            return noticiaRepository.save(noticia);
+        }
+        return null;
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        noticiaRepository.deleteById(id);
+    }
+
+    public List<Noticia> filtrarNoticias(FiltroNoticia filtro) {
+        return noticiaRepository.findAll((root, query, criteriaBuilder) -> {
+            Specification<Noticia> spec = Specification.where(null);
+
+            if (filtro.getTitulo() != null && !filtro.getTitulo().isEmpty()) {
+                spec = spec.and((root1, query1, criteriaBuilder1) ->
+                        criteriaBuilder1.like(root1.get("titulo"), "%" + filtro.getTitulo() + "%"));
+            }
+            if (filtro.getDataInicio() != null && filtro.getDataFim() != null) {
+                spec = spec.and((root1, query1, criteriaBuilder1) ->
+                        criteriaBuilder1.between(root1.get("dataPublicacao"), filtro.getDataInicio(), filtro.getDataFim()));
+            }
+            return spec.toPredicate(root, query, criteriaBuilder);
+        });
+    }
+
+
 }

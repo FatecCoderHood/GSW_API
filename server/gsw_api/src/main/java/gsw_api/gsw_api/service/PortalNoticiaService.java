@@ -1,44 +1,54 @@
 package gsw_api.gsw_api.service;
 
+import gsw_api.gsw_api.dao.PortalNoticiaRepository;
+import gsw_api.gsw_api.dto.DadosPortalNoticia;
 import gsw_api.gsw_api.model.PortalNoticia;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
+@Service
 public class PortalNoticiaService {
-    private List<PortalNoticia> portais = new ArrayList<>();
 
-    public PortalNoticiaService() {
-        portais.addAll(List.of(
-				new PortalNoticia("Globo News", "globonews.com","globonewsjson"),
-				new PortalNoticia("UOL","uol.com","uoljson"),
-				new PortalNoticia("Aggro","aggro.com","aggrojson"),
-				new PortalNoticia("CNN","cnn.com","cnnjson")
-		));
+    @Autowired
+    private PortalNoticiaRepository portalNoticiaRepository;
+
+    @Transactional
+    public PortalNoticia create(DadosPortalNoticia dadosPortalNoticia) {
+        PortalNoticia portalNoticia = new PortalNoticia(
+                dadosPortalNoticia.nome(),
+                dadosPortalNoticia.url(),
+                dadosPortalNoticia.parametrizacao()
+        );
+        return portalNoticiaRepository.save(portalNoticia);
     }
 
-    public Iterable<PortalNoticia> getPortais() {
-		return portais;
-	}
-
-    public PortalNoticia addPortalNoticia( PortalNoticia portalNoticia) {
-		portais.add(portalNoticia);
-		return portalNoticia;
-	}
-
-    public PortalNoticia getPortalNoticiaById( String id) {
-        return portais.stream()
-            .filter(portalNoticia -> portalNoticia.getId().equals(id))
-            .findFirst()
-            .orElse(null); // Você pode retornar uma exceção personalizada se preferir
+    public Optional<PortalNoticia> findById(Long id) {
+        return portalNoticiaRepository.findById(id);
     }
 
-    public String getPortalIdByName(String portalName) {
-        Optional<PortalNoticia> portal = portais.stream()
-            .filter(p -> p.getName().equals(portalName))
-            .findFirst();
-        return portal.map(PortalNoticia::getId).orElse(null);
-    };
+    public List<PortalNoticia> findAll() {
+        return portalNoticiaRepository.findAll();
+    }
+
+    @Transactional
+    public PortalNoticia update(Long id, DadosPortalNoticia dadosPortalNoticia) {
+        Optional<PortalNoticia> optionalPortalNoticia = portalNoticiaRepository.findById(id);
+        if (optionalPortalNoticia.isPresent()) {
+            PortalNoticia portalNoticia = optionalPortalNoticia.get();
+            portalNoticia.setNome(dadosPortalNoticia.nome());
+            portalNoticia.setUrl(dadosPortalNoticia.url());
+            portalNoticia.setParametrizacao(dadosPortalNoticia.parametrizacao());
+            return portalNoticiaRepository.save(portalNoticia);
+        }
+        return null;
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        portalNoticiaRepository.deleteById(id);
+    }
 }

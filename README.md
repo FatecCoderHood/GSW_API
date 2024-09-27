@@ -1,6 +1,10 @@
 # <p align = "center"> Coderhood - API 3º Semestre - BD 2024
 
-# <p align = "center"> ![Coderhood2](https://github.com/CoderhoodFatec-2024-1/Coderhood/assets/87550162/771a8ed8-4c0b-46b4-838d-0358347ca0e5)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/31805bfb-677f-4777-9824-651643cc0aac" width="400" height="400" />
+</p>
+
+
 
 
 <p align="center">
@@ -25,6 +29,7 @@
 | Juan Cursino           | Scrum Master      | [![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-blue?style=flat-square&logo=linkedin&labelColor=blue)](http://www.linkedin.com/in/juan-cursino)|
 | Alexandre Jonas        | Desenvolvedor     | [![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-blue?style=flat-square&logo=linkedin&labelColor=blue)](https://www.linkedin.com/in/alexandre-jonas-de-souza-fonseca-989920181)|
 | Caique Almeida         | Desenvolvedor     | [![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-blue?style=flat-square&logo=linkedin&labelColor=blue)](https://www.linkedin.com/in/caique-almeida-privado)|
+| Cristiane Alvares      | Desenvolvedor     | [![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-blue?style=flat-square&logo=linkedin&labelColor=blue)](https://www.linkedin.com/in/cristiane-alvares)|
 | Jean César             | Desenvolvedor     | [![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-blue?style=flat-square&logo=linkedin&labelColor=blue)](https://www.linkedin.com/in/jean-rodrigues-0569a0251)|
 | Michel Momose          | Desenvolvedor     | [![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-blue?style=flat-square&logo=linkedin&labelColor=blue)](https://www.linkedin.com/in/michel-momosemichel-momose-b78a04203)|
 | Rafael Trevizoli       | Desenvolvedor     | [![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-blue?style=flat-square&logo=linkedin&labelColor=blue)](https://www.linkedin.com/in/rafael-trevizoli)|

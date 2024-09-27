@@ -61,10 +61,10 @@
   <v-container>
     <v-data-table :headers="headers" :items="filteredSources" items-per-page="4">
       <template v-slot:item.actions="{ item }">
-        <v-icon class="me-2" size="small" @click="editItem(item)">
+        <v-icon class="me-2" size="x-large" color="yellow" @click="editItem(item)">
           mdi-pencil
         </v-icon>
-        <v-icon size="small" @click="deleteItem(item)">
+        <v-icon size="x-large" color="red" @click="deleteItem(item)">
           mdi-delete
         </v-icon>
       </template>

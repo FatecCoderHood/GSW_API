@@ -1,6 +1,10 @@
 # <p align = "center"> Coderhood - API 3º Semestre - BD 2024
 
-# <p align = "center"> ![Coderhood2](https://github.com/CoderhoodFatec-2024-1/Coderhood/assets/87550162/771a8ed8-4c0b-46b4-838d-0358347ca0e5)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/31805bfb-677f-4777-9824-651643cc0aac" width="400" height="400" />
+</p>
+
+
 
 
 <p align="center">
@@ -21,13 +25,15 @@
 
 | **Nome**                   | **Função**            | **LinkedIn**                                                  |
 |:----------------------:|:-----------------:|:----------------------------------------------------------:|
-| Juan Cursino           | Scrum Master      | ![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-blue?style=flat-square&logo=linkedin&labelColor=blue)|
-| Michel Momose          | Product Owner     | ![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-blue?style=flat-square&logo=linkedin&labelColor=blue)|
-| Caique Almeida         | Desenvolvedor     | ![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-blue?style=flat-square&logo=linkedin&labelColor=blue)|
-| Rafael Trevizoli       | Desenvolvedor     | ![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-blue?style=flat-square&logo=linkedin&labelColor=blue)|
-| Alexandre Jonas        | Desenvolvedor     | ![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-blue?style=flat-square&logo=linkedin&labelColor=blue)|
-| Jean César             | Desenvolvedor     | ![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-blue?style=flat-square&logo=linkedin&labelColor=blue)|
-| Rennerson Vasconcelos  | Desenvolvedor     | ![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-blue?style=flat-square&logo=linkedin&labelColor=blue)|
+| Aline Ramos            | Product Owner     | [![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-blue?style=flat-square&logo=linkedin&labelColor=blue)](https://www.linkedin.com/in/aline-ramos-3186b130)|
+| Juan Cursino           | Scrum Master      | [![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-blue?style=flat-square&logo=linkedin&labelColor=blue)](http://www.linkedin.com/in/juan-cursino)|
+| Alexandre Jonas        | Desenvolvedor     | [![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-blue?style=flat-square&logo=linkedin&labelColor=blue)](https://www.linkedin.com/in/alexandre-jonas-de-souza-fonseca-989920181)|
+| Caique Almeida         | Desenvolvedor     | [![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-blue?style=flat-square&logo=linkedin&labelColor=blue)](https://www.linkedin.com/in/caique-almeida-privado)|
+| Cristiane Alvares      | Desenvolvedor     | [![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-blue?style=flat-square&logo=linkedin&labelColor=blue)](https://www.linkedin.com/in/cristiane-alvares)|
+| Jean César             | Desenvolvedor     | [![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-blue?style=flat-square&logo=linkedin&labelColor=blue)](https://www.linkedin.com/in/jean-rodrigues-0569a0251)|
+| Michel Momose          | Desenvolvedor     | [![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-blue?style=flat-square&logo=linkedin&labelColor=blue)](https://www.linkedin.com/in/michel-momosemichel-momose-b78a04203)|
+| Rafael Trevizoli       | Desenvolvedor     | [![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-blue?style=flat-square&logo=linkedin&labelColor=blue)](https://www.linkedin.com/in/rafael-trevizoli)|
+| Rennerson Vasconcelos  | Desenvolvedor     | [![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-blue?style=flat-square&logo=linkedin&labelColor=blue)](https://www.linkedin.com/in/rennerson-vasconcelos-afonso-136107169/)|
 
 
 ## :dart: Objetivo
@@ -44,9 +50,9 @@ por exemplo, previsão do tempo.
 | Cadastro de Portais de Notícias | 1 |
 | Cadastro de APIs | 2 |
 | Cadastro de Tags | 3 |
-| Cadastro de Jornalistas | 4 |
+| Indicação de tags que estão relacionadas | 4 |
 | Processo de web scraping (capturar os dados de notícias e APIs e armazenar em banco de dados) | 5 |
-| Indicação de tags que estão relacionadas | 6 |
+| Cadastro de Jornalistas | 6 |
 | Tela de consulta de notícias, com filtros de pesquisa | 7 |
 | Tela de APIs, com filtros de pesquisa | 8 |
 

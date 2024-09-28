@@ -25,24 +25,24 @@ public class Tag {
     @Column(name = "descricao")
     private String descricao;
 
-    @Column(name = "ativa", nullable = false)
+    @Column(name = "ativa")
     private Boolean ativa;
 
     @Column(name = "data_criacao")
-    private LocalDate dataCriacao;
+    private LocalDate dataCriacao = LocalDate.now();
 
     @ManyToMany(mappedBy = "tags")
     @JsonManagedReference
     private Set<Noticia> noticias = new HashSet<>();
 
     public Tag() {
-        // Construtor padrão
+        
     }
 
     public Tag(String nome, String descricao, Boolean ativa, LocalDate dataCriacao) {
         this.nome = nome;
         this.descricao = descricao;
-        this.ativa = ativa;
-        this.dataCriacao = dataCriacao;
+        this.ativa = (ativa != null) ? ativa : true;
+        this.dataCriacao = (dataCriacao != null) ? dataCriacao : LocalDate.now();
     }
 }

@@ -31,14 +31,14 @@
             <v-container>
               <v-row>
                 <v-col cols="12" md="4" sm="6">
-                  <v-text-field v-model="editedItem.name" label="Nome"></v-text-field>
+                  <v-text-field v-model="editedItem.nome" label="Nome"></v-text-field>
                 </v-col>
                 <v-col cols="12" md="4" sm="6">
                   <v-text-field v-model="editedItem.url" label="URL"></v-text-field>
                 </v-col>
-                <v-col cols="12" md="4" sm="6">
-                  <v-text-field v-model="editedItem.type" label="Tipo"></v-text-field>
-                </v-col>
+                <!-- <v-col cols="12" md="4" sm="6">
+                 // <v-text-field v-model="editedItem.type" label="Tipo"></v-text-field>
+                </v-col> -->
               </v-row>
             </v-container>
           </v-card-text>
@@ -88,23 +88,23 @@ export default {
     dialog: false,
     dialogDelete: false,
     headers: [
-      { title: 'Nome', align: 'start', key: 'name' },
+      { title: 'Nome', align: 'start', key: 'nome' },
       { title: 'URL', key: 'url' },
-      { title: 'Tipo', key: 'type' },
+      //{ title: 'Tipo', key: 'type' },
       { title: 'Ações', key: 'actions', sortable: false },
     ],
     sources: [],
     filteredSources: [],
     editedIndex: -1,
     editedItem: {
-      name: '',
+      nome: '',
       url: '',
-      type: '',
+      //type: '',
     },
     defaultItem: {
-      name: '',
+      nome: '',
       url: '',
-      type: '',
+      //type: '',
     },
   }),
 
@@ -142,7 +142,7 @@ export default {
       const searchTerm = this.search.toLowerCase();
 
       this.filteredSources = this.sources.filter(source =>
-        (source.name && source.name.toLowerCase().includes(searchTerm)) ||
+        (source.nome && source.nome.toLowerCase().includes(searchTerm)) ||
         (source.type && source.type.toLowerCase().includes(searchTerm))
       );
     },

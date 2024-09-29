@@ -157,8 +157,6 @@ por exemplo, previsão do tempo.
     <img src="documentacao\Burndown\burndown_sprint1.png" alt="Gráfico Burndown" alt="Gráfico Burndown" width="75%">
 </div>
 
-Para mais detalhes, [clique aqui]().
-
 ## :bookmark: Tecnologias Utilizadas
 <h4 align="center">
 

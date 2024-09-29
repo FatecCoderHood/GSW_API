@@ -154,7 +154,7 @@ por exemplo, previsão do tempo.
 
 ## :chart_with_upwards_trend: Gráfico Burndown
 <div align="center">
-    <img src="documentacao\Gráfio Burndown.jpg" alt="Gráfico Burndown" alt="Gráfico Burndown" width="75%">
+    <img src="documentacao\Burndown\burndown_sprint1.png" alt="Gráfico Burndown" alt="Gráfico Burndown" width="75%">
 </div>
 
 Para mais detalhes, [clique aqui]().

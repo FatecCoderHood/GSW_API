@@ -30,9 +30,18 @@ public class Noticia {
     @Column(name = "autor")
     private String autor;
 
+    @ManyToOne
+    @JoinColumn(name = "api_id", nullable = false)
+    private Api api;
+
     @ManyToMany
-    @JoinTable(name = "tb_noticia_tag", joinColumns = @JoinColumn(name = "noticia_id"), inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    @JoinTable(
+            name = "tb_noticia_tag",
+            joinColumns = @JoinColumn(name = "noticia_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
     private Set<Tag> tags = new HashSet<>();
+
 
     public Noticia() {
 

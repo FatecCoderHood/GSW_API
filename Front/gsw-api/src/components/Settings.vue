@@ -3,26 +3,43 @@
     <h1>Configurações</h1>
     <v-spacer></v-spacer>
 
-
-    <v-combobox
-      v-model="chips"
-      :items="filteredTags"
-      label="Tags"
-      chips
-      clearable
-      multiple
-    >
-      <template v-slot:selection="{ attrs, item, select, selected }">
-        <v-chip
-          v-bind="attrs"
-          closable
-          @click.stop="remove(item)"
+    <v-row>
+      <v-col cols="10">
+        <v-combobox
+          v-model="chips"
+          :items="filteredTags"
+          label="Tags"
+          chips
+          clearable
+          multiple
         >
-          <strong>{{ item }}</strong>
-          <span>(interest)</span>
-        </v-chip>
-      </template>
-    </v-combobox>
+          <template v-slot:selection="{ attrs, item, select, selected }">
+            <v-chip
+              v-bind="attrs"
+              closable
+              @click.stop="remove(item)"
+            >
+              <strong>{{ item }}</strong>
+              <span>(interest)</span>
+            </v-chip>
+          </template>
+        </v-combobox>
+      </v-col>
+
+      <v-col cols="2" class="d-flex align-center">
+        <v-btn class="mt-2" @click="searchNews">Pesquisar</v-btn>
+      </v-col>
+    </v-row>
+
+    <v-list>
+      <v-list-item v-for="news in filteredNews" :key="news.idNoticia">
+        <v-list-item-content>
+          <v-list-item-title>{{ news.titulo }} </v-list-item-title>
+          <v-list-item-subtitle>{{ news.conteudo }} </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+    </v-list>
+      
 
     <v-sheet class="mx-auto" width="300">
       <v-form @submit.prevent="sendTag">
@@ -44,29 +61,42 @@ export default {
   data() {
     return {
       search: '',
-      chips: [], 
-      filteredTags: [], 
+      chips: [],
+      filteredTags: [],
+      filteredNews: [],
       firstName: '',
-      rules: [], 
+      rules: [],
     };
   },
   mounted() {
-    this.fetchTags(); 
+    this.fetchTags();
   },
   methods: {
     async fetchTags() {
       try {
         const response = await axios.get('http://localhost:8080/tags');
-        this.filteredTags = [...response.data.map(obj => obj.nome)].slice();
+        this.tags = response.data.map(obj => obj.nome);
+        this.filteredTags = this.tags.slice();
       } catch (error) {
         console.error('Erro ao buscar tags:', error);
       }
     },
-    filterTags() {
-      const searchTerm = this.search.toLowerCase();
-      this.filteredTags = this.filteredTags.filter(tag =>
-        tag.toLowerCase().includes(searchTerm)
-      );
+    //filterTags() {
+      //const searchTerm = this.search.toLowerCase();
+      //this.filteredTags = this.tags.filter(tag =>
+        //tag.toLowerCase().includes(searchTerm)
+     //);
+    //},
+
+    async searchNews() {
+      try {
+        const response = await axios.get('http://localhost:8080/noticias', {
+          params: {tags: this.chips}
+        });
+        this .filteredNews = response.data;
+      } catch (error) {
+        console.error('Erro ao buscar notícias:', error);
+      }
     },
     remove(item) {
       const index = this.chips.indexOf(item);
@@ -77,7 +107,7 @@ export default {
     async sendTag() {
       try {
         const newTag = {
-          nome: this.firstName.trim() 
+          nome: this.firstName.trim()
         };
 
         const response = await axios.post('http://localhost:8080/tags', newTag);
@@ -85,8 +115,8 @@ export default {
 
         // Adiciona a nova tag aos chips
         this.chips.push(response.data.nome);
-        this.firstName = ''; 
-        this.fetchTags(); 
+        this.firstName = '';
+        this.fetchTags();
       } catch (error) {
         console.error('Erro ao enviar tag:', error);
       }
@@ -95,7 +125,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 /* Estilos opcionais */
 </style>
 

@@ -1,16 +1,18 @@
 package gsw_api.gsw_api.service;
 
-import gsw_api.gsw_api.dao.NoticiaRepository;
-import gsw_api.gsw_api.dto.DadosNoticia;
-import gsw_api.gsw_api.dto.FiltroNoticia;
-import gsw_api.gsw_api.model.Noticia;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import gsw_api.gsw_api.dao.NoticiaRepository;
+import gsw_api.gsw_api.dto.DadosNoticia;
+import gsw_api.gsw_api.dto.FiltroNoticia;
+import gsw_api.gsw_api.model.Noticia;
+import jakarta.persistence.criteria.JoinType;
 
 @Service
 public class NoticiaService {
@@ -59,7 +61,7 @@ public class NoticiaService {
     }
 
     public List<Noticia> filtrarNoticias(FiltroNoticia filtro) {
-        return noticiaRepository.findAll((root, query, criteriaBuilder) -> {
+        return noticiaRepository.findAll((Specification<Noticia>) (root, query, criteriaBuilder) -> {
             Specification<Noticia> spec = Specification.where(null);
 
             if (filtro.getTitulo() != null && !filtro.getTitulo().isEmpty()) {
@@ -69,6 +71,12 @@ public class NoticiaService {
             if (filtro.getDataInicio() != null && filtro.getDataFim() != null) {
                 spec = spec.and((root1, query1, criteriaBuilder1) ->
                         criteriaBuilder1.between(root1.get("dataPublicacao"), filtro.getDataInicio(), filtro.getDataFim()));
+            }
+            if (filtro.getTags() != null && !filtro.getTags().isEmpty()) {
+                spec = spec.and((root1, query1, criteriaBuilder1) ->{
+                    var join = root1.join("tags", JoinType.INNER);
+                    return join.get("nome").in(filtro.getTags());
+                });
             }
             return spec.toPredicate(root, query, criteriaBuilder);
         });

@@ -190,24 +190,24 @@ export default {
     },
 
     async save() {
-     try {
+      try {
       if (this.editedIndex > -1) {
       // Editar
-       const id = this.filteredSources[this.editedIndex].id; // Supondo que você tenha o id do portal
-       const response = await axios.put(`http://localhost:8080/portais/${id}`, this.editedItem);
-       console.log('Atualizado:', response.data); // Verifique o que está sendo retornado
-       Object.assign(this.filteredSources[this.editedIndex], this.editedItem);
+        const id = this.filteredSources[this.editedIndex].id; // Supondo que você tenha o id do portal
+        const response = await axios.put(`http://localhost:8080/portais/${id}`, this.editedItem);
+        console.log('Atualizado:', response.data); // Verifique o que está sendo retornado
+        Object.assign(this.filteredSources[this.editedIndex], this.editedItem);
       } else {
       // Adicionar
-       const response = await axios.post('http://localhost:8080/portais', this.editedItem);
+        const response = await axios.post('http://localhost:8080/portais', this.editedItem);
        console.log('Adicionado:', response.data); // Verifique o que está sendo retornado
-       this.filteredSources.unshift(response.data);
-     }
-       this.close();
-     } catch (error) {
-       console.error('Erro ao salvar fonte:', error);
-     }
-   },
+        this.filteredSources.unshift(response.data);
+      }
+        this.close();
+      } catch (error) {
+        console.error('Erro ao salvar fonte:', error);
+      }
+    },
   },
 };
 </script>

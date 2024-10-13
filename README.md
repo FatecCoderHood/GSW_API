@@ -50,9 +50,9 @@ por exemplo, previsão do tempo.
 | Cadastro de Portais de Notícias | 1 |
 | Cadastro de APIs | 2 |
 | Cadastro de Tags | 3 |
-| Indicação de tags que estão relacionadas | 4 |
+| Cadastro de Jornalistas | 4 |
 | Processo de web scraping (capturar os dados de notícias e APIs e armazenar em banco de dados) | 5 |
-| Cadastro de Jornalistas | 6 |
+| Indicação de tags que estão relacionadas | 6 |
 | Tela de consulta de notícias, com filtros de pesquisa | 7 |
 | Tela de APIs, com filtros de pesquisa | 8 |
 
@@ -154,7 +154,7 @@ por exemplo, previsão do tempo.
 
 ## :chart_with_upwards_trend: Gráfico Burndown
 <div align="center">
-    <img src="documentacao\Burndown\burndown_sprint1.png" alt="Gráfico Burndown" alt="Gráfico Burndown" width="75%">
+    <img src="documentacao\Burndown\sprint2\burndown_sprint2_2024-10-13.png" alt="Gráfico Burndown" alt="Gráfico Burndown" width="75%">
 </div>
 
 ## :bookmark: Tecnologias Utilizadas

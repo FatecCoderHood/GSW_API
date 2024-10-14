@@ -1,6 +1,8 @@
 package gsw_api.gsw_api.controller;
 
+import gsw_api.gsw_api.dao.TagRepository;
 import gsw_api.gsw_api.dto.DadosTag;
+import gsw_api.gsw_api.model.Tag;
 import gsw_api.gsw_api.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/tags")
@@ -16,6 +19,9 @@ public class TagController {
 
     @Autowired
     private TagService tagService;
+
+    @Autowired
+    private TagRepository tagRepository;
 
     @GetMapping
     public List<DadosTag> getAllTags() {
@@ -48,4 +54,33 @@ public ResponseEntity<DadosTag> createTag(@RequestBody DadosTag dadosTag) {
         tagService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Tag> updateTag(@PathVariable Long id, @RequestBody Tag patch) {
+        Optional<Tag> optionalTag = tagRepository.findById(id);
+
+        if (!optionalTag.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Tag existingTag = optionalTag.get();
+
+        if (patch.getNome() != null) {
+            existingTag.setNome(patch.getNome());
+        }
+        if (patch.getDescricao() != null) {
+            existingTag.setDescricao(patch.getDescricao());
+        }
+        if (patch.getAtiva() != null) {
+            existingTag.setAtiva(patch.getAtiva());
+        }
+        if (patch.getDataCriacao() != null) {
+            existingTag.setDataCriacao(patch.getDataCriacao());
+        }
+
+        Tag updatedTag = tagRepository.save(existingTag);
+        return ResponseEntity.ok(updatedTag);
+    }
 }
+
+

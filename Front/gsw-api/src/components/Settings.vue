@@ -52,15 +52,17 @@ export default {
       filteredTags: [],
       firstName: '',
       rules: [],
+      rules: [],
     };
   },
   mounted() {
+    this.fetchTags();
     this.fetchTags();
   },
   methods: {
     async fetchTags() {
       try {
-        const response = await axios.get('http://localhost:3002/tags');
+        const response = await axios.get('http://localhost:8080/tags');
         this.filteredTags = response.data.map(obj => obj.nome);
       } catch (error) {
         console.error('Erro ao buscar tags:', error);
@@ -69,7 +71,7 @@ export default {
     async sendTag() {
       try {
         const newTag = { nome: this.firstName.trim() };
-        const response = await axios.post('http://localhost:3002/tags', newTag);
+        const response = await axios.post('http://localhost:8080/tags', newTag);
         this.firstName = '';
         this.fetchTags(); // Atualiza a lista de tags
       } catch (error) {

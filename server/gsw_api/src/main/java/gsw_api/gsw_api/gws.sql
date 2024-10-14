@@ -40,5 +40,41 @@ CREATE TABLE tb_noticia_tag (
     FOREIGN KEY (tag_id) REFERENCES tb_tag(id)
 );
  
- 
 alter table tb_portal_noticia drop column categoria;
+
+
+
+
+
+
+CREATE TABLE tb_api (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+  documentacao VARCHAR(255) NOT NULL,
+  chave_acesso TEXT NOT NULL,
+  active BOOLEAN NOT NULL,
+  url VARCHAR(2048)
+);
+
+alter table tb_api add column nome varchar(100) not null;
+
+ALTER TABLE tb_api
+DROP COLUMN documentacao;
+
+ALTER TABLE tb_api
+ADD COLUMN payload VARCHAR(255);
+
+ALTER TABLE tb_noticia
+    ADD COLUMN api_id BIGINT;
+
+ALTER TABLE tb_noticia
+    ADD CONSTRAINT fk_noticia_api
+        FOREIGN KEY (api_id) REFERENCES tb_api(id) ON DELETE CASCADE;
+
+alter table tb_api
+    drop column active;
+
+
+INSERT INTO tb_api (nome, payload, chave_acesso, url)
+VALUES ('Nome da API', 'Conteúdo do payload', 'sua-chave-de-acesso', 'https://suaapi.com');
+
+SELECT * FROM tb_api;

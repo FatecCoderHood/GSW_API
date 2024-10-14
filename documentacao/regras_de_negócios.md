@@ -40,15 +40,6 @@ Este projeto tem como objetivo criar um sistema de gerenciamento de portais de n
   - O sistema deve capturar título, conteúdo, data de publicação e autor das notícias.
   - Os dados capturados devem ser armazenados de forma estruturada no banco de dados.
 
-- **Como** um administrador, **eu quero** cadastrar tags no sistema, **para que** eu possa organizar as notícias e APIs de acordo com tópicos ou categorias específicas.
-  
-  Critérios de aceitação:
-  
-  - O sistema deve permitir o cadastro de tags com nome.
-  - Eu devo poder associar tags às notícias e APIs para melhorar a pesquisa.
-
-### Sprint 3
-
 - **Como** um administrador, **eu quero** cadastrar APIs externas no sistema, **para que** eu possa integrar dados externos no processo de captura de notícias e informações.
   
   Critérios de aceitação:
@@ -56,14 +47,14 @@ Este projeto tem como objetivo criar um sistema de gerenciamento de portais de n
   - O sistema deve permitir o registro da URL da API e chave de acesso.
   - Eu devo poder visualizar, editar e excluir APIs cadastradas.
 
-- **Como** um usuário, **eu quero** que o sistema sugira tags relacionadas com base no conteúdo das notícias, **para que** eu possa associar automaticamente as notícias às tags apropriadas e facilitar a pesquisa.
+### Sprint 3
+
+- **Como** um administrador, **eu quero** cadastrar tags no sistema, **para que** eu possa organizar as notícias e APIs de acordo com tópicos ou categorias específicas.
   
   Critérios de aceitação:
   
-  - O sistema deve sugerir tags automaticamente com base no conteúdo da notícia capturada.
-  - Eu devo poder visualizar e editar as tags sugeridas antes de confirmá-las.
-
-### Sprint 4
+  - O sistema deve permitir o cadastro de tags com nome.
+  - Eu devo poder associar tags às notícias e APIs para melhorar a pesquisa.
 
 - **Como** um administrador, **eu quero** acessar uma tela de consulta de APIs com filtros de pesquisa, **para que** eu possa gerenciar e encontrar facilmente as APIs cadastradas no sistema.
   
@@ -72,3 +63,12 @@ Este projeto tem como objetivo criar um sistema de gerenciamento de portais de n
   - A tela deve permitir filtrar as APIs por nome ou data de cadastro.
   - As APIs devem ser exibidas em formato de lista, com paginação.
   - Eu devo poder visualizar os detalhes completos da API selecionada.
+
+### Sprint 4
+
+- **Como** um usuário, **eu quero** que o sistema sugira tags relacionadas com base no conteúdo das notícias, **para que** eu possa associar automaticamente as notícias às tags apropriadas e facilitar a pesquisa.
+  
+  Critérios de aceitação:
+  
+  - O sistema deve sugerir tags automaticamente com base no conteúdo da notícia capturada.
+  - Eu devo poder visualizar e editar as tags sugeridas antes de confirmá-las.

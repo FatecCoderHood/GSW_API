@@ -1,15 +1,16 @@
 package gsw_api.gsw_api.service;
 
 
-import gsw_api.gsw_api.dao.TagRepository;
-import gsw_api.gsw_api.dto.DadosTag;
-import gsw_api.gsw_api.model.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import gsw_api.gsw_api.dao.TagRepository;
+import gsw_api.gsw_api.dto.DadosTag;
+import gsw_api.gsw_api.model.Tag;
 
 @Service
 public class TagService {
@@ -40,5 +41,12 @@ public class TagService {
     }
     public void delete(Long id) {
         tagRepository.deleteById(id);
+    }
+    
+    public Tag createTag(Tag tag) {
+        if (tagRepository.existsByNome(tag.getNome())) {
+            throw new RuntimeException("Tag já existe.");
+        }
+        return tagRepository.save(tag);
     }
 }

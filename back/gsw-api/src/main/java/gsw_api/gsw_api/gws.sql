@@ -78,3 +78,5 @@ INSERT INTO tb_api (nome, payload, chave_acesso, url)
 VALUES ('Nome da API', 'Conteúdo do payload', 'sua-chave-de-acesso', 'https://suaapi.com');
 
 SELECT * FROM tb_api;
+
+

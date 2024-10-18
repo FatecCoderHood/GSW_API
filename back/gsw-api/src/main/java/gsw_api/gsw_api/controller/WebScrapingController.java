@@ -9,15 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import gsw_api.gsw_api.dao.NoticiaRepository;
+import gsw_api.gsw_api.dao.PortalNoticiaRepository;
 import gsw_api.gsw_api.model.Noticia;
 import gsw_api.gsw_api.model.PortalNoticia;
 import gsw_api.gsw_api.service.PortalNoticiaService;
 import gsw_api.gsw_api.service.WebScrapingService;
+import gsw_api.gsw_api.service.NoticiaService;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/web_scrap")
@@ -25,26 +27,35 @@ import java.util.Optional;
 public class WebScrapingController {
 
     @Autowired
+    private NoticiaService noticiaService;
+    @Autowired
     private PortalNoticiaService portalNoticiaService;
+    @Autowired
+    private NoticiaRepository noticiaRepository;
     private WebScrapingService webScrapingService;
+    
 
-    @Operation(summary = "Get a list of all Noticias")
+    @Operation(summary = "Webscraping de notícias de todos os postais")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "List of Noticias retrieved", 
                      content = @Content(mediaType = "application/json", 
                      schema = @Schema(implementation = Noticia.class)))
     })
     @GetMapping
-    public ResponseEntity<List<Noticia>> findAll() throws IOException {
-        Optional<PortalNoticia> optionalPortalNoticia = portalNoticiaService.findById(Long.valueOf(3));
+    public ResponseEntity<List<Noticia>> webScraping() throws IOException {
+
+        webScrapingService = new WebScrapingService();
+        noticiaService = new NoticiaService();
+
+        //Vetor com todos os portais do banco
+        List<PortalNoticia> portais = portalNoticiaService.findAll();
+        //Vetor das noticias a serem inseridas no banco
         List<Noticia> noticias = new ArrayList<>();
 
-        if (optionalPortalNoticia.isPresent()) {
-            PortalNoticia portalNoticia = optionalPortalNoticia.get();
-            webScrapingService = new WebScrapingService();
-            noticias = webScrapingService.ParametrizacaoToNoticia(portalNoticia);
-        }
-        return ResponseEntity.ok(noticias);
+        //Rotina que retorna o vetor de noticias gerados via webscraping
+        noticias = webScrapingService.gerarNoticiasByPortais(portais);
+
+        return ResponseEntity.ok(noticiaRepository.saveAll(noticias));
     }
 
 }

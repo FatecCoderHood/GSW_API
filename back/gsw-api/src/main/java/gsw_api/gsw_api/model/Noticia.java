@@ -31,7 +31,7 @@ public class Noticia {
     private String autor;
 
     @ManyToOne
-    @JoinColumn(name = "api_id", nullable = false)
+    @JoinColumn(name = "api_id", nullable = true)
     private Api api;
 
     @ManyToMany

@@ -75,11 +75,11 @@ VALUES ('Nome da API', 'Conteúdo do payload', 'sua-chave-de-acesso', 'https://s
 SELECT * FROM tb_api;
 
 update tb_portal_noticia set parametrizacao = 
-        "{'URL': 'div._evt h2 a','titulo' : 'h1.content-headtitle','conteudo' : 'p.content-textcontainer','autor' : 'p.content-publication-datafrom','data' : 'p.content-publication-dataupdated time'}"
+        "{'URL': 'div._evt h2 a','titulo' : 'h1.content-head__title','conteudo' : 'p.content-text__container','autor' : 'p.content-publication-data__from','data' : 'p.content-publication-data__updated time'}"
 where id = 3;
 
 update tb_portal_noticia set parametrizacao = 
-        "{'URL': 'div.sectionGridgridcolumnTwo article a','titulo' : 'h1.title','conteudo' : 'p.bullet','autor' : 'a.solar-author-name','data' : 'div.solar-date time'}"
+        "{'URL': 'div.sectionGrid__grid__columnTwo article a','titulo' : 'h1.title','conteudo' : 'p.bullet','autor' : 'a.solar-author-name','data' : 'div.solar-date time'}"
  where id = 1;
 
  

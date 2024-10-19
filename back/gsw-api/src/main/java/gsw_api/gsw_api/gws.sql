@@ -82,3 +82,10 @@ update tb_portal_noticia set parametrizacao =
         "{'URL': 'div.sectionGrid__grid__columnTwo article a','titulo' : 'h1.title','conteudo' : 'p.bullet','autor' : 'a.solar-author-name','data' : 'div.solar-date time'}"
  where id = 1;
 
+CREATE TABLE SINONIMO_REGIONAL (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    tag VARCHAR(255) NOT NULL,
+    sinonimo VARCHAR(255) NOT NULL,
+    regiao VARCHAR(100) NOT NULL,
+    PRIMARY KEY (id)
+);

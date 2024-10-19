@@ -16,8 +16,17 @@ public class PortalNoticiaService {
     @Autowired
     private PortalNoticiaRepository portalNoticiaRepository;
 
+    private boolean PortaisDuplicados(String nome, String url) {
+        Optional<PortalNoticia> existingPortal = portalNoticiaRepository.findByNomeOrUrl(nome, url);
+        return existingPortal.isPresent();
+    }
+
     @Transactional
     public PortalNoticia create(DadosPortalNoticia dadosPortalNoticia) {
+        if (PortaisDuplicados(dadosPortalNoticia.nome(), dadosPortalNoticia.url())) {
+            throw new IllegalArgumentException("Portal já cadastrado com este nome ou URL.");
+        }
+
         PortalNoticia portalNoticia = new PortalNoticia(
                 dadosPortalNoticia.nome(),
                 dadosPortalNoticia.url(),
@@ -39,6 +48,11 @@ public class PortalNoticiaService {
         Optional<PortalNoticia> optionalPortalNoticia = portalNoticiaRepository.findById(id);
         if (optionalPortalNoticia.isPresent()) {
             PortalNoticia portalNoticia = optionalPortalNoticia.get();
+            
+            if (PortaisDuplicados(dadosPortalNoticia.nome(), dadosPortalNoticia.url())) {
+                throw new IllegalArgumentException("Portal já cadastrado com este nome ou URL.");
+            }
+
             portalNoticia.setNome(dadosPortalNoticia.nome());
             portalNoticia.setUrl(dadosPortalNoticia.url());
             portalNoticia.setParametrizacao(dadosPortalNoticia.parametrizacao());
@@ -52,3 +66,4 @@ public class PortalNoticiaService {
         portalNoticiaRepository.deleteById(id);
     }
 }
+

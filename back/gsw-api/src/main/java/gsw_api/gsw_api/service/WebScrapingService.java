@@ -24,6 +24,7 @@ public class WebScrapingService {
     private static final Logger logger = LoggerFactory.getLogger(WebScrapingService.class);
     private Parametrizacao parametrizacao;
 
+    // Método para pegar a parametrização do JSON
     public Parametrizacao getParametrizacaoByJSON(String JSON) {
         parametrizacao = new Parametrizacao(JSON);
         return parametrizacao;
@@ -33,13 +34,9 @@ public class WebScrapingService {
         List<Noticia> noticiasGerais = new ArrayList<>();
 
         for (PortalNoticia p : portais) {
-
             boolean isVazio = p.getParametrizacao() == null || p.getParametrizacao().isEmpty();
             if (!isVazio) {
-
-                List<Noticia> noticiasPortal = new ArrayList<>();
-
-                noticiasPortal = parametrizacaoToNoticia(p);
+                List<Noticia> noticiasPortal = parametrizacaoToNoticia(p);
                 noticiasGerais.addAll(noticiasPortal);
             }
         }
@@ -66,7 +63,10 @@ public class WebScrapingService {
                     String autor = noticiaHTML.select(parametrizacao.getAutor()).text();
                     String dataStr = noticiaHTML.select(parametrizacao.getData()).text();
 
-                    if (!titulo.isEmpty() && !conteudo.isEmpty() && !autor.isEmpty()) {
+                    boolean isDuplicada = noticias.stream()
+                        .anyMatch(n -> n.getTitulo().equals(titulo) && n.getConteudo().equals(conteudo));
+
+                    if (!titulo.isEmpty() && !conteudo.isEmpty() && !autor.isEmpty() && !isDuplicada) {
                         noticia.setTitulo(titulo);
                         noticia.setConteudo(conteudo);
                         noticia.setAutor(autor);
@@ -79,6 +79,8 @@ public class WebScrapingService {
                         }
 
                         noticias.add(noticia);
+                    } else if (isDuplicada) {
+                        logger.warn("Notícia duplicada ignorada: " + titulo + " - " + autor);
                     } else {
                         logger.warn("Notícia ignorada por falta de informações obrigatórias: Título, Autor ou Conteúdo.");
                     }

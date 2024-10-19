@@ -82,6 +82,3 @@ update tb_portal_noticia set parametrizacao =
         "{'URL': 'div.sectionGrid__grid__columnTwo article a','titulo' : 'h1.title','conteudo' : 'p.bullet','autor' : 'a.solar-author-name','data' : 'div.solar-date time'}"
  where id = 1;
 
- 
-
-

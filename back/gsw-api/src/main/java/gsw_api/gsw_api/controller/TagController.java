@@ -55,32 +55,32 @@ public ResponseEntity<DadosTag> createTag(@RequestBody DadosTag dadosTag) {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<Tag> updateTag(@PathVariable Long id, @RequestBody Tag patch) {
-        Optional<Tag> optionalTag = tagRepository.findById(id);
+    @PatchMapping(value = "/{id}")
+    public ResponseEntity<Tag> updateTag(@PathVariable Long id,
+        @RequestParam(required = false) String nome, 
+        @RequestParam(required = false) String descricao,
+        @RequestParam(required = false) Boolean ativa)
+        {
+            Optional<Tag> optionalTag = tagRepository.findById(id);
 
-        if (!optionalTag.isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
+            if (!optionalTag.isPresent()) {
+                return ResponseEntity.notFound().build();
+            }
 
-        Tag existingTag = optionalTag.get();
+            Tag existingTag = optionalTag.get();
 
-        if (patch.getNome() != null) {
-            existingTag.setNome(patch.getNome());
-        }
-        if (patch.getDescricao() != null) {
-            existingTag.setDescricao(patch.getDescricao());
-        }
-        if (patch.getAtiva() != null) {
-            existingTag.setAtiva(patch.getAtiva());
-        }
-        if (patch.getDataCriacao() != null) {
-            existingTag.setDataCriacao(patch.getDataCriacao());
-        }
+            if (nome != null) 
+                existingTag.setNome(nome);
 
-        Tag updatedTag = tagRepository.save(existingTag);
-        return ResponseEntity.ok(updatedTag);
-    }
+            if (descricao != null)
+                existingTag.setDescricao(descricao);
+
+            if (ativa)
+                existingTag.setAtiva(ativa);
+
+            Tag updatedTag = tagRepository.save(existingTag);
+            return ResponseEntity.ok(updatedTag);
+        }
 }
 
 

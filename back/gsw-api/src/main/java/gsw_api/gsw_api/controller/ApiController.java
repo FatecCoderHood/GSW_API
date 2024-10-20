@@ -1,7 +1,11 @@
 package gsw_api.gsw_api.controller;
 
 import gsw_api.gsw_api.dao.ApiRepository;
+import gsw_api.gsw_api.dto.DadosApi;
 import gsw_api.gsw_api.model.Api;
+import gsw_api.gsw_api.model.PortalNoticia;
+import gsw_api.gsw_api.service.ApiService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,15 +14,19 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "http://localhost:3000")
 public class ApiController {
 
     @Autowired
     private ApiRepository apiRepository;
+    @Autowired
+    private ApiService apiService;
 
 
     @PostMapping
-    public Api createApi(@RequestBody Api api) {
-        return apiRepository.save(api);
+    public ResponseEntity<Api> createApi(@RequestBody DadosApi dados) {
+        Api api = apiService.create(dados);
+        return ResponseEntity.ok(api);
     }
 
 

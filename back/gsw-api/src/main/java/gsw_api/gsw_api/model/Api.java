@@ -24,11 +24,11 @@ public class Api {
     @Column(name = "payload", nullable = false)
     private String payload;
 
-    @Column(name = "chave_acesso", columnDefinition = "TEXT")
+    @Column(name = "chave_acesso", columnDefinition = "TEXT", nullable = false)
     private String chaveAcesso;
 
 
-    @Column(name = "url", length = 2048)
+    @Column(name = "url", length = 2048, nullable = false)
     private String url;
 
 
@@ -38,9 +38,14 @@ public class Api {
     private List<Noticia> noticias;
 
 
-    public Api() {
+    public Api() {}
 
-    }
+    public Api(String nome, String url, String chaveAcesso, String payload) {
+		this.nome = nome;
+		this.url = url;
+        this.chaveAcesso = chaveAcesso;
+        this.payload = payload;
+	}
 
     @Override
     public String toString() {

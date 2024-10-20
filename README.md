@@ -8,8 +8,7 @@
 
 
 <p align="center">
-  <a href ="#mortar_board-integrantes-da-equipe"> Integrantes </a>  •
-  <a href ="#anger-descrição-do-desafio"> Desafio </a>  •
+  <a href ="#mortar_board-integrantes"> Integrantes </a>  •
   <a href ="#dart-objetivo"> Objetivo </a>  •
   <a href="#page_facing_up-requisitos-funcionais"> Requisitos Funcionais </a> •
   <a href="#page_with_curl-requisitos-não-funcionais"> Requisitos Não Funcionais </a>
@@ -18,6 +17,9 @@
   <a href ="#calendar-cronograma"> Cronograma </a>  •
   <a href="#date-product-backlog"> Product Backlog </a> •
   <a href="#bookmark-tecnologias-utilizadas"> Tecnologias Utilizadas </a>
+</p>
+<p align="center">
+  <a href="#instruções-de-execução"> Instruções de Execução </a>
 </p>
 
 
@@ -173,3 +175,22 @@ por exemplo, previsão do tempo.
 ![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white)
 
 </h4>
+
+## Instruções de Execução
+### Database
+Execute o script abaixo para criação das tabelas no seu DBMS ou SGBD em português.
+> ./back/gsw-ap/src/main/java/gsw_api/gsw_api/gws.sql
+
+### Back-end
+``` Bash
+cd back/gsw-api
+mvn clean install
+mvn spring-boot:run
+```
+
+### Front-end
+``` Bash
+cd front/gsw-api
+npm i
+npm run dev
+```

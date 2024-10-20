@@ -25,10 +25,10 @@ public class NoticiaController {
 
     @Operation(summary = "Create a new Noticia")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Noticia created successfully", 
-                     content = @Content(mediaType = "application/json", 
-                     schema = @Schema(implementation = Noticia.class))),
-        @ApiResponse(responseCode = "400", description = "Invalid input", content = @Content)
+            @ApiResponse(responseCode = "200", description = "Noticia created successfully",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Noticia.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid input", content = @Content)
     })
     @PostMapping
     public ResponseEntity<Noticia> create(@RequestBody DadosNoticia dadosNoticia) {
@@ -38,10 +38,10 @@ public class NoticiaController {
 
     @Operation(summary = "Find Noticia by ID")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Noticia found", 
-                     content = @Content(mediaType = "application/json", 
-                     schema = @Schema(implementation = Noticia.class))),
-        @ApiResponse(responseCode = "404", description = "Noticia not found", content = @Content)
+            @ApiResponse(responseCode = "200", description = "Noticia found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Noticia.class))),
+            @ApiResponse(responseCode = "404", description = "Noticia not found", content = @Content)
     })
     @GetMapping("/{id}")
     public ResponseEntity<Noticia> findById(@PathVariable Long id) {
@@ -52,9 +52,9 @@ public class NoticiaController {
 
     @Operation(summary = "Get a list of all Noticias")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "List of Noticias retrieved", 
-                     content = @Content(mediaType = "application/json", 
-                     schema = @Schema(implementation = Noticia.class)))
+            @ApiResponse(responseCode = "200", description = "List of Noticias retrieved",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Noticia.class)))
     })
     @GetMapping
     public ResponseEntity<List<Noticia>> findAll() {
@@ -64,10 +64,10 @@ public class NoticiaController {
 
     @Operation(summary = "Update an existing Noticia")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Noticia updated successfully", 
-                     content = @Content(mediaType = "application/json", 
-                     schema = @Schema(implementation = Noticia.class))),
-        @ApiResponse(responseCode = "404", description = "Noticia not found", content = @Content)
+            @ApiResponse(responseCode = "200", description = "Noticia updated successfully",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Noticia.class))),
+            @ApiResponse(responseCode = "404", description = "Noticia not found", content = @Content)
     })
     @PutMapping("/{id}")
     public ResponseEntity<Noticia> update(@PathVariable Long id, @RequestBody DadosNoticia dadosNoticia) {
@@ -77,8 +77,8 @@ public class NoticiaController {
 
     @Operation(summary = "Delete a Noticia by ID")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Noticia deleted successfully"),
-        @ApiResponse(responseCode = "404", description = "Noticia not found")
+            @ApiResponse(responseCode = "204", description = "Noticia deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Noticia not found")
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
@@ -88,13 +88,15 @@ public class NoticiaController {
 
     @Operation(summary = "Filter Noticias based on criteria")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Filtered Noticias retrieved", 
-                     content = @Content(mediaType = "application/json", 
-                     schema = @Schema(implementation = Noticia.class)))
+            @ApiResponse(responseCode = "200", description = "Filtered Noticias retrieved",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Noticia.class)))
     })
     @PostMapping("/filtrar")
     public ResponseEntity<List<Noticia>> filtrarNoticias(@RequestBody FiltroNoticia filtro) {
         List<Noticia> noticiasFiltradas = noticiaService.filtrarNoticias(filtro);
         return ResponseEntity.ok(noticiasFiltradas);
     }
+
+
 }

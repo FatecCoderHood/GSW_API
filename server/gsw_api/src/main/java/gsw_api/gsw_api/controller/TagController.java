@@ -33,21 +33,24 @@ public class TagController {
         DadosTag dadosTag = tagService.findById(id);
         return ResponseEntity.ok(dadosTag);
     }
-
     @PostMapping
-public ResponseEntity<DadosTag> createTag(@RequestBody DadosTag dadosTag) {
-    try {
-        if (dadosTag.nome() == null || dadosTag.nome().trim().isEmpty()) {
-            return ResponseEntity.badRequest().build(); 
-        }
+    public ResponseEntity<DadosTag> createTag(@RequestBody DadosTag dadosTag) {
+        try {
+            if (dadosTag.nome() == null || dadosTag.nome().trim().isEmpty()) {
+                return ResponseEntity.badRequest().build();
+            }
 
-        DadosTag createdTag = tagService.save(dadosTag);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdTag);
-    } catch (Exception e) {
-        e.printStackTrace();
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            if (tagRepository.existsByNome(dadosTag.nome())) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(null); // 409 Conflict
+            }
+
+            DadosTag createdTag = tagService.save(dadosTag);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdTag);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
-}
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTag(@PathVariable Long id) {

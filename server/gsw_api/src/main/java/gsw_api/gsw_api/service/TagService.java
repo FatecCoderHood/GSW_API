@@ -41,4 +41,11 @@ public class TagService {
     public void delete(Long id) {
         tagRepository.deleteById(id);
     }
+
+    public Tag createTag(Tag tag) {
+        if (tagRepository.existsByNome(tag.getNome())) {
+            throw new RuntimeException("Tag já existe.");
+        }
+        return tagRepository.save(tag);
+    }
 }

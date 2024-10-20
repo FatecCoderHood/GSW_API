@@ -1,0 +1,13 @@
+
+# Por favor escreva a mensagem de commit das suas alterações.
+# Linhas que começam com '#' serão ignoradas, e uma mensagem vazia irá cancelar o commit.
+#
+#<id-da-tarefa> [Escopo]: Título da Tarefa
+#
+#Descrição da Implementação
+# - Fiz tal coisa desse jeito
+#
+#Sugestões para Melhorias Futuras
+# - Melhorar isso assim
+# - Melhorar aquilo assado
+#

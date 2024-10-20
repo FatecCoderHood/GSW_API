@@ -73,7 +73,7 @@ por exemplo, previsão do tempo.
 | Sprint  | Nome | Data inicio  | Data Fim | Status |
 | ------------- | ------------- | ------------- | ------------- | ------------- |
 | --  | KickOff   | 26/08   | 30/08 | Ok |
-|  1  | Sprint 1   | 09/09   | 29/09 |    |
+|  1  | Sprint 1   | 09/09   | 29/09 | Ok |
 |  2  | Sprint 2   | 30/09   | 20/10 |    |
 |  3  | Sprint 3   | 21/10   | 10/11 |    |
 |  4  | Sprint 4   | 11/11   | 01/12 |    |

@@ -33,6 +33,7 @@ public class TagController {
         DadosTag dadosTag = tagService.findById(id);
         return ResponseEntity.ok(dadosTag);
     }
+
     @PostMapping
     public ResponseEntity<DadosTag> createTag(@RequestBody DadosTag dadosTag) {
         try {
@@ -84,6 +85,7 @@ public class TagController {
         Tag updatedTag = tagRepository.save(existingTag);
         return ResponseEntity.ok(updatedTag);
     }
+
 }
 
 

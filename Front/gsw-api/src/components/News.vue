@@ -18,7 +18,7 @@
         class="mx-2"
         style="flex: 1; min-width: 300px;"
       />
-      <v-select
+       <!--<v-select
         v-model="selectedTags"
         :items="availableTags"
         density="compact"
@@ -32,13 +32,14 @@
         style="flex: 1; min-width: 300px;"
         @change="filterItems"
       />
-      <v-btn @click="searchNews" style="width: 200px; height: 40px" color="primary">Pesquisar</v-btn>
+      <v-btn @click="searchNews" style="width: 200px; height: 40px" color="primary">Pesquisar</v-btn> -->
     </v-container>
 
+    <!-- Lista de notícias -->
     <v-container>
       <v-row v-for="item in filteredItems" :key="item.idNoticia">
         <v-col>
-          <v-card elevation="2" rounded>
+          <v-card elevation="2" rounded @click="openModal(item)">
             <v-card-title>
               {{ item.titulo }}
             </v-card-title>
@@ -49,6 +50,24 @@
         </v-col>
       </v-row>
     </v-container>
+
+    <!-- Modal -->
+    <v-dialog v-model="NoticiaModal" max-width="800px">
+      <v-card>
+        <v-card-title>
+          <span class="headline" style="word-wrap: break-word; white-space: normal; overflow-wrap: break-word;">{{ selectedItem?.titulo }}</span>
+        </v-card-title>
+        <v-card-subtitle>
+          Autor: {{ selectedItem?.autor }}
+        </v-card-subtitle>
+        <v-card-text>
+          <div v-html="selectedItem?.conteudo"></div>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn @click="NoticiaModal = false" color="primary">Fechar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
@@ -63,6 +82,8 @@ export default {
       filteredItems: [],
       selectedTags: [],
       availableTags: [],
+      NoticiaModal: false,  
+      selectedItem: null,  
     };
   },
   mounted() {
@@ -70,7 +91,6 @@ export default {
     this.fetchTags();
   },
   methods: {
-    // Função para buscar notícias da API
     async fetchNoticias() {
       try {
         const response = await axios.get('http://localhost:8080/noticias');
@@ -108,6 +128,18 @@ export default {
         console.error('Erro ao buscar notícias:', error);
       }
     },
+    openModal(item) {
+      this.selectedItem = item;  // pegando a notícia 
+      this.NoticiaModal = true;    // Abrindo o pop-up
+    }
   },
 };
 </script>
+
+<style scoped>
+.headline {
+  word-wrap: break-word;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+</style>

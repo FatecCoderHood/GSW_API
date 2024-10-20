@@ -42,11 +42,6 @@ CREATE TABLE tb_noticia_tag (
  
 alter table tb_portal_noticia drop column categoria;
 
-
-
-
-
-
 CREATE TABLE tb_api (
   id BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL,
   documentacao VARCHAR(255) NOT NULL,
@@ -78,3 +73,12 @@ INSERT INTO tb_api (nome, payload, chave_acesso, url)
 VALUES ('Nome da API', 'Conteúdo do payload', 'sua-chave-de-acesso', 'https://suaapi.com');
 
 SELECT * FROM tb_api;
+
+update tb_portal_noticia set parametrizacao = 
+        "{'URL': 'div._evt h2 a','titulo' : 'h1.content-head__title','conteudo' : 'p.content-text__container','autor' : 'p.content-publication-data__from','data' : 'p.content-publication-data__updated time'}"
+where id = 3;
+
+update tb_portal_noticia set parametrizacao = 
+        "{'URL': 'div.sectionGrid__grid__columnTwo article a','titulo' : 'h1.title','conteudo' : 'p.bullet','autor' : 'a.solar-author-name','data' : 'div.solar-date time'}"
+ where id = 1;
+

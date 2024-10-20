@@ -2,6 +2,7 @@ package gsw_api.gsw_api.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -12,6 +13,7 @@ import gsw_api.gsw_api.dao.NoticiaRepository;
 import gsw_api.gsw_api.dto.DadosNoticia;
 import gsw_api.gsw_api.dto.FiltroNoticia;
 import gsw_api.gsw_api.model.Noticia;
+import gsw_api.gsw_api.model.PortalNoticia;
 import jakarta.persistence.criteria.JoinType;
 
 @Service
@@ -30,6 +32,18 @@ public class NoticiaService {
         // Defina tags aqui, se necessário
 
         return noticiaRepository.save(noticia);
+    }
+
+    @Transactional
+    public List<Noticia> createAll(List<Noticia> noticias) {
+        List<Noticia> resultado = new ArrayList<>();
+        DadosNoticia dadoNoticia;
+         for (Noticia n : noticias)
+         {
+            dadoNoticia = new DadosNoticia(n.getId(), n.getTitulo(), n.getConteudo(), null, n.getAutor());
+            resultado.add(create(dadoNoticia));
+         }
+        return resultado;
     }
 
     public Optional<Noticia> findById(Long id) {

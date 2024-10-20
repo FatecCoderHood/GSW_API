@@ -47,4 +47,6 @@ public class PortalNoticiaController {
 		portalNoticiaService.delete(id);
 		return ResponseEntity.noContent().build();
 	}
+
+
 }

@@ -27,6 +27,7 @@
             <span class="text-h5">{{ formTitle }}</span>
           </v-card-title>
 
+          <!-- POP-UP Inserir Fonte -->
           <v-card-text>
             <v-container>
               <v-row>
@@ -36,9 +37,10 @@
                 <v-col cols="12" md="4" sm="6">
                   <v-text-field v-model="editedItem.url" label="URL"></v-text-field>
                 </v-col>
-                <!-- <v-col cols="12" md="4" sm="6">
-                 // <v-text-field v-model="editedItem.type" label="Tipo"></v-text-field>
-                </v-col> -->
+                <v-col cols="12" md="4" sm="6">
+                  <!-- <v-text-field v-model="editedItem.type" label="Tipo"></v-text-field> -->
+                  <v-combobox v-model="editedItem.type" label="Tipo":items="['Portal', 'API']"></v-combobox>
+                </v-col>
               </v-row>
             </v-container>
           </v-card-text>
@@ -90,7 +92,7 @@ export default {
     headers: [
       { title: 'Nome', align: 'start', key: 'nome' },
       { title: 'URL', key: 'url' },
-      //{ title: 'Tipo', key: 'type' },
+      { title: 'Tipo', key: 'type' },
       { title: 'Ações', key: 'actions', sortable: false },
     ],
     sources: [],
@@ -99,12 +101,14 @@ export default {
     editedItem: {
       nome: '',
       url: '',
-      //type: '',
+      type: '',
+      chaveAcesso: '',
+      payload: '',
     },
     defaultItem: {
       nome: '',
       url: '',
-      //type: '',
+      // type: '',
     },
   }),
 
@@ -128,11 +132,29 @@ export default {
   },
 
   methods: {
+
+    insertColumnType(source,newType) {
+     
+      for (let i = 0; i < source.length; i++) {
+        source[i]['type'] = newType;
+      }
+    },
+
     async fetchSources() {
       try {
         const response = await axios.get('http://localhost:8080/portais');
-        this.sources = response.data;
-        this.filteredSources = this.sources;
+        const apiResponse = await axios.get('http://localhost:8080/api');
+
+        let portalSources = response.data
+        this.insertColumnType(portalSources,'Portal')
+
+        let apiSources = apiResponse.data
+        this.insertColumnType(apiSources,'API')
+
+        let allSources = apiSources.concat(portalSources)
+
+        this.sources = allSources;
+        this.filteredSources = allSources;
       } catch (error) {
         console.error('Erro ao buscar fontes:', error);
       }
@@ -190,24 +212,30 @@ export default {
     },
 
     async save() {
-     try {
+      try {
       if (this.editedIndex > -1) {
       // Editar
-       const id = this.filteredSources[this.editedIndex].id; // Supondo que você tenha o id do portal
-       const response = await axios.put(`http://localhost:8080/portais/${id}`, this.editedItem);
-       console.log('Atualizado:', response.data); // Verifique o que está sendo retornado
-       Object.assign(this.filteredSources[this.editedIndex], this.editedItem);
+        const id = this.filteredSources[this.editedIndex].id; // Supondo que você tenha o id do portal
+        const response = await axios.put(`http://localhost:8080/portais/${id}`, this.editedItem);
+        console.log('Atualizado:', response.data); // Verifique o que está sendo retornado
+        Object.assign(this.filteredSources[this.editedIndex], this.editedItem);
       } else {
       // Adicionar
-       const response = await axios.post('http://localhost:8080/portais', this.editedItem);
-       console.log('Adicionado:', response.data); // Verifique o que está sendo retornado
-       this.filteredSources.unshift(response.data);
-     }
-       this.close();
-     } catch (error) {
-       console.error('Erro ao salvar fonte:', error);
-     }
-   },
+
+        this.editedItem.payload = ''
+        this.editedItem.chaveAcesso = ''
+        let endpoint = (this.editedItem.type === 'API') ? 'api' : 'portais';
+
+        const response = await axios.post(`http://localhost:8080/${endpoint}`, this.editedItem);
+        console.log('Adicionado:', response.data); // Verifique o que está sendo retornado
+        this.filteredSources.unshift(response.data);
+        
+      }
+        this.close();
+      } catch (error) {
+        console.error('Erro ao salvar fonte:', error);
+      }
+    },
   },
 };
 </script>

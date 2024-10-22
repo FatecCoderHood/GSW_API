@@ -4,7 +4,11 @@
  * Configures SASS variables and Vuetify overwrites
  */
 
-// https://vuetifyjs.com/features/sass-variables/`
-// @use 'vuetify/settings' with (
-//   $color-pack: false
-// );
+// Importando as variáveis do Vuetify
+@use 'vuetify/settings';
+
+// Defina suas variáveis personalizadas
+$input-height: 48px; // altura do input
+$input-padding: 8px; // padding do input
+$border-radius: 4px; // raio da borda
+$v-btn-height: 48px; // altura do botão

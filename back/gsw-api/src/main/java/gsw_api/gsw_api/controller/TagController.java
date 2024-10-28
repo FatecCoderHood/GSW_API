@@ -1,9 +1,13 @@
 package gsw_api.gsw_api.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -71,30 +75,45 @@ public class TagController {
 
     @PatchMapping(value = "/{id}")
     public ResponseEntity<Tag> updateTag(@PathVariable Long id,
-        @RequestParam(required = false) String nome, 
-        @RequestParam(required = false) String descricao,
-        @RequestParam(required = false) Boolean ativa)
-        {
-            Optional<Tag> optionalTag = tagRepository.findById(id);
+                                         @RequestParam(required = false) String nome,
+                                         @RequestParam(required = false) String descricao,
+                                         @RequestParam(required = false) Boolean ativa) {
 
-            if (!optionalTag.isPresent()) {
-                return ResponseEntity.notFound().build();
-            }
+        Optional<Tag> optionalTag = tagRepository.findById(id);
 
-            Tag existingTag = optionalTag.get();
-
-            if (nome != null) 
-                existingTag.setNome(nome);
-
-            if (descricao != null)
-                existingTag.setDescricao(descricao);
-
-            if (ativa)
-                existingTag.setAtiva(ativa);
-
-            Tag updatedTag = tagRepository.save(existingTag);
-            return ResponseEntity.ok(updatedTag);
+        if (!optionalTag.isPresent()) {
+            return ResponseEntity.notFound().build();
         }
+
+        Tag existingTag = optionalTag.get();
+
+        if (nome != null)
+            existingTag.setNome(nome);
+
+        if (descricao != null)
+            existingTag.setDescricao(descricao);
+
+        if (ativa != null)
+            existingTag.setAtiva(ativa);
+
+        Tag updatedTag = tagRepository.save(existingTag);
+        return ResponseEntity.ok(updatedTag);
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<Page<DadosTag>> filterTags(
+            @RequestParam(required = false) String nome,
+            @RequestParam(required = false) Boolean ativa,
+            @RequestParam(required = false) String descricao,
+            @RequestParam(required = false) LocalDate dataCriacao,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Tag> tagPage = tagService.filterTags(nome, ativa, descricao, dataCriacao, pageable);
+
+        Page<DadosTag> dadosTagPage = tagPage.map(tag -> new DadosTag(tag.getId(), tag.getNome(), tag.getDescricao(), tag.getAtiva(), tag.getDataCriacao()));
+
+        return ResponseEntity.ok(dadosTagPage);
+    }
 }
-
-

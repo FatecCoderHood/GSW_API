@@ -66,7 +66,7 @@
           
           <v-form @submit.prevent="addTag">
             <v-combobox
-              v-model="tagForm.nome"
+              v-model="selectedTagsFrom"
               :items="availableTags"
               item-value="id"
               label="Vincular tag"
@@ -121,8 +121,7 @@ export default {
       availableTags: [],
       NoticiaModal: false,  
       selectedItem: null,
-      tagsForm: [], // Uma ou mais tags que serão inseridas e (ou) vinculadas à notícia, 
-      tagForm: { id: null, nome: null }, 
+      selectedTagsFrom: [], // Uma ou mais tags que serão inseridas e (ou) vinculadas à notícia, 
     };
   },
   mounted() {
@@ -135,7 +134,7 @@ export default {
     {
       try {
         // Adiciona uma nova tag
-        const response = await axios.post('http://localhost:8080/tags', this.tagForm);
+        const response = await axios.post('http://localhost:8080/tags', this.selectedTagsFrom);
         this.tags.push(response.data); // Adiciona a nova tag à lista
         this.cleanTagForm(); // Limpa o formulário após salvar
       } catch (error) {
@@ -144,7 +143,7 @@ export default {
     },
 
     cleanTagForm() {
-      this.tagForm = { id: null, nome: null };
+      this.selectedTagsFrom = [];
     },
     
     async fetchNoticias() {

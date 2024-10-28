@@ -60,7 +60,44 @@
         <v-card-subtitle>
           Autor: {{ selectedItem?.autor }}
         </v-card-subtitle>
-        <v-card-text>
+
+        <v-container class="mb-0 pb-0 d-flex align-start">
+          <v-spacer></v-spacer>
+          
+          <v-form @submit.prevent="addTag">
+            <v-combobox
+              v-model="tagForm.nome"
+              :items="availableTags"
+              item-value="id"
+              label="Vincular tag"
+              prepend-inner-icon="mdi-tag"
+              clearable
+              multiple
+              density="compact"
+              class="mx-2"
+              style="flex: 1; min-width: 300px;"
+            >
+              <template v-slot:append>
+                <v-btn type="Submit" icon="mdi-arrow-right-bold" color="primary" style="width: 40px; border-radius: 0"/>
+              </template>
+              <template v-slot:selection="{ attrs, item, select, selected }">
+                <v-chip
+                  v-bind="attrs"
+                  :model-value="selected"
+                  @click="select"
+                  @click:close="remove(item)"
+                  closable
+                  class="mt-2"
+                >
+                  <strong>{{ item.value }}</strong>
+                </v-chip>
+              </template>
+            </v-combobox>
+          </v-form>
+
+        </v-container>
+
+        <v-card-text class="mt-0 pt-0">
           <div v-html="selectedItem?.conteudo"></div>
         </v-card-text>
         <v-card-actions>
@@ -83,14 +120,33 @@ export default {
       selectedTags: [],
       availableTags: [],
       NoticiaModal: false,  
-      selectedItem: null,  
+      selectedItem: null,
+      tagsForm: [], // Uma ou mais tags que serão inseridas e (ou) vinculadas à notícia, 
+      tagForm: { id: null, nome: null }, 
     };
   },
   mounted() {
     this.fetchNoticias();
     this.fetchTags();
   },
-  methods: {
+  methods:
+  {
+    async addTag()
+    {
+      try {
+        // Adiciona uma nova tag
+        const response = await axios.post('http://localhost:8080/tags', this.tagForm);
+        this.tags.push(response.data); // Adiciona a nova tag à lista
+        this.cleanTagForm(); // Limpa o formulário após salvar
+      } catch (error) {
+        console.error('Erro ao adicionar tag:', error);
+      }
+    },
+
+    cleanTagForm() {
+      this.tagForm = { id: null, nome: null };
+    },
+    
     async fetchNoticias() {
       try {
         const response = await axios.get('http://localhost:8080/noticias');

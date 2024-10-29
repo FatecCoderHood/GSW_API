@@ -46,6 +46,14 @@ public class Tag {
         
     }
 
+    public Tag(String nome)
+    {
+        this.nome = nome;
+        this.descricao = "";
+        this.ativa = true;
+        this.dataCriacao = LocalDate.now();
+    }
+
     public Tag(String nome, String descricao, Boolean ativa, LocalDate dataCriacao) {
         this.nome = nome;
         this.descricao = descricao;

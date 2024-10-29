@@ -2,7 +2,9 @@ package gsw_api.gsw_api.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -10,10 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import gsw_api.gsw_api.dao.NoticiaRepository;
+import gsw_api.gsw_api.dao.TagRepository;
 import gsw_api.gsw_api.dto.DadosNoticia;
 import gsw_api.gsw_api.dto.FiltroNoticia;
 import gsw_api.gsw_api.model.Noticia;
-import gsw_api.gsw_api.model.PortalNoticia;
+import gsw_api.gsw_api.model.Tag;
 import jakarta.persistence.criteria.JoinType;
 
 @Service
@@ -21,6 +24,8 @@ public class NoticiaService {
 
     @Autowired
     private NoticiaRepository noticiaRepository;
+    @Autowired
+    private TagRepository tagRepository;
 
     @Transactional
     public Noticia create(DadosNoticia dadosNoticia) {
@@ -96,5 +101,22 @@ public class NoticiaService {
         });
     }
 
+    public Noticia handleTags(Long noticiaId, List<String> tagNames)
+    {
+        //TODO: Stop the flow if noticia was not found
+        Noticia noticia = noticiaRepository.findById(noticiaId)
+            .orElseThrow(() -> new RuntimeException("Notícia não encontrada"));
+        
+        Set<Tag> tags = new HashSet<>();
+        for (String tagName : tagNames)
+        {
+            Tag tag = tagRepository.findByNome(tagName)
+                .orElseGet(() -> tagRepository.save(new Tag(tagName)));
+                
+            tags.add(tag);
+        }
 
+        noticia.getTags().addAll(tags);
+        return noticiaRepository.save(noticia);
+    }
 }

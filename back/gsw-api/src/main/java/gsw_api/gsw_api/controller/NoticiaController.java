@@ -97,4 +97,13 @@ public class NoticiaController {
         List<Noticia> noticiasFiltradas = noticiaService.filtrarNoticias(filtro);
         return ResponseEntity.ok(noticiasFiltradas);
     }
+
+    @Operation(summary = "Vincular Tag à Notícia")
+    @PostMapping("/vilcularTags")
+    public ResponseEntity<Void> vincularTags(@RequestParam Long noticiaId, @RequestBody List<String> tags)
+    {
+        //TODO: Melhorar erros nesta rota
+        noticiaService.handleTags(noticiaId, tags);
+        return ResponseEntity.ok().build();
+    }
 }

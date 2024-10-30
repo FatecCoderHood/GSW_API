@@ -8,7 +8,7 @@
     <h2>Gerenciamento de Tags</h2>
     <v-divider class="mb-4"></v-divider>
     <!-- Formulário de Cadastro e Edição de Tags -->
-    <v-form @submit.prevent="sendTag">
+    <v-form ref="form" @submit.prevent="sendTag">
       <v-row>
         <v-col cols="12" md="6">
           <v-text-field
@@ -129,12 +129,13 @@ export default {
           // Edita a tag existente
           await axios.patchForm(`http://localhost:8080/tags/${this.editedTag.id}`, this.editedTag);
         } else {
-          // Adiciona uma nova tag
+          // Cria uma nova tag
           const response = await axios.post('http://localhost:8080/tags', this.editedTag);
-          this.tags.push(response.data); // Adiciona a nova tag à lista
+          this.tags.push(response.data);
+        this.fetchTags();
+        this.cancelEdit();
+        this.$refs.form.reset();
         }
-        this.fetchTags(); // Atualiza a lista de tags
-        this.cancelEdit(); // Limpa o formulário após salvar
       } catch (error) {
         console.error('Erro ao salvar tag:', error);
       }

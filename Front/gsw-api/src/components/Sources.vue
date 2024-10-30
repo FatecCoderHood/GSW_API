@@ -67,6 +67,16 @@
         </v-card>
       </v-dialog>
     </div>
+    
+    <v-snackbar 
+      v-model="snackbar"
+      :timeout="3000"
+      color="deep-purple-accent-4"
+      elevation="24"
+    >
+      Fonte duplicada! Por favor, escolha um nome ou URL diferente.
+    </v-snackbar>
+
   </v-container>
 
   <v-container>
@@ -106,6 +116,7 @@ export default {
       url: '',
       //type: '',
     },
+    snackbar: false,
   }),
 
   mounted() {
@@ -189,7 +200,15 @@ export default {
       });
     },
 
-    async save() {
+    async save() {    
+      const sourceExists = this.sources.some(source => 
+        source.nome.toLowerCase === this.editedItem.nome.toLowerCase || source.url.toLowerCase === this.editedItem.url.toLowerCase
+      );
+
+      if (sourceExists) {
+        this.snackbar = true;
+        return;
+      }        
       try {
       if (this.editedIndex > -1) {
       // Editar

@@ -7,6 +7,16 @@
 
     <h2>Gerenciamento de Tags</h2>
     <v-divider class="mb-4"></v-divider>
+
+    <!-- Snackbar para exibir mensagem de erro -->
+    <v-snackbar
+      v-model="snackbar"
+      :timeout="3000"
+      color="deep-purple-accent-4"
+      elevation="24"
+    >
+      Tag duplicada! Por favor, escolha um nome diferente.
+    </v-snackbar>
     <!-- Formulário de Cadastro e Edição de Tags -->
     <v-form @submit.prevent="sendTag">
       <v-row>
@@ -78,7 +88,10 @@
 import axios from 'axios';
 
 export default {
+
+
   data() {
+
     return {
       tags: [], // Lista de tags
       editedTag: { nome: '', id: null }, // Tag que está sendo editada ou nova tag
@@ -93,13 +106,17 @@ export default {
       selectedPeriod: null,
       portals: [], // Portais carregados da API
       periodOptions: ['Diário', 'Semanal', 'Quinzenal', 'Mensal'], // Opções de periodicidade
+      snackbar: false,
     };
+    
+
   },
 
   mounted() {
     this.fetchTags();
     this.fetchPortals(); // Carrega portais ao montar o componente
   },
+
 
   methods: {
     // Método para buscar todas as tags
@@ -124,20 +141,27 @@ export default {
 
     // Método para criar ou editar uma tag
     async sendTag() {
-      try {
-        if (this.editedTag.id) {
-          // Edita a tag existente
-          await axios.patchForm(`http://localhost:8080/tags/${this.editedTag.id}`, this.editedTag);
-        } else {
-          // Adiciona uma nova tag
-          const response = await axios.post('http://localhost:8080/tags', this.editedTag);
-          this.tags.push(response.data); // Adiciona a nova tag à lista
-        }
-        this.fetchTags(); // Atualiza a lista de tags
-        this.cancelEdit(); // Limpa o formulário após salvar
+      const tagExists = this.tags.some(tag => tag.nome.toLowerCase === this.editedTag.nome.toLowerCase);
+      if (tagExists) {
+        this.snackbar = true; 
+        return;
+      }
+      try{   
+          if (this.editedTag.id){
+            // Edita a tag existente
+            await axios.patchForm(`http://localhost:8080/tags/${this.editedTag.id}`, this.editedTag); 
+          } else {
+            // Adiciona uma nova tag
+            const response = await axios.post('http://localhost:8080/tags', this.editedTag);
+            this.tags.push(response.data); // Adiciona a nova tag à lista
+          }
+        
+          
+          this.fetchTags(); //Atualiza a lista de tags
+          this.cancelEdit(); // Limpa o formulários após salvar
       } catch (error) {
         console.error('Erro ao salvar tag:', error);
-      }
+      } 
     },
 
     // Método para preencher o formulário de edição

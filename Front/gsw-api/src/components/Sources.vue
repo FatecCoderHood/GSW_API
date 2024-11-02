@@ -57,6 +57,10 @@
         </v-card>
       </v-dialog>
 
+      <v-snackbar v-model="showSnackbar" :timeout="5000" color="green" top right>
+  {{ snackbarMessage }}
+</v-snackbar>
+
       <v-dialog v-model="dialogDelete" max-width="500px">
         <v-card>
           <v-card-text class="text-h5">Você tem certeza que deseja remover este item?</v-card-text>
@@ -89,6 +93,8 @@ export default {
     search: '',
     dialog: false,
     dialogDelete: false,
+    showSnackbar: false,
+    snackbarMessage: '',
     headers: [
       { title: 'Nome', align: 'start', key: 'nome' },
       { title: 'URL', key: 'url' },
@@ -134,7 +140,7 @@ export default {
   methods: {
 
     insertColumnType(source,newType) {
-     
+    
       for (let i = 0; i < source.length; i++) {
         source[i]['type'] = newType;
       }
@@ -213,25 +219,24 @@ export default {
 
     async save() {
       try {
-      if (this.editedIndex > -1) {
-      // Editar
-        const id = this.filteredSources[this.editedIndex].id; // Supondo que você tenha o id do portal
-        const response = await axios.put(`http://localhost:8080/portais/${id}`, this.editedItem);
-        console.log('Atualizado:', response.data); // Verifique o que está sendo retornado
-        Object.assign(this.filteredSources[this.editedIndex], this.editedItem);
-      } else {
-      // Adicionar
+        if (this.editedIndex > -1) {
+          const id = this.filteredSources[this.editedIndex].id;
+          const response = await axios.put(`http://localhost:8080/portais/${id}`, this.editedItem);
+          Object.assign(this.filteredSources[this.editedIndex], this.editedItem);
+          this.snackbarMessage = 'Editado com sucesso!';
+        } else {
+          // Cadastro
+          this.editedItem.payload = this.editedItem.payload || '';
+          this.editedItem.chaveAcesso = this.editedItem.chaveAcesso || '';
+          let endpoint = this.editedItem.type === 'API' ? 'api' : 'portais';
+          
+          const response = await axios.post(`http://localhost:8080/${endpoint}`, this.editedItem);
+          this.filteredSources.unshift(response.data);
+          this.snackbarMessage = 'Cadastrado com sucesso!';
+        }
 
-        this.editedItem.payload = ''
-        this.editedItem.chaveAcesso = ''
-        let endpoint = (this.editedItem.type === 'API') ? 'api' : 'portais';
-
-        const response = await axios.post(`http://localhost:8080/${endpoint}`, this.editedItem);
-        console.log('Adicionado:', response.data); // Verifique o que está sendo retornado
-        this.filteredSources.unshift(response.data);
-        
-      }
-        this.close();
+        this.showSnackbar = true; // Ativa o snackbar
+        this.close(); // Fecha o dialog de cadastro
       } catch (error) {
         console.error('Erro ao salvar fonte:', error);
       }

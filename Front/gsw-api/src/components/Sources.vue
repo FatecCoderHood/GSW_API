@@ -39,7 +39,17 @@
                 </v-col>
                 <v-col cols="12" md="4" sm="6">
                   <!-- <v-text-field v-model="editedItem.type" label="Tipo"></v-text-field> -->
-                  <v-combobox v-model="editedItem.type" label="Tipo":items="['Portal', 'API']"></v-combobox>
+                  <v-combobox v-model="editedItem.type"
+                  label="Tipo"
+                  :items="['Portal', 'API']">
+                  ></v-combobox>
+                </v-col>
+
+                <v-col cols="12" v-if="editedItem.type === 'API'">
+                  <v-text-field v-model="editedItem.payload" label="Payload"></v-text-field>
+                </v-col>
+                <v-col cols="12" v-if="editedItem.type === 'API'">
+                <v-text-field v-model="editedItem.chaveAcesso" label="Chave de Acesso"></v-text-field>
                 </v-col>
               </v-row>
             </v-container>
@@ -115,6 +125,8 @@ export default {
       nome: '',
       url: '',
       // type: '',
+      chaveAcesso: '',
+      payload: '',
     },
   }),
 
@@ -139,11 +151,17 @@ export default {
 
   methods: {
 
-    insertColumnType(source,newType) {
-    
-      for (let i = 0; i < source.length; i++) {
-        source[i]['type'] = newType;
+    onTypeChange() {
+      if (this.editedItem.type !== 'API') {
+        this.editedItem.payload = '';
+        this.editedItem.chaveAcesso = '';
       }
+    },
+
+    insertColumnType(sourceArray, typeValue) {
+      sourceArray.forEach(item => {
+        item.type = typeValue;
+      });
     },
 
     async fetchSources() {
@@ -194,7 +212,7 @@ export default {
     },
 
     async deleteItemConfirm() {
-      const id = this.editedItem.id; 
+      const id = this.editedItem.id;
       await axios.delete(`http://localhost:8080/portais/${id}`);
       this.sources.splice(this.editedIndex, 1);
       this.filteredSources.splice(this.editedIndex, 1);
@@ -217,26 +235,25 @@ export default {
       });
     },
 
+
     async save() {
       try {
         if (this.editedIndex > -1) {
+          // Editando
           const id = this.filteredSources[this.editedIndex].id;
-          const response = await axios.put(`http://localhost:8080/portais/${id}`, this.editedItem);
+          await axios.put(`http://localhost:8080/portais/${id}`, this.editedItem);
           Object.assign(this.filteredSources[this.editedIndex], this.editedItem);
           this.snackbarMessage = 'Editado com sucesso!';
         } else {
-          // Cadastro
-          this.editedItem.payload = this.editedItem.payload || '';
-          this.editedItem.chaveAcesso = this.editedItem.chaveAcesso || '';
-          let endpoint = this.editedItem.type === 'API' ? 'api' : 'portais';
-          
+          // Cadastrando novo item
+          const endpoint = this.editedItem.type === 'API' ? 'api' : 'portais';
           const response = await axios.post(`http://localhost:8080/${endpoint}`, this.editedItem);
           this.filteredSources.unshift(response.data);
           this.snackbarMessage = 'Cadastrado com sucesso!';
         }
 
-        this.showSnackbar = true; // Ativa o snackbar
-        this.close(); // Fecha o dialog de cadastro
+        this.showSnackbar = true; // Mostra o snackbar
+        this.close(); // Fecha o diálogo
       } catch (error) {
         console.error('Erro ao salvar fonte:', error);
       }

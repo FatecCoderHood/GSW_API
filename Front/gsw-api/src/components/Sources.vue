@@ -132,6 +132,7 @@ export default {
     defaultItem: {
       nome: '',
       url: '',
+      // type: '',
     },
   }),
 

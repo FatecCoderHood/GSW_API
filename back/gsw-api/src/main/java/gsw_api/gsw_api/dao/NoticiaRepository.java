@@ -13,5 +13,6 @@ import java.util.List;
 public interface NoticiaRepository extends JpaRepository<Noticia, Long>, JpaSpecificationExecutor<Noticia> {
     List<Noticia> findByTituloContaining(String titulo);
     List<Noticia> findByDataPublicacaoBetween(LocalDate startDate, LocalDate endDate);
+    List<Noticia> findByTags_NomeIn(List<String> nomesTags);
 }
 

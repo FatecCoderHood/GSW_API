@@ -71,6 +71,27 @@
         </v-card>
       </v-dialog>
     </div>
+
+    <!-- Snackbar -->
+    <v-snackbar
+      v-model="snackbar"
+      :timeout="4000"
+      color="success"
+      vertical
+      centered
+    >
+      Dados salvos com sucesso!
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="white"
+          text
+          v-bind="attrs"
+          @click="snackbar = false"
+        >
+          Fechar
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-container>
 
   <v-container>
@@ -91,6 +112,7 @@ export default {
     search: '',
     dialog: false,
     dialogDelete: false,
+    snackbar: false, // Adiciona a variável do Snackbar
     headers: [
       { title: 'Nome', align: 'start', key: 'nome' },
       { title: 'URL', key: 'url' },
@@ -133,7 +155,6 @@ export default {
   },
 
   methods: {
-
     insertColumnType(source, newType) {
       for (let i = 0; i < source.length; i++) {
         source[i]['type'] = newType;
@@ -215,9 +236,9 @@ export default {
       try {
         if (this.editedIndex > -1) {
           // Editar
-          const id = this.filteredSources[this.editedIndex].id; // Supondo que você tenha o id do portal
+          const id = this.filteredSources[this.editedIndex].id;
           const response = await axios.put(`http://localhost:8080/portais/${id}`, this.editedItem);
-          console.log('Atualizado:', response.data); // Verifique o que está sendo retornado
+          console.log('Atualizado:', response.data);
           Object.assign(this.filteredSources[this.editedIndex], this.editedItem);
         } else {
           // Adicionar
@@ -225,10 +246,16 @@ export default {
           let endpoint = this.editedItem.type === 'API' ? 'api' : 'portais';
 
           const response = await axios.post(`http://localhost:8080/${endpoint}`, this.editedItem);
-          console.log('Adicionado:', response.data); // Verifique o que está sendo retornado
+          console.log('Adicionado:', response.data);
           this.filteredSources.unshift(response.data);
         }
         this.close();
+        this.snackbar = true; // Mostrar o Snackbar ao salvar
+
+        // Fechar o Snackbar após 4 segundos
+        setTimeout(() => {
+          this.snackbar = false;
+        }, 4000);
       } catch (error) {
         console.error('Erro ao salvar fonte:', error);
       }

@@ -38,8 +38,10 @@
                   <v-text-field v-model="editedItem.url" label="URL"></v-text-field>
                 </v-col>
                 <v-col cols="12" md="4" sm="6">
-                  <!-- <v-text-field v-model="editedItem.type" label="Tipo"></v-text-field> -->
-                  <v-combobox v-model="editedItem.type" label="Tipo":items="['Portal', 'API']"></v-combobox>
+                  <v-combobox v-model="editedItem.type" label="Tipo" :items="['Portal', 'API']"></v-combobox>
+                </v-col>
+                <v-col cols="12" md="4" sm="6" v-if="editedItem.type === 'API'">
+                  <v-text-field v-model="editedItem.chaveAcesso" label="Chave"></v-text-field>
                 </v-col>
               </v-row>
             </v-container>
@@ -108,7 +110,6 @@ export default {
     defaultItem: {
       nome: '',
       url: '',
-      // type: '',
     },
   }),
 
@@ -133,8 +134,7 @@ export default {
 
   methods: {
 
-    insertColumnType(source,newType) {
-     
+    insertColumnType(source, newType) {
       for (let i = 0; i < source.length; i++) {
         source[i]['type'] = newType;
       }
@@ -145,13 +145,13 @@ export default {
         const response = await axios.get('http://localhost:8080/portais');
         const apiResponse = await axios.get('http://localhost:8080/api');
 
-        let portalSources = response.data
-        this.insertColumnType(portalSources,'Portal')
+        let portalSources = response.data;
+        this.insertColumnType(portalSources, 'Portal');
 
-        let apiSources = apiResponse.data
-        this.insertColumnType(apiSources,'API')
+        let apiSources = apiResponse.data;
+        this.insertColumnType(apiSources, 'API');
 
-        let allSources = apiSources.concat(portalSources)
+        let allSources = apiSources.concat(portalSources);
 
         this.sources = allSources;
         this.filteredSources = allSources;
@@ -188,7 +188,7 @@ export default {
     },
 
     async deleteItemConfirm() {
-      const id = this.editedItem.id; 
+      const id = this.editedItem.id;
       await axios.delete(`http://localhost:8080/portais/${id}`);
       this.sources.splice(this.editedIndex, 1);
       this.filteredSources.splice(this.editedIndex, 1);
@@ -213,24 +213,21 @@ export default {
 
     async save() {
       try {
-      if (this.editedIndex > -1) {
-      // Editar
-        const id = this.filteredSources[this.editedIndex].id; // Supondo que você tenha o id do portal
-        const response = await axios.put(`http://localhost:8080/portais/${id}`, this.editedItem);
-        console.log('Atualizado:', response.data); // Verifique o que está sendo retornado
-        Object.assign(this.filteredSources[this.editedIndex], this.editedItem);
-      } else {
-      // Adicionar
+        if (this.editedIndex > -1) {
+          // Editar
+          const id = this.filteredSources[this.editedIndex].id; // Supondo que você tenha o id do portal
+          const response = await axios.put(`http://localhost:8080/portais/${id}`, this.editedItem);
+          console.log('Atualizado:', response.data); // Verifique o que está sendo retornado
+          Object.assign(this.filteredSources[this.editedIndex], this.editedItem);
+        } else {
+          // Adicionar
+          this.editedItem.payload = '';
+          let endpoint = this.editedItem.type === 'API' ? 'api' : 'portais';
 
-        this.editedItem.payload = ''
-        this.editedItem.chaveAcesso = ''
-        let endpoint = (this.editedItem.type === 'API') ? 'api' : 'portais';
-
-        const response = await axios.post(`http://localhost:8080/${endpoint}`, this.editedItem);
-        console.log('Adicionado:', response.data); // Verifique o que está sendo retornado
-        this.filteredSources.unshift(response.data);
-        
-      }
+          const response = await axios.post(`http://localhost:8080/${endpoint}`, this.editedItem);
+          console.log('Adicionado:', response.data); // Verifique o que está sendo retornado
+          this.filteredSources.unshift(response.data);
+        }
         this.close();
       } catch (error) {
         console.error('Erro ao salvar fonte:', error);

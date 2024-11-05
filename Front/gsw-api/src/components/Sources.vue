@@ -79,6 +79,16 @@
         </v-card>
       </v-dialog>
     </div>
+
+    <v-snackbar 
+        v-model="snackbar"
+        :timeout="5000"
+        color="green"
+        elevation="24"
+      >
+        {{ snackbarMessage }}
+    </v-snackbar>    
+
   </v-container>
 
   <v-container>
@@ -123,6 +133,8 @@ export default {
       chaveAcesso: '',
       payload: '',
     },
+    snackbarMessage: '',
+    snackbar: false,
   }),
 
   mounted() {
@@ -223,6 +235,19 @@ export default {
     },
 
     async save() {
+      if (!this.editedItem.nome.trim() || !this.editedItem.url.trim()) {
+      this.snackbarMessage = 'Os campos Nome e URL não podem estar vazios!';
+      this.snackbar = true;
+      return;
+    }
+      const sourceExists = this.sources.some(source => 
+        source.nome.toLowerCase === this.editedItem.nome.toLowerCase || source.url.toLowerCase === this.editedItem.url.toLowerCase
+      );
+      if (sourceExists) {
+        this.snackbarMessage = 'Fonte duplicada! Por favor, escolha um nome ou URL diferente';  
+        this.snackbar = true;
+        return;
+      }      
       try {
         if (!this.editedItem.url) {
           this.snackbarMessage = 'A URL é obrigatória.';

@@ -7,6 +7,17 @@
 
     <h2>Gerenciamento de Tags</h2>
     <v-divider class="mb-4"></v-divider>
+
+    <v-snackbar 
+        v-model="snackbar"
+        :timeout="5000"
+        color="green"
+        elevation="24"
+      >
+        {{ snackbarMessage }}
+    </v-snackbar>    
+
+
     <!-- Formulário de Cadastro e Edição de Tags -->
     <v-form ref="form" @submit.prevent="sendTag">
       <v-row>
@@ -14,7 +25,6 @@
           <v-text-field
             v-model="editedTag.nome"
             label="Nome da Tag"
-            :rules="[v => !!v || 'Campo obrigatório']"
             required
           ></v-text-field>
         </v-col>
@@ -54,7 +64,7 @@
     <v-divider class="mb-4"></v-divider>
     <v-select
       v-model="selectedPortal"
-      :items="portals"
+      :items="portais"
       label="Selecione o Portal"
       item-text="nome"
       item-value="id"
@@ -91,14 +101,16 @@ export default {
       // Dados para configuração de scraping
       selectedPortal: null,
       selectedPeriod: null,
-      portals: [], // Portais carregados da API
+      portais: [], // Portais carregados da API
       periodOptions: ['Diário', 'Semanal', 'Quinzenal', 'Mensal'], // Opções de periodicidade
+      snackbarMessage: '',
+      snackbar: false,
     };
   },
 
   mounted() {
     this.fetchTags();
-    this.fetchPortals(); // Carrega portais ao montar o componente
+    this.fetchPortais(); // Carrega portais ao montar o componente
   },
 
   methods: {
@@ -113,10 +125,10 @@ export default {
     },
 
     // Método para buscar todos os portais
-    async fetchPortals() {
+    async fetchPortais() {
       try {
-        const response = await axios.get('http://localhost:8080/portals');
-        this.portals = response.data;
+        const response = await axios.get('http://localhost:8080/portais');
+        this.portais = response.data;
       } catch (error) {
         console.error('Erro ao buscar portais:', error);
       }
@@ -124,6 +136,18 @@ export default {
 
     // Método para criar ou editar uma tag
     async sendTag() {
+      if (!this.editedTag.nome.trim()) {
+        this.snackbarMessage = 'O campo Nome da Tag não pode estar vazio!';
+        this.snackbar = true;
+        return;
+       }
+
+    const tagExists = this.tags.some(tag => tag.nome.toLowerCase() === this.editedTag.nome.toLowerCase() && tag.id !== this.editedTag.id);
+    if (tagExists) {
+      this.snackbarMessage = 'Tag duplicada! Por favor, escolha um nome diferente.';
+      this.snackbar = true;
+      return;
+    }
       try {
         if (this.editedTag.id) {
           // Edita a tag existente

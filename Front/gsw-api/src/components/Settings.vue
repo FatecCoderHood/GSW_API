@@ -81,6 +81,13 @@
     <v-btn class="mt-2" @click="saveScrapingConfig" style="width: 200px;" color="primary">
       Salvar Configurações
     </v-btn>
+
+    <v-divider class="mb-4"></v-divider>
+    <h2>WebScraping</h2>    
+
+    <v-btn class="mt-2" @click="WebScraping" style="width: 200px;" color="primary">
+      Ativar WebScraping
+    </v-btn>
   </v-container>
 </template>
 
@@ -200,6 +207,17 @@ export default {
       console.log('Configurações de Web Scraping salvas');
       // Implementar lógica de salvar as configurações de scraping
     },
+
+    async WebScraping(){
+      try{
+      const response = await axios.get('http://localhost:8080/web_scrap');
+      console.log('Web scraping executado com sucesso:', response.data);
+      location.reload();
+    } catch (error) {
+      console.error('Erro ao executar o web scraping:', error);
+    }
+    },
+    
   },
 };
 </script>

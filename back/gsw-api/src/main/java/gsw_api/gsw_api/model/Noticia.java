@@ -8,6 +8,9 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Getter
 @Setter
 @Entity
@@ -32,6 +35,7 @@ public class Noticia {
 
     @ManyToOne
     @JoinColumn(name = "api_id", nullable = true)
+    @JsonBackReference
     private Api api;
 
     @ManyToMany
@@ -40,6 +44,8 @@ public class Noticia {
             joinColumns = @JoinColumn(name = "noticia_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
+    
+    @JsonManagedReference
     private Set<Tag> tags = new HashSet<>();
 
 

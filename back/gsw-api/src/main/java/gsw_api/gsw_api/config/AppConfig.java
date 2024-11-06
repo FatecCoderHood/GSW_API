@@ -8,6 +8,7 @@ public class AppConfig {
 
     @Bean
     public RestTemplate restTemplate() {
+        System.out.println("RestTemplate bean criado em AppConfig.");
         return new RestTemplate();
     }
 }

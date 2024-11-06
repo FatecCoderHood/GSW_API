@@ -87,4 +87,5 @@ update tb_portal_noticia set parametrizacao =
  ('Receitas com aipim', 'Aprenda a fazer deliciosas receitas com aipim.', '2024-10-30', 'Autor B'),
  ('Benefícios da mandioca', 'A mandioca é rica em carboidratos e traz muitos benefícios para a saúde.', '2024-10-29', 'Autor C');
 
-
+ALTER TABLE tb_portal_noticia
+ADD COLUMN periodicidade VARCHAR(255) NULL;

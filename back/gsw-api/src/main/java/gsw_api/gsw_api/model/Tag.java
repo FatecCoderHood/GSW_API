@@ -38,10 +38,6 @@ public class Tag {
     @Column(name = "data_criacao")
     private LocalDate dataCriacao = LocalDate.now();
 
-    @ManyToMany(mappedBy = "tags")
-    @JsonManagedReference
-    private Set<Noticia> noticias = new HashSet<>();
-
     public Tag() {
         
     }

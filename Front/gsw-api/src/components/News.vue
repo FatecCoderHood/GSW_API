@@ -62,11 +62,14 @@
         </v-card-subtitle>
 
         <v-container class="mb-0 pb-0 d-flex align-start">
+            <v-chip v-for="tag in selectedItem.tags" :key="tag.id" :ripple="false" link> 
+              {{ tag.nome }}
+            </v-chip>
           <v-spacer></v-spacer>
           
           <v-form @submit.prevent="addTag">
             <v-combobox
-              v-model="selectedTagsFrom"
+              v-model="selectedTagsForm"
               :items="availableTags"
               item-value="id"
               label="Vincular tag"
@@ -121,7 +124,7 @@ export default {
       availableTags: [],
       NoticiaModal: false,  
       selectedItem: null,
-      selectedTagsFrom: [], // Uma ou mais tags que serão inseridas e (ou) vinculadas à notícia, 
+      selectedTagsForm: [], // Uma ou mais tags que serão inseridas e (ou) vinculadas à notícia, 
     };
   },
   mounted() {
@@ -133,17 +136,28 @@ export default {
     async addTag()
     {
       try {
-        // Adiciona uma nova tag
-        const response = await axios.post('http://localhost:8080/tags', this.selectedTagsFrom);
-        this.tags.push(response.data); // Adiciona a nova tag à lista
-        this.cleanTagForm(); // Limpa o formulário após salvar
-      } catch (error) {
+        const response = await axios.post(`http://localhost:8080/noticias/vincularTags`, 
+          this.selectedTagsForm, // Array de Tag que será enviado no request body
+          {
+            params: {
+              noticiaId: this.selectedItem.id // Id da notícia que será enviado como query param
+            }
+          }
+        );
+        
+        this.selectedItem.tags = response.data; // Adiciona a nova tag à lista
+
+      } catch (error)
+      {
         console.error('Erro ao adicionar tag:', error);
+      } finally
+      {
+        this.cleanTagForm(); // Limpa o formulário após salvar
       }
-    },
+  },
 
     cleanTagForm() {
-      this.selectedTagsFrom = [];
+      this.selectedTagsForm = [];
     },
     
     async fetchNoticias() {

@@ -1,6 +1,7 @@
 package gsw_api.gsw_api.controller;
 
 import gsw_api.gsw_api.dto.DadosNoticia;
+import gsw_api.gsw_api.dto.DadosTag;
 import gsw_api.gsw_api.dto.FiltroNoticia;
 import gsw_api.gsw_api.model.Noticia;
 import gsw_api.gsw_api.service.NoticiaService;
@@ -17,7 +18,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/noticias")
-@CrossOrigin(origins = "http://localhost:3000")
 public class NoticiaController {
 
     @Autowired
@@ -99,11 +99,10 @@ public class NoticiaController {
     }
 
     @Operation(summary = "Vincular Tag à Notícia")
-    @PostMapping("/vilcularTags")
-    public ResponseEntity<Void> vincularTags(@RequestParam Long noticiaId, @RequestBody List<String> tags)
+    @PostMapping("/vincularTags")
+    public ResponseEntity<List<DadosTag>> vincularTags(@RequestParam Long noticiaId, @RequestBody List<String> tags)
     {
         //TODO: Melhorar erros nesta rota
-        noticiaService.handleTags(noticiaId, tags);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(noticiaService.associateTags(noticiaId, tags));
     }
 }

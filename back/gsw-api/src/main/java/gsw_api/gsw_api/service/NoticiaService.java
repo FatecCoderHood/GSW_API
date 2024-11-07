@@ -3,6 +3,7 @@ package gsw_api.gsw_api.service;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import gsw_api.gsw_api.dao.NoticiaRepository;
 import gsw_api.gsw_api.dao.TagRepository;
 import gsw_api.gsw_api.dto.DadosNoticia;
+import gsw_api.gsw_api.dto.DadosTag;
 import gsw_api.gsw_api.dto.FiltroNoticia;
 import gsw_api.gsw_api.model.Noticia;
 import gsw_api.gsw_api.model.Tag;
@@ -26,6 +28,8 @@ public class NoticiaService {
     private NoticiaRepository noticiaRepository;
     @Autowired
     private TagRepository tagRepository;
+    @Autowired
+    private TagService tagService;
 
     @Transactional
     public Noticia create(DadosNoticia dadosNoticia) {
@@ -101,7 +105,7 @@ public class NoticiaService {
         });
     }
 
-    public Noticia handleTags(Long noticiaId, List<String> tagNames)
+    public List<DadosTag> associateTags(Long noticiaId, List<String> tagNames)
     {
         //TODO: Stop the flow if noticia was not found
         Noticia noticia = noticiaRepository.findById(noticiaId)
@@ -117,6 +121,14 @@ public class NoticiaService {
         }
 
         noticia.getTags().addAll(tags);
-        return noticiaRepository.save(noticia);
+
+        Noticia savedNoticia = noticiaRepository.save(noticia);
+
+        List<DadosTag> savedTagNames = null;
+        
+        if (savedNoticia != null && savedNoticia.getId() != null)
+            savedTagNames = noticia.getTags().stream().map(tagService::convertToDTO).collect(Collectors.toList());
+
+        return savedTagNames;
     }
 }

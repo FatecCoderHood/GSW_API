@@ -1,8 +1,7 @@
 <template>
     <v-container class="mx-0 px-0">
         <v-chip v-for="tag in tags" :key="tag.id"
-            link
-            closable 
+            :closable=closable
             class="ma-1"
         >
             {{ tag.nome }}
@@ -17,6 +16,10 @@ export default {
     tags: {
       type: Array,
       required: true
+    },
+    closable: {
+        type: Boolean,
+        default: false
     },
   }
 };

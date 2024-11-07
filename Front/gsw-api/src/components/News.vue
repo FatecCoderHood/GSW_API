@@ -37,18 +37,21 @@
 
     <!-- Lista de notícias -->
     <v-container>
-      <v-row v-for="item in filteredItems" :key="item.idNoticia">
-        <v-col>
-          <v-card elevation="2" rounded @click="openModal(item)">
-            <v-card-title>
-              {{ item.titulo }}
-            </v-card-title>
-            <v-card-text>
-              {{ item.autor }}
-            </v-card-text>
+          <v-card v-for="item in filteredItems" :key="item.idNoticia" elevation="2" rounded @click="openModal(item)" class="d-flex my-3">
+              <v-container>
+                <v-card-title class="card">
+                  {{ item.titulo }}
+                </v-card-title>
+                <v-card-text class="card">
+                  {{ item.autor }}
+                </v-card-text>
+              </v-container>
+
+              <v-spacer/>
+              
+              <TagList width="50%" :tags=item.tags />
+          
           </v-card>
-        </v-col>
-      </v-row>
     </v-container>
 
     <!-- Modal -->
@@ -62,7 +65,7 @@
         </v-card-subtitle>
 
         <v-container class="mb-0 pb-0 d-flex" >
-          <TagList :tags="selectedItem.tags"></TagList>
+          <TagList :tags=selectedItem.tags closable />
           
           <v-spacer/>
           
@@ -212,5 +215,8 @@ export default {
   word-wrap: break-word;
   white-space: normal;
   overflow-wrap: break-word;
+}
+.card {
+  white-space: normal;
 }
 </style>

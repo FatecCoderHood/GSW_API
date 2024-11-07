@@ -62,15 +62,7 @@
         </v-card-subtitle>
 
         <v-container class="mb-0 pb-0 d-flex" >
-          <v-container class="mx-0 px-0">
-            <v-chip v-for="tag in selectedItem.tags" :key="tag.id"
-              link
-              closable 
-              class="ma-1"
-            >
-              {{ tag.nome }}
-            </v-chip>
-          </v-container>
+          <TagList :tags="selectedItem.tags"></TagList>
           
           <v-spacer/>
           
@@ -119,8 +111,12 @@
 
 <script>
 import axios from 'axios';
+import TagList from './TagList.vue';
 
 export default {
+  components: {
+    TagList
+  },
   data() {
     return {
       search: '',

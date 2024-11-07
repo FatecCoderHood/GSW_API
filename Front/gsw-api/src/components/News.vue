@@ -61,13 +61,20 @@
           Autor: {{ selectedItem?.autor }}
         </v-card-subtitle>
 
-        <v-container class="mb-0 pb-0 d-flex align-start">
-            <v-chip v-for="tag in selectedItem.tags" :key="tag.id" :ripple="false" link> 
+        <v-container class="mb-0 pb-0 d-flex" >
+          <v-container class="mx-0 px-0">
+            <v-chip v-for="tag in selectedItem.tags" :key="tag.id"
+              link
+              closable 
+              class="ma-1"
+            >
               {{ tag.nome }}
             </v-chip>
-          <v-spacer></v-spacer>
+          </v-container>
           
-          <v-form @submit.prevent="addTag">
+          <v-spacer/>
+          
+          <v-form @submit.prevent="addTag" class="mt-2 pa-0">
             <v-combobox
               v-model="selectedTagsForm"
               :items="availableTags"
@@ -77,7 +84,6 @@
               clearable
               multiple
               density="compact"
-              class="mx-2"
               style="flex: 1; min-width: 300px;"
             >
               <template v-slot:append>

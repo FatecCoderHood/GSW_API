@@ -131,4 +131,21 @@ public class NoticiaService {
 
         return savedTagNames;
     }
+
+    public boolean unassociateTags(Long noticiaId, Long tagId)
+    {
+        //TODO: Stop the flow if noticia was not found
+        Noticia noticia = noticiaRepository.findById(noticiaId)
+        .orElseThrow(() -> new RuntimeException("Notícia não encontrada"));
+        
+        //TODO: Stop the flow if tag was not found
+        Tag tag = tagRepository.findById(tagId)
+            .orElseThrow(() -> new RuntimeException("Tag não encontrada"));
+        
+        noticia.getTags().remove(tag);
+
+        Noticia savedNoticia = noticiaRepository.save(noticia);
+
+        return (savedNoticia != null && savedNoticia.getId() != null);
+    }
 }

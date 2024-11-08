@@ -110,6 +110,7 @@ public class NoticiaController {
     @DeleteMapping("/{noticiaId}/{tagId}")
     public ResponseEntity<Boolean> desvincularTag(@PathVariable Long noticiaId, @PathVariable Long tagId)
     {
-        return ResponseEntity.ok(/*noticiaService.unassociateTags(noticiaId, tagId)*/).build();
+        //TODO: Melhorar erros nesta rota
+        return ResponseEntity.ok(noticiaService.unassociateTags(noticiaId, tagId));
     }
 }

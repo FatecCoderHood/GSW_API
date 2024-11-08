@@ -98,11 +98,18 @@ public class NoticiaController {
         return ResponseEntity.ok(noticiasFiltradas);
     }
 
-    @Operation(summary = "Vincular Tag à Notícia")
+    @Operation(summary = "Vincular Tags à Notícia")
     @PostMapping("/vincularTags")
     public ResponseEntity<List<DadosTag>> vincularTags(@RequestParam Long noticiaId, @RequestBody List<String> tags)
     {
         //TODO: Melhorar erros nesta rota
         return ResponseEntity.ok(noticiaService.associateTags(noticiaId, tags));
+    }
+
+    @Operation(summary = "Desvincular Tag da Notícia")
+    @DeleteMapping("/{noticiaId}/{tagId}")
+    public ResponseEntity<Boolean> desvincularTag(@PathVariable Long noticiaId, @PathVariable Long tagId)
+    {
+        return ResponseEntity.ok(/*noticiaService.unassociateTags(noticiaId, tagId)*/).build();
     }
 }

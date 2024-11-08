@@ -38,6 +38,11 @@ public class NoticiaService {
 
     @Transactional
     public Noticia create(DadosNoticia dadosNoticia) {
+        Optional<Noticia> existingNoticia = noticiaRepository.findByTituloAndConteudo(dadosNoticia.titulo(), dadosNoticia.conteudo());
+        if (existingNoticia.isPresent()) {
+            return existingNoticia.get();  
+        }
+
         Noticia noticia = new Noticia();
         noticia.setTitulo(dadosNoticia.titulo());
         noticia.setConteudo(dadosNoticia.conteudo());
@@ -94,7 +99,7 @@ public class NoticiaService {
 
             noticia.getTags().clear();
 
-            //processar novas tags
+         
             for (String termo : noticia.getConteudo().split(" ")) {
                 List<String> sinonimos = sinonimoService.buscarSinonimos(termo);
                 for (String sinonimo : sinonimos) {
@@ -108,39 +113,44 @@ public class NoticiaService {
         return null;
     }
 
-
     @Transactional
     public void delete(Long id) {
         noticiaRepository.deleteById(id);
     }
 
     public List<Noticia> filtrarNoticias(FiltroNoticia filtro) {
-        return noticiaRepository.findAll((Specification<Noticia>) (root, query, criteriaBuilder) -> {
+        List<Noticia> noticiasFiltradas = noticiaRepository.findAll((Specification<Noticia>) (root, query, criteriaBuilder) -> {
             Specification<Noticia> spec = Specification.where(null);
 
             if (filtro.getTitulo() != null && !filtro.getTitulo().isEmpty()) {
-                spec = spec.and((root1, query1, criteriaBuilder1) ->
+                spec = spec.and((root1, query1, criteriaBuilder1) -> 
                         criteriaBuilder1.like(root1.get("titulo"), "%" + filtro.getTitulo() + "%"));
             }
             if (filtro.getDataInicio() != null && filtro.getDataFim() != null) {
-                spec = spec.and((root1, query1, criteriaBuilder1) ->
+                spec = spec.and((root1, query1, criteriaBuilder1) -> 
                         criteriaBuilder1.between(root1.get("dataPublicacao"), filtro.getDataInicio(), filtro.getDataFim()));
             }
             if (filtro.getTags() != null && !filtro.getTags().isEmpty()) {
-                spec = spec.and((root1, query1, criteriaBuilder1) ->{
+                spec = spec.and((root1, query1, criteriaBuilder1) -> {
                     var join = root1.join("tags", JoinType.INNER);
                     return join.get("nome").in(filtro.getTags());
                 });
             }
             return spec.toPredicate(root, query, criteriaBuilder);
         });
+
+        return noticiasFiltradas.stream()
+            .distinct() 
+            .toList();
     }
 
     public List<Noticia> buscarNoticiasPorTermo(String termo) {
         List<String> sinonimos = sinonimoService.buscarSinonimos(termo);
-        sinonimos.add(termo); // Adiciona o termo original
+        sinonimos.add(termo); 
 
-        return noticiaRepository.findByTags_NomeIn(sinonimos);
+        return noticiaRepository.findByTags_NomeIn(sinonimos).stream()
+            .distinct()  
+            .toList();
     }
-
 }
+

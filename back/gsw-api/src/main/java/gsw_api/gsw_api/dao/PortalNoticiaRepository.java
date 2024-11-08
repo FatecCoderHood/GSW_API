@@ -7,5 +7,7 @@ import java.util.Optional;
 
 @Repository
 public interface PortalNoticiaRepository extends JpaRepository<PortalNoticia, Long> {
-    Optional<PortalNoticia> findByNomeOrUrl(String nome, String url);
+
+    // Alterado para buscar por nome, url e periodicidade de uma vez
+    Optional<PortalNoticia> findByNomeAndUrlAndPeriodicidade(String nome, String url, String periodicidade);
 }

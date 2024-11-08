@@ -167,8 +167,9 @@ export default {
     
     async fetchNoticias() {
       try {
-        const response = await axios.get('http://localhost:8080/noticias');
+        const response = await axios.get('http://localhost:8080/noticias/todas');
         this.items = response.data;
+        this.items.sort((a, b) => new Date(b.dataPublicacao) - new Date(a.dataPublicacao));
         this.filteredItems = this.items;
       } catch (error) {
         console.error('Erro ao buscar notícias:', error);

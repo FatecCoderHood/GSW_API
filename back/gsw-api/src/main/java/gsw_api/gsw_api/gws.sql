@@ -82,3 +82,10 @@ update tb_portal_noticia set parametrizacao =
         "{'URL': 'div.sectionGrid__grid__columnTwo article a','titulo' : 'h1.title','conteudo' : 'p.bullet','autor' : 'a.solar-author-name','data' : 'div.solar-date time'}"
  where id = 1;
 
+ INSERT INTO tb_noticia (titulo, conteudo, dta_publicacao, autor) VALUES
+ ('Mandioca é um alimento versátil', 'A mandioca, também conhecida como aipim, é muito utilizada na culinária brasileira.', '2024-11-01', 'Autor A'),
+ ('Receitas com aipim', 'Aprenda a fazer deliciosas receitas com aipim.', '2024-10-30', 'Autor B'),
+ ('Benefícios da mandioca', 'A mandioca é rica em carboidratos e traz muitos benefícios para a saúde.', '2024-10-29', 'Autor C');
+
+ALTER TABLE tb_portal_noticia
+ADD COLUMN periodicidade VARCHAR(255) NULL;

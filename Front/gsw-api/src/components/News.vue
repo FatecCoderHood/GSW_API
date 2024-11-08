@@ -65,7 +65,7 @@
         </v-card-subtitle>
 
         <v-container class="mb-0 pb-0 d-flex" >
-          <TagList :tags=selectedItem.tags closable />
+          <TagList :noticiaId=selectedItem.id :tags=selectedItem.tags closable />
           
           <v-spacer/>
           

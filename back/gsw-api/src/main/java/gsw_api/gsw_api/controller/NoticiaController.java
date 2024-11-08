@@ -109,6 +109,7 @@ public class NoticiaController {
     }
 
     @Operation(summary = "Vincular Tags à Notícia")
+    @PostMapping("/vincularTags")
     public ResponseEntity<List<DadosTag>> vincularTags(@RequestParam Long noticiaId, @RequestBody List<String> tags)
     {
         //TODO: Melhorar erros nesta rota

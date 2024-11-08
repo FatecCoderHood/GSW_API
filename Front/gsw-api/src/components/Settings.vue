@@ -29,6 +29,7 @@
           ></v-text-field>
         </v-col>
         <v-col cols="12" md="6" class="d-flex align-center">
+          <ColorPicker v-if="isEditing" v-model="editedTag.color" class="mr-4"/>
           <v-btn color="primary" type="submit" class="mr-4">Salvar</v-btn>
           <v-btn color="error" v-if="isEditing" @click="cancelEdit">Cancelar Edição</v-btn>
         </v-col>
@@ -93,8 +94,13 @@
 
 <script>
 import axios from 'axios';
+import ColorPicker from './ColorPicker.vue';
+
 
 export default {
+  components: {
+    ColorPicker
+  },
   data() {
     return {
       tags: [], // Lista de tags

@@ -11,7 +11,7 @@
     <v-snackbar 
         v-model="snackbar"
         :timeout="5000"
-        color="green"
+        :color="snackbarColor"
         elevation="24"
       >
         {{ snackbarMessage }}
@@ -117,6 +117,7 @@ export default {
       portais: [], // Portais carregados da API
       periodOptions: ['Diário', 'Semanal', 'Quinzenal', 'Mensal'], // Opções de periodicidade
       snackbarMessage: '',
+      snackbarColor: "green",
       snackbar: false,
     };
   },
@@ -151,6 +152,7 @@ export default {
     async sendTag() {
       if (!this.editedTag.nome.trim()) {
         this.snackbarMessage = 'O campo Nome da Tag não pode estar vazio!';
+        this.snackbarColor = "red"
         this.snackbar = true;
         return;
        }
@@ -158,6 +160,7 @@ export default {
     const tagExists = this.tags.some(tag => tag.nome.toLowerCase() === this.editedTag.nome.toLowerCase() && tag.id !== this.editedTag.id);
     if (tagExists) {
       this.snackbarMessage = 'Tag duplicada! Por favor, escolha um nome diferente.';
+      this.snackbarColor = "red"
       this.snackbar = true;
       return;
     }
@@ -169,12 +172,21 @@ export default {
           // Cria uma nova tag
           const response = await axios.post('http://localhost:8080/tags', this.editedTag);
           this.tags.push(response.data);
-        this.fetchTags();
-        this.cancelEdit();
-        this.$refs.form.reset();
+
+          this.snackbarMessage = 'Tag salva com sucesso';
+          this.snackbarColor = "green"
+          this.snackbar = true;
+
+          this.fetchTags();
+          this.cancelEdit();
+          this.$refs.form.reset();
         }
       } catch (error) {
         console.error('Erro ao salvar tag:', error);
+
+        this.snackbarMessage = 'Erro ao salvar tag';
+        this.snackbarColor = "red"
+        this.snackbar = true;
       }
     },
 

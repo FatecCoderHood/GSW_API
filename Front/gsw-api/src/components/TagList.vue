@@ -10,6 +10,15 @@
             {{ tag.nome }}
         </v-chip>
     </v-container>
+
+    <v-snackbar 
+        v-model="snackbar"
+        :timeout="5000"
+        :color="snackbarColor"
+        elevation="24"
+      >
+        {{ snackbarMessage }}
+    </v-snackbar> 
 </template>
 
 <script>
@@ -33,6 +42,13 @@ export default {
         default: false
     },
   },
+  data() {
+    return {
+      snackbarMessage: '',
+      snackbarColor: "green",
+      snackbar: false,
+    }
+  },
   computed: {
     activeTags() {
       return this.tags.filter(tag => tag.ativa);
@@ -48,6 +64,10 @@ export default {
         const response = await axios.delete(`http://localhost:8080/noticias/${this.noticiaId}/${tag.id}`);
       } catch (error)
       {
+        this.snackbarMessage = 'Erro ao desassociar tag';
+        this.snackbarColor = "red"
+        this.snackbar = true;
+
         console.error(`Tag unassociation was not confirmed by server (${error})`)
         tag.ativa = true
       }

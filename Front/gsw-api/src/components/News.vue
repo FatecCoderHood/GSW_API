@@ -109,8 +109,19 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-snackbar 
+      v-model="snackbar"
+      :timeout="5000"
+      :color="snackbarColor"
+      elevation="24"
+    >
+      {{ this.snackbarMessage }}
+    </v-snackbar>
   </v-app>
 </template>
+
+
 
 <script>
 import axios from 'axios';
@@ -130,6 +141,9 @@ export default {
       NoticiaModal: false,  
       selectedItem: null,
       selectedTagsForm: [], // Uma ou mais tags que serão inseridas e (ou) vinculadas à notícia, 
+      snackbarMessage: '',
+      snackbarColor: "green",
+      snackbar: false,
     };
   },
   mounted() {
@@ -152,9 +166,17 @@ export default {
         
         this.selectedItem.tags = response.data; // Adiciona a nova tag à lista
 
+        this.snackbarMessage = 'Tag salva com sucesso';
+        this.snackbarColor = "green"
+        this.snackbar = true;
+
       } catch (error)
       {
-        console.error('Erro ao adicionar tag:', error);
+        console.error('Erro ao salvar tag:', error);
+
+        this.snackbarMessage = 'Erro ao salvar tag';
+        this.snackbarColor = "red"
+        this.snackbar = true;
       } finally
       {
         this.cleanTagForm(); // Limpa o formulário após salvar

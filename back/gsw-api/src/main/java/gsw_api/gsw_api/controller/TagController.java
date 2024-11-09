@@ -77,7 +77,8 @@ public class TagController {
     public ResponseEntity<Tag> updateTag(@PathVariable Long id,
                                          @RequestParam(required = false) String nome,
                                          @RequestParam(required = false) String descricao,
-                                         @RequestParam(required = false) Boolean ativa) {
+                                         @RequestParam(required = false) Boolean ativa,
+                                         @RequestParam(required = false) String cor) {
 
         Optional<Tag> optionalTag = tagRepository.findById(id);
 
@@ -95,6 +96,11 @@ public class TagController {
 
         if (ativa != null)
             existingTag.setAtiva(ativa);
+        
+        if (cor != null)
+            existingTag.setCor(cor);
+
+        System.out.println("RTX ==== COR ====> " + cor);
 
         Tag updatedTag = tagRepository.save(existingTag);
         return ResponseEntity.ok(updatedTag);
@@ -112,7 +118,7 @@ public class TagController {
         Pageable pageable = PageRequest.of(page, size);
         Page<Tag> tagPage = tagService.filterTags(nome, ativa, descricao, dataCriacao, pageable);
 
-        Page<DadosTag> dadosTagPage = tagPage.map(tag -> new DadosTag(tag.getId(), tag.getNome(), tag.getDescricao(), tag.getAtiva(), tag.getDataCriacao()));
+        Page<DadosTag> dadosTagPage = tagPage.map(tag -> new DadosTag(tag.getId(), tag.getNome(), tag.getDescricao(), tag.getAtiva(), tag.getDataCriacao(), tag.getCor()));
 
         return ResponseEntity.ok(dadosTagPage);
     }

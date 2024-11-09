@@ -38,6 +38,9 @@ public class Tag {
     @Column(name = "data_criacao")
     private LocalDate dataCriacao = LocalDate.now();
 
+    @Column(name = "cor")
+    private String cor;
+
     public Tag() {
         
     }

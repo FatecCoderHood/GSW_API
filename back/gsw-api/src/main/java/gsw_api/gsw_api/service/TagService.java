@@ -39,7 +39,7 @@ public class TagService {
     }
 
     public DadosTag convertToDTO(Tag tag) {
-        return new DadosTag(tag.getId(), tag.getNome(), tag.getDescricao(), tag.getAtiva(), tag.getDataCriacao());
+        return new DadosTag(tag.getId(), tag.getNome(), tag.getDescricao(), tag.getAtiva(), tag.getDataCriacao(), tag.getCor());
     }
 
     public void delete(Long id) {

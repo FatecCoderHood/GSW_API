@@ -5,16 +5,9 @@ CREATE TABLE tb_portal_noticia(
     id BIGINT NOT NULL AUTO_INCREMENT,
     nome VARCHAR(100),
     url VARCHAR(255),
+    categoria VARCHAR(45),
     parametrizacao TEXT,
     PRIMARY KEY (id)
-);
-
-CREATE TABLE tb_api (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    chave_acesso TEXT NOT NULL,
-    url VARCHAR(2048),
-    nome VARCHAR(100) NOT NULL,
-    payload VARCHAR(255)
 );
 
 CREATE TABLE tb_noticia(
@@ -25,10 +18,8 @@ CREATE TABLE tb_noticia(
     autor VARCHAR(100),
     tags JSON,
     id_portal_noticia BIGINT,
-    api_id BIGINT,
     PRIMARY KEY (id),
-    FOREIGN KEY (id_portal_noticia) REFERENCES tb_portal_noticia(id),
-    FOREIGN KEY (api_id) REFERENCES tb_api(id) ON DELETE CASCADE
+    FOREIGN KEY (id_portal_noticia) REFERENCES tb_portal_noticia(id)
 );
 
 CREATE TABLE tb_tag(
@@ -48,19 +39,23 @@ CREATE TABLE tb_noticia_tag (
     FOREIGN KEY (tag_id) REFERENCES tb_tag(id)
 );
 
-INSERT INTO tb_noticia (titulo, conteudo, dta_publicacao, autor) VALUES 
-('Desafios do agronegócio brasileiro', 'Os principais desafios enfrentados pelo setor atualmente...', CURRENT_DATE, 'Ricardo Almeida'),
-('Sustentabilidade no campo', 'Práticas sustentáveis estão se tornando essenciais para o futuro...', CURRENT_DATE, 'Fernanda Costa'),
-('O papel da tecnologia no agronegócio', 'Como a tecnologia está transformando o setor agrícola...', CURRENT_DATE, 'Lucas Mendes'),
-('Culturas de inverno em ascensão', 'As culturas de inverno estão se mostrando cada vez mais rentáveis...', CURRENT_DATE, 'Tatiane Lima'),
-('O futuro da agricultura digital', 'Tendências e inovações na agricultura digital...', CURRENT_DATE, 'Felipe Rocha'),
-('Mercado de orgânicos cresce no Brasil', 'O consumo de produtos orgânicos está aumentando no país...', CURRENT_DATE, 'Gabriela Martins'),
-('Desenvolvimento rural sustentável', 'Importância do desenvolvimento rural sustentável para o Brasil...', CURRENT_DATE, 'Eduardo Silva'),
-('O impacto das políticas agrícolas', 'Como as políticas públicas afetam o agronegócio...', CURRENT_DATE, 'Patrícia Ferreira'),
-('Avanços na biotecnologia agrícola', 'Novas técnicas de biotecnologia estão mudando o setor...', CURRENT_DATE, 'André Santos'),
-('Como o clima afeta a produção agrícola', 'Estudo sobre os efeitos das mudanças climáticas na agricultura...', CURRENT_DATE, 'Juliana Almeida'),
-('Tendências em agroindústria', 'As novas tendências que estão moldando a agroindústria...', CURRENT_DATE, 'Bruno Gomes'),
-('Mercado de café em alta', 'O mercado de café está se expandindo em nível global...', CURRENT_DATE, 'Clara Pires');
+CREATE TABLE tb_api (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    chave_acesso TEXT NOT NULL,
+    url VARCHAR(2048),
+    nome VARCHAR(100) NOT NULL,
+    payload VARCHAR(255)
+);
+
+ALTER TABLE tb_noticia
+    ADD COLUMN api_id BIGINT;
+
+ALTER TABLE tb_noticia
+    ADD CONSTRAINT fk_noticia_api
+    FOREIGN KEY (api_id) REFERENCES tb_api(id) ON DELETE CASCADE;
+
+INSERT INTO tb_api (nome, payload, chave_acesso, url)
+VALUES ('Nome da API', 'Conteúdo do payload', 'sua-chave-de-acesso', 'https://suaapi.com');
 
 INSERT INTO tb_portal_noticia (nome, url, parametrizacao) VALUES
 ('UOL', 'https://www.uol.com.br/', NULL),
@@ -74,9 +69,6 @@ INSERT INTO tb_portal_noticia (nome, url, parametrizacao) VALUES
 ('CNN', 'https://www.cnnbrasil.com.br/', NULL),
 ('Notícias Agrícolas', 'https://www.noticiasagricolas.com.br/', NULL),
 ('BBC', 'https://www.bbc.com/', NULL);
-
-INSERT INTO tb_api (nome, payload, chave_acesso, url)
-VALUES ('Nome da API', 'Conteúdo do payload', 'sua-chave-de-acesso', 'https://suaapi.com');
 
 UPDATE tb_portal_noticia SET parametrizacao = 
 '{"URL": "h1.text-3xl.md:text-5xl.font-bold.tracking-tighter.text-wl-neutral-950 a","titulo": "h1.text-3xl.md:text-5xl.font-bold.tracking-tighter.text-wl-neutral-950","conteudo": "div.text-lg.md:text-xl.font-medium.tracking-tight.text-wl-neutral-600","data": "time[datetime]"}'

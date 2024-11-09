@@ -1,7 +1,7 @@
-CREATE DATABASE IF NOT EXISTS gwsapi;
+CREATE DATABASE gwsapi;
 USE gwsapi;
 
-CREATE TABLE IF NOT EXISTS tb_portal_noticia(
+CREATE TABLE tb_portal_noticia(
     id BIGINT NOT NULL AUTO_INCREMENT,
     nome VARCHAR(100),
     url VARCHAR(255),
@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS tb_portal_noticia(
     PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS tb_api (
+CREATE TABLE tb_api (
     id BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL,
     chave_acesso TEXT NOT NULL,
     url VARCHAR(2048),
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS tb_api (
     payload VARCHAR(255)
 );
 
-CREATE TABLE IF NOT EXISTS tb_noticia(
+CREATE TABLE tb_noticia(
     id BIGINT NOT NULL AUTO_INCREMENT,
     titulo VARCHAR(255),
     conteudo TEXT,
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS tb_noticia(
     FOREIGN KEY (api_id) REFERENCES tb_api(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS tb_tag(
+CREATE TABLE tb_tag(
     id BIGINT NOT NULL AUTO_INCREMENT,
     nome VARCHAR(255) NOT NULL UNIQUE,
     descricao VARCHAR(255),
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS tb_tag(
     PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS tb_noticia_tag (
+CREATE TABLE tb_noticia_tag (
     noticia_id BIGINT NOT NULL,
     tag_id BIGINT NOT NULL,
     PRIMARY KEY (noticia_id, tag_id),
@@ -85,9 +85,6 @@ WHERE id = 6;
 INSERT INTO tb_portal_noticia (nome, url, parametrizacao)
 VALUES ('PODER 360', 'https://www.poder360.com.br/', '{"URL": "div.sectionGrid__grid__columnTwo article a","titulo": "h1.title","conteudo": "p.bullet","autor": "a.solar-author-name","data": "div.solar-date time"}');
 
-INSERT INTO tb_portal_noticia (nome, url, parametrizacao)
-VALUES ('InfoMoney', 'https://www.infomoney.com.br/', '{"URL": "h1.text-3xl.md:text-5xl.font-bold.tracking-tighter.text-wl-neutral-950 a","titulo": "h1.text-3xl.md:text-5xl.font-bold.tracking-tighter.text-wl-neutral-950","conteudo": "div.text-lg.md:text-xl.font-medium.tracking-tight.text-wl-neutral-600","autor": "p.im-mob-core-description.lg:im-web-core-description.text-wl-neutral-600","data": "time[datetime]"}');
-
 SET SQL_SAFE_UPDATES = 0;
 
 UPDATE tb_portal_noticia 
@@ -97,11 +94,7 @@ SET nome = 'BBCBRASIL',
 WHERE id = 5;
 
 INSERT INTO tb_portal_noticia (nome, url, parametrizacao)
-VALUES ('InfoMoney', 'https://www.infomoney.com.br/', '{"URL": "h1.text-3xl.md:text-5xl.font-bold.tracking-tighter.text-wl-neutral-950 a","titulo": "h1.text-3xl.md:text-5xl.font-bold.tracking-tighter.text-wl-neutral-950","conteudo": "div.text-lg.md:text-xl.font-medium.tracking-tight.text-wl-neutral-600","autor": "p.im-mob-core-description.lg:im-web-core-description.text-wl-neutral-600","data": "time[datetime]"}');
-
-INSERT INTO tb_portal_noticia (nome, url, parametrizacao)
 VALUES ('CNN Brasil', 'https://www.cnnbrasil.com.br/', '{"URL": "h1.single-header__title","titulo": "h1.single-header__title","conteudo": "p.single-header__excerpt","autor": "p.author__name a","data": "time.single-header__time"}');
-
 
 SET SQL_SAFE_UPDATES = 1;
 

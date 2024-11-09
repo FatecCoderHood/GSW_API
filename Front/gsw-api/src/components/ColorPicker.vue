@@ -1,7 +1,7 @@
 <template>
     <div>
-      <v-btn id = "btn-color-picker" :color="selectedColor" @click="toggleColorPicker">
-        {{ selectedColor }}
+      <v-btn id = "btn-color-picker" :color="computedSelectedColor" @click="toggleColorPicker">
+        {{ computedSelectedColor }}
       </v-btn>
   
       <v-overlay
@@ -10,7 +10,7 @@
         @click:outside="showColorPicker = false"
       >
         <v-card class="pa-4">
-          <v-color-picker mode="hex" v-model="selectedColor" />
+          <v-color-picker mode="hex" v-model="computedSelectedColor" />
         </v-card>
       </v-overlay>
   
@@ -19,6 +19,13 @@
   
 <script>
   export default {
+    props: {
+      selectedColor: 
+      {
+        type: String,
+        required: false,
+      },
+    },
     data() {
       return {
         showColorPicker: false,       // Controls the visibility of the color picker overlay
@@ -38,15 +45,16 @@
         if (this.showColorPicker)
         {
           const button = event.currentTarget.getBoundingClientRect();
-          this.overlayStyle.top = `${button.y - 150}px`;
-          this.overlayStyle.left = `${button.x + button.width + 10}px`;
+          this.overlayStyle.top = `${button.y + window.scrollY - 150}px`;
+          this.overlayStyle.left = `${button.x + window.scrollX + button.width + 10}px`;
         }
       },
     },
     computed: {
-      selectedColor: {
+      computedSelectedColor: {
         get()
         {
+          this.modelValue = this.selectedColor == undefined ? "#747474" : this.selectedColor;
           return this.modelValue;
         },
         set(value)

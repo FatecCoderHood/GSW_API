@@ -2,6 +2,8 @@
     <v-container class="mx-0 px-0">
         <v-chip v-for="tag in activeTags" :key="tag.id"
             :closable=closable
+            :color="tag.cor"
+            variant="flat"
             class="ma-1"
             @click:close="unassociateTag(tag)"
         >

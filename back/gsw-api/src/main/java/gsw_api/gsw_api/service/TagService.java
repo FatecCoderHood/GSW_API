@@ -20,6 +20,11 @@ public class TagService {
     @Autowired
     private TagRepository tagRepository;
 
+    @Autowired
+    private SinonimoService sinonimoService;
+
+    
+
     public List<DadosTag> findAll() {
         return tagRepository.findAll().stream()
                 .map(this::convertToDTO)
@@ -73,4 +78,14 @@ public class TagService {
             return predicate;
         };
     }
+
+        // Novo método para buscar tags usando sinônimos
+        public List<DadosTag> findTagsByTerm(String termo) {
+            List<String> sinonimos = sinonimoService.buscarSinonimos(termo);
+            sinonimos.add(termo); // Inclui o termo original
+    
+            return tagRepository.findByNomeIn(sinonimos).stream()
+                    .map(this::convertToDTO)
+                    .collect(Collectors.toList());
+        }
 }

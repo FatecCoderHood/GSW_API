@@ -24,7 +24,9 @@ public class Noticia {
     @Column(name = "titulo", nullable = false)
     private String titulo;
 
-    @Column(name = "conteudo", columnDefinition = "TEXT", nullable = false)
+
+    @Column(name = "conteudo", nullable = false, columnDefinition="LONGTEXT")
+
     private String conteudo;
 
     @Column(name = "dta_publicacao")

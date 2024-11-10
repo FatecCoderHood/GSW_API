@@ -116,4 +116,9 @@ public class TagController {
 
         return ResponseEntity.ok(dadosTagPage);
     }
+        @GetMapping("/search")
+        public ResponseEntity<List<DadosTag>> searchTags(@RequestParam String termo) {
+            List<DadosTag> tagsRelacionadas = tagService.findTagsByTerm(termo);
+            return ResponseEntity.ok(tagsRelacionadas);
+        }
 }

@@ -48,7 +48,7 @@
 
               <v-spacer/>
               
-              <TagList width="50%" :tags=item.tags />
+              <TagList :tags=item.tags />
           
           </v-card>
     </v-container>

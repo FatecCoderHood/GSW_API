@@ -1,6 +1,7 @@
 package gsw_api.gsw_api.controller;
 
 import gsw_api.gsw_api.dto.DadosNoticia;
+import gsw_api.gsw_api.dto.DadosTag;
 import gsw_api.gsw_api.dto.FiltroNoticia;
 import gsw_api.gsw_api.model.Api;
 import gsw_api.gsw_api.model.Noticia;
@@ -21,7 +22,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/noticias")
-@CrossOrigin(origins = "http://localhost:3000")
 public class NoticiaController {
 
     @Autowired
@@ -106,6 +106,22 @@ public class NoticiaController {
     public ResponseEntity<List<Noticia>> filtrarNoticias(@RequestBody FiltroNoticia filtro) {
         List<Noticia> noticiasFiltradas = noticiaService.filtrarNoticias(filtro);
         return ResponseEntity.ok(noticiasFiltradas);
+    }
+
+    @Operation(summary = "Vincular Tags à Notícia")
+    @PostMapping("/vincularTags")
+    public ResponseEntity<List<DadosTag>> vincularTags(@RequestParam Long noticiaId, @RequestBody List<String> tags)
+    {
+        //TODO: Melhorar erros nesta rota
+        return ResponseEntity.ok(noticiaService.associateTags(noticiaId, tags));
+    }
+
+    @Operation(summary = "Desvincular Tag da Notícia")
+    @DeleteMapping("/{noticiaId}/{tagId}")
+    public ResponseEntity<Boolean> desvincularTag(@PathVariable Long noticiaId, @PathVariable Long tagId)
+    {
+        //TODO: Melhorar erros nesta rota
+        return ResponseEntity.ok(noticiaService.unassociateTags(noticiaId, tagId));
     }
 
     @Operation(summary = "Obter todas as Notícias, incluindo aquelas de APIs externas")

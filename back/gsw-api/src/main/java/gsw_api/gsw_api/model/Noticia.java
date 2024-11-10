@@ -40,17 +40,13 @@ public class Noticia {
 
     @ManyToMany
     @JoinTable(
-            name = "tb_noticia_tag",
-            joinColumns = @JoinColumn(name = "noticia_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id")
+        name = "tb_noticia_tag",
+        joinColumns = @JoinColumn(name = "noticia_id"),
+        inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
-    
+    @OrderBy("nome ASC")
     @JsonManagedReference
     private Set<Tag> tags = new HashSet<>();
 
-
-    public Noticia() {
-
-    }
-
+    public Noticia() { }
 }

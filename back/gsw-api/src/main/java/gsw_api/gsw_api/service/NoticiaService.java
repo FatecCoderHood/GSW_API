@@ -3,7 +3,11 @@ package gsw_api.gsw_api.service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.ArrayList;
+import java.util.HashSet;
+
 import gsw_api.gsw_api.dao.TagRepository;
 import gsw_api.gsw_api.model.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import gsw_api.gsw_api.dao.NoticiaRepository;
 import gsw_api.gsw_api.dto.DadosNoticia;
+import gsw_api.gsw_api.dto.DadosTag;
 import gsw_api.gsw_api.dto.FiltroNoticia;
 import gsw_api.gsw_api.model.Noticia;
 import jakarta.persistence.criteria.JoinType;
@@ -21,8 +26,10 @@ public class NoticiaService {
 
     @Autowired
     private NoticiaRepository noticiaRepository;
-
+    @Autowired
     private TagRepository tagRepository;
+    @Autowired
+    private TagService tagService;
 
     private SinonimoService sinonimoService;
 
@@ -144,6 +151,7 @@ public class NoticiaService {
             .toList();
     }
 
+
     public List<Noticia> buscarNoticiasPorTermo(String termo) {
         List<String> sinonimos = sinonimoService.buscarSinonimos(termo);
         sinonimos.add(termo); 
@@ -151,6 +159,50 @@ public class NoticiaService {
         return noticiaRepository.findByTags_NomeIn(sinonimos).stream()
             .distinct()  
             .toList();
+    }
+
+    public List<DadosTag> associateTags(Long noticiaId, List<String> tagNames)
+    {
+        //TODO: Stop the flow if noticia was not found
+        Noticia noticia = noticiaRepository.findById(noticiaId)
+            .orElseThrow(() -> new RuntimeException("Notícia não encontrada"));
+        
+        Set<Tag> tags = new HashSet<>();
+        for (String tagName : tagNames)
+        {
+            Tag tag = tagRepository.findByNome(tagName)
+                .orElseGet(() -> tagRepository.save(new Tag(tagName)));
+                
+            tags.add(tag);
+        }
+
+        noticia.getTags().addAll(tags);
+
+        Noticia savedNoticia = noticiaRepository.save(noticia);
+
+        List<DadosTag> savedTagNames = null;
+        
+        if (savedNoticia != null && savedNoticia.getId() != null)
+            savedTagNames = noticia.getTags().stream().map(tagService::convertToDTO).collect(Collectors.toList());
+
+        return savedTagNames;
+    }
+
+    public boolean unassociateTags(Long noticiaId, Long tagId)
+    {
+        //TODO: Stop the flow if noticia was not found
+        Noticia noticia = noticiaRepository.findById(noticiaId)
+        .orElseThrow(() -> new RuntimeException("Notícia não encontrada"));
+        
+        //TODO: Stop the flow if tag was not found
+        Tag tag = tagRepository.findById(tagId)
+            .orElseThrow(() -> new RuntimeException("Tag não encontrada"));
+        
+        noticia.getTags().remove(tag);
+
+        Noticia savedNoticia = noticiaRepository.save(noticia);
+
+        return (savedNoticia != null && savedNoticia.getId() != null);
     }
 }
 

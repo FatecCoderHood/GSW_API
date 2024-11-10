@@ -38,12 +38,19 @@ public class Tag {
     @Column(name = "data_criacao")
     private LocalDate dataCriacao = LocalDate.now();
 
-    @ManyToMany(mappedBy = "tags")
-    @JsonManagedReference
-    private Set<Noticia> noticias = new HashSet<>();
+    @Column(name = "cor")
+    private String cor;
 
     public Tag() {
         
+    }
+
+    public Tag(String nome)
+    {
+        this.nome = nome;
+        this.descricao = "";
+        this.ativa = true;
+        this.dataCriacao = LocalDate.now();
     }
 
     public Tag(String nome, String descricao, Boolean ativa, LocalDate dataCriacao) {

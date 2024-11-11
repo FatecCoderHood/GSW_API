@@ -1,19 +1,24 @@
 package gsw_api.gsw_api.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.ArrayList;
+import java.util.HashSet;
 
+import gsw_api.gsw_api.dao.TagRepository;
+import gsw_api.gsw_api.model.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import gsw_api.gsw_api.dao.NoticiaRepository;
 import gsw_api.gsw_api.dto.DadosNoticia;
+import gsw_api.gsw_api.dto.DadosTag;
 import gsw_api.gsw_api.dto.FiltroNoticia;
 import gsw_api.gsw_api.model.Noticia;
-import gsw_api.gsw_api.model.PortalNoticia;
 import jakarta.persistence.criteria.JoinType;
 
 @Service
@@ -21,17 +26,52 @@ public class NoticiaService {
 
     @Autowired
     private NoticiaRepository noticiaRepository;
+    @Autowired
+    private TagRepository tagRepository;
+    @Autowired
+    private TagService tagService;
+
+    private SinonimoService sinonimoService;
+
+    @Autowired
+    public void setSinonimoService(SinonimoService sinonimoService){
+        this.sinonimoService = sinonimoService;
+    }
+
+    @Autowired
+    public void setTagRepository(TagRepository tagRepository) {
+        this.tagRepository = tagRepository;
+    }
 
     @Transactional
     public Noticia create(DadosNoticia dadosNoticia) {
+        Optional<Noticia> existingNoticia = noticiaRepository.findByTituloAndConteudo(dadosNoticia.titulo(), dadosNoticia.conteudo());
+        if (existingNoticia.isPresent()) {
+            return existingNoticia.get();  
+        }
+
         Noticia noticia = new Noticia();
         noticia.setTitulo(dadosNoticia.titulo());
         noticia.setConteudo(dadosNoticia.conteudo());
         noticia.setDataPublicacao(dadosNoticia.dataPublicacao());
         noticia.setAutor(dadosNoticia.autor());
-        // Defina tags aqui, se necessário
+
+        for (String termo : noticia.getConteudo().split(" ")) {
+            List<String> sinonimos = sinonimoService.buscarSinonimos(termo);
+            for (String sinonimo : sinonimos) {
+                Tag tag = buscarOuCriarTag(sinonimo);
+                noticia.getTags().add(tag);
+            }
+        }
 
         return noticiaRepository.save(noticia);
+    }
+
+    private Tag buscarOuCriarTag(String nome) {
+        return tagRepository.findByNome(nome).orElseGet(() -> {
+            Tag novaTag = new Tag(nome, null, true, LocalDate.now());
+            return tagRepository.save(novaTag);
+        });
     }
 
     @Transactional
@@ -63,7 +103,18 @@ public class NoticiaService {
             noticia.setConteudo(dadosNoticia.conteudo());
             noticia.setDataPublicacao(dadosNoticia.dataPublicacao());
             noticia.setAutor(dadosNoticia.autor());
-            // Atualize tags aqui, se necessário
+
+            noticia.getTags().clear();
+
+         
+            for (String termo : noticia.getConteudo().split(" ")) {
+                List<String> sinonimos = sinonimoService.buscarSinonimos(termo);
+                for (String sinonimo : sinonimos) {
+                    Tag tag = buscarOuCriarTag(sinonimo);
+                    noticia.getTags().add(tag);
+                }
+            }
+
             return noticiaRepository.save(noticia);
         }
         return null;
@@ -75,26 +126,83 @@ public class NoticiaService {
     }
 
     public List<Noticia> filtrarNoticias(FiltroNoticia filtro) {
-        return noticiaRepository.findAll((Specification<Noticia>) (root, query, criteriaBuilder) -> {
+        List<Noticia> noticiasFiltradas = noticiaRepository.findAll((Specification<Noticia>) (root, query, criteriaBuilder) -> {
             Specification<Noticia> spec = Specification.where(null);
 
             if (filtro.getTitulo() != null && !filtro.getTitulo().isEmpty()) {
-                spec = spec.and((root1, query1, criteriaBuilder1) ->
+                spec = spec.and((root1, query1, criteriaBuilder1) -> 
                         criteriaBuilder1.like(root1.get("titulo"), "%" + filtro.getTitulo() + "%"));
             }
             if (filtro.getDataInicio() != null && filtro.getDataFim() != null) {
-                spec = spec.and((root1, query1, criteriaBuilder1) ->
+                spec = spec.and((root1, query1, criteriaBuilder1) -> 
                         criteriaBuilder1.between(root1.get("dataPublicacao"), filtro.getDataInicio(), filtro.getDataFim()));
             }
             if (filtro.getTags() != null && !filtro.getTags().isEmpty()) {
-                spec = spec.and((root1, query1, criteriaBuilder1) ->{
+                spec = spec.and((root1, query1, criteriaBuilder1) -> {
                     var join = root1.join("tags", JoinType.INNER);
                     return join.get("nome").in(filtro.getTags());
                 });
             }
             return spec.toPredicate(root, query, criteriaBuilder);
         });
+
+        return noticiasFiltradas.stream()
+            .distinct() 
+            .toList();
     }
 
 
+    public List<Noticia> buscarNoticiasPorTermo(String termo) {
+        List<String> sinonimos = sinonimoService.buscarSinonimos(termo);
+        sinonimos.add(termo); 
+
+        return noticiaRepository.findByTags_NomeIn(sinonimos).stream()
+            .distinct()  
+            .toList();
+    }
+
+    public List<DadosTag> associateTags(Long noticiaId, List<String> tagNames)
+    {
+        //TODO: Stop the flow if noticia was not found
+        Noticia noticia = noticiaRepository.findById(noticiaId)
+            .orElseThrow(() -> new RuntimeException("Notícia não encontrada"));
+        
+        Set<Tag> tags = new HashSet<>();
+        for (String tagName : tagNames)
+        {
+            Tag tag = tagRepository.findByNome(tagName)
+                .orElseGet(() -> tagRepository.save(new Tag(tagName)));
+                
+            tags.add(tag);
+        }
+
+        noticia.getTags().addAll(tags);
+
+        Noticia savedNoticia = noticiaRepository.save(noticia);
+
+        List<DadosTag> savedTagNames = null;
+        
+        if (savedNoticia != null && savedNoticia.getId() != null)
+            savedTagNames = noticia.getTags().stream().map(tagService::convertToDTO).collect(Collectors.toList());
+
+        return savedTagNames;
+    }
+
+    public boolean unassociateTags(Long noticiaId, Long tagId)
+    {
+        //TODO: Stop the flow if noticia was not found
+        Noticia noticia = noticiaRepository.findById(noticiaId)
+        .orElseThrow(() -> new RuntimeException("Notícia não encontrada"));
+        
+        //TODO: Stop the flow if tag was not found
+        Tag tag = tagRepository.findById(tagId)
+            .orElseThrow(() -> new RuntimeException("Tag não encontrada"));
+        
+        noticia.getTags().remove(tag);
+
+        Noticia savedNoticia = noticiaRepository.save(noticia);
+
+        return (savedNoticia != null && savedNoticia.getId() != null);
+    }
 }
+

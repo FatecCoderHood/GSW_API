@@ -2,11 +2,12 @@ package gsw_api.gsw_api.service;
 
 import gsw_api.gsw_api.dao.ApiRepository;
 import gsw_api.gsw_api.dto.DadosApi;
-import gsw_api.gsw_api.dto.DadosPortalNoticia;
 import gsw_api.gsw_api.model.Api;
-import gsw_api.gsw_api.model.PortalNoticia;
-
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +18,7 @@ import java.util.Optional;
 @Service
 public class ApiService {
 
-   @Autowired
+    @Autowired
     private ApiRepository apiRepository;
 
     @Autowired
@@ -32,10 +33,9 @@ public class ApiService {
     public Optional<Api> getApiById(Long id) {
         return apiRepository.findById(id);
     }
-    
+
     private boolean APIsDuplicados(String nome, String url) {
-        // Optional<Api> existingApi = apiRepository. findByNomeOrUrl(nome, url);
-        return false; //existingApi.isPresent();
+        return false;
     }
 
     @Transactional
@@ -43,8 +43,7 @@ public class ApiService {
         if (APIsDuplicados(dadosApi.nome(), dadosApi.url())) {
             throw new IllegalArgumentException("API já cadastrado com este nome ou URL.");
         }
-        
-        // String nome, String url, String chaveAcesso, String payload
+
         Api api = new Api(dadosApi.nome(), dadosApi.url(), dadosApi.chaveAcesso(), dadosApi.payload());
         return apiRepository.save(api);
     }
@@ -62,4 +61,34 @@ public class ApiService {
         api.setUrl(apiDetails.getUrl());
         return apiRepository.save(api);
     }
+
+    public Page<Api> filterApis(String nome, String url, String chaveAcesso, String payload, Pageable pageable) {
+        return apiRepository.findAll(createSpecification(nome, url, chaveAcesso, payload), pageable);
+    }
+
+    private Specification<Api> createSpecification(String nome, String url, String chaveAcesso, String payload) {
+        return (root, query, criteriaBuilder) -> {
+            Predicate predicate = criteriaBuilder.conjunction();
+
+            if (nome != null && !nome.isEmpty()) {
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(root.get("nome"), "%" + nome + "%"));
+            }
+
+            if (url != null && !url.isEmpty()) {
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("url"), url));
+            }
+
+            if (chaveAcesso != null && !chaveAcesso.isEmpty()) {
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("chaveAcesso"), chaveAcesso));
+            }
+
+            if (payload != null && !payload.isEmpty()) {
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("payload"), payload));
+            }
+
+
+            return predicate;
+        };
+    }
 }
+

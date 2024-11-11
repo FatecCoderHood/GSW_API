@@ -7,11 +7,16 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
 public interface NoticiaRepository extends JpaRepository<Noticia, Long>, JpaSpecificationExecutor<Noticia> {
     List<Noticia> findByTituloContaining(String titulo);
     List<Noticia> findByDataPublicacaoBetween(LocalDate startDate, LocalDate endDate);
+    List<Noticia> findByTags_NomeIn(List<String> nomesTags);
+
+    // Método para buscar por título e conteúdo
+    Optional<Noticia> findByTituloAndConteudo(String titulo, String conteudo);
 }
 

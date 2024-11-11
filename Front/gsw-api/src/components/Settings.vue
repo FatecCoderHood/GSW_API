@@ -7,18 +7,29 @@
 
     <h2>Gerenciamento de Tags</h2>
     <v-divider class="mb-4"></v-divider>
+
+    <v-snackbar 
+        v-model="snackbar"
+        :timeout="5000"
+        :color="snackbarColor"
+        elevation="24"
+      >
+        {{ snackbarMessage }}
+    </v-snackbar>    
+
+
     <!-- Formulário de Cadastro e Edição de Tags -->
-    <v-form @submit.prevent="sendTag">
+    <v-form ref="form" @submit.prevent="sendTag">
       <v-row>
         <v-col cols="12" md="6">
           <v-text-field
             v-model="editedTag.nome"
             label="Nome da Tag"
-            :rules="[v => !!v || 'Campo obrigatório']"
             required
           ></v-text-field>
         </v-col>
         <v-col cols="12" md="6" class="d-flex align-center">
+          <ColorPicker v-if="isEditing" v-model="editedTag.cor" :selectedColor="editedTag.cor" class="mr-4"/>
           <v-btn color="primary" type="submit" class="mr-4">Salvar</v-btn>
           <v-btn color="error" v-if="isEditing" @click="cancelEdit">Cancelar Edição</v-btn>
         </v-col>
@@ -54,7 +65,7 @@
     <v-divider class="mb-4"></v-divider>
     <v-select
       v-model="selectedPortal"
-      :items="portals"
+      :items="portais"
       label="Selecione o Portal"
       item-text="nome"
       item-value="id"
@@ -71,13 +82,25 @@
     <v-btn class="mt-2" @click="saveScrapingConfig" style="width: 200px;" color="primary">
       Salvar Configurações
     </v-btn>
+
+    <v-divider class="mb-4"></v-divider>
+    <h2>WebScraping</h2>    
+
+    <v-btn class="mt-2" @click="WebScraping" style="width: 200px;" color="primary">
+      Ativar WebScraping
+    </v-btn>
   </v-container>
 </template>
 
 <script>
 import axios from 'axios';
+import ColorPicker from './ColorPicker.vue';
+
 
 export default {
+  components: {
+    ColorPicker
+  },
   data() {
     return {
       tags: [], // Lista de tags
@@ -91,14 +114,17 @@ export default {
       // Dados para configuração de scraping
       selectedPortal: null,
       selectedPeriod: null,
-      portals: [], // Portais carregados da API
+      portais: [], // Portais carregados da API
       periodOptions: ['Diário', 'Semanal', 'Quinzenal', 'Mensal'], // Opções de periodicidade
+      snackbarMessage: '',
+      snackbarColor: "green",
+      snackbar: false,
     };
   },
 
   mounted() {
     this.fetchTags();
-    this.fetchPortals(); // Carrega portais ao montar o componente
+    this.fetchPortais(); // Carrega portais ao montar o componente
   },
 
   methods: {
@@ -113,10 +139,10 @@ export default {
     },
 
     // Método para buscar todos os portais
-    async fetchPortals() {
+    async fetchPortais() {
       try {
-        const response = await axios.get('http://localhost:8080/portals');
-        this.portals = response.data;
+        const response = await axios.get('http://localhost:8080/portais');
+        this.portais = response.data;
       } catch (error) {
         console.error('Erro ao buscar portais:', error);
       }
@@ -124,19 +150,43 @@ export default {
 
     // Método para criar ou editar uma tag
     async sendTag() {
+      if (!this.editedTag.nome.trim()) {
+        this.snackbarMessage = 'O campo Nome da Tag não pode estar vazio!';
+        this.snackbarColor = "red"
+        this.snackbar = true;
+        return;
+       }
+
+    const tagExists = this.tags.some(tag => tag.nome.toLowerCase() === this.editedTag.nome.toLowerCase() && tag.id !== this.editedTag.id);
+    if (tagExists) {
+      this.snackbarMessage = 'Tag duplicada! Por favor, escolha um nome diferente.';
+      this.snackbarColor = "red"
+      this.snackbar = true;
+      return;
+    }
       try {
         if (this.editedTag.id) {
           // Edita a tag existente
           await axios.patchForm(`http://localhost:8080/tags/${this.editedTag.id}`, this.editedTag);
         } else {
-          // Adiciona uma nova tag
+          // Cria uma nova tag
           const response = await axios.post('http://localhost:8080/tags', this.editedTag);
-          this.tags.push(response.data); // Adiciona a nova tag à lista
+          this.tags.push(response.data);
+
+          this.snackbarMessage = 'Tag salva com sucesso';
+          this.snackbarColor = "green"
+          this.snackbar = true;
+
+          this.fetchTags();
+          this.cancelEdit();
+          this.$refs.form.reset();
         }
-        this.fetchTags(); // Atualiza a lista de tags
-        this.cancelEdit(); // Limpa o formulário após salvar
       } catch (error) {
         console.error('Erro ao salvar tag:', error);
+
+        this.snackbarMessage = 'Erro ao salvar tag';
+        this.snackbarColor = "red"
+        this.snackbar = true;
       }
     },
 
@@ -175,6 +225,17 @@ export default {
       console.log('Configurações de Web Scraping salvas');
       // Implementar lógica de salvar as configurações de scraping
     },
+
+    async WebScraping(){
+      try{
+      const response = await axios.get('http://localhost:8080/web_scrap');
+      console.log('Web scraping executado com sucesso:', response.data);
+      location.reload();
+    } catch (error) {
+      console.error('Erro ao executar o web scraping:', error);
+    }
+    },
+    
   },
 };
 </script>

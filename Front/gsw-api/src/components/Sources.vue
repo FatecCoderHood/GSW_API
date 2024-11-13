@@ -241,7 +241,7 @@ export default {
       return;
     }
       const sourceExists = this.sources.some(source => 
-        source.nome.toLowerCase === this.editedItem.nome.toLowerCase || source.url.toLowerCase === this.editedItem.url.toLowerCase
+        source.nome.toLowerCase() === this.editedItem.nome.toLowerCase() || source.url.toLowerCase() === this.editedItem.url.toLowerCase()
       );
       if (sourceExists) {
         this.snackbarMessage = 'Fonte duplicada! Por favor, escolha um nome ou URL diferente';  

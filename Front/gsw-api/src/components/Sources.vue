@@ -279,21 +279,14 @@ export default {
       this.snackbar = true;
       return;
     }
-    // for (let source in this.sources)
-    // {
-    //   console.log("nome => " + source.nome.toLowerCase() === this.editedItem.nome.toLowerCase())
-    //   console.log("url => " + source.url.toLowerCase() === this.editedItem.url.toLowerCase())
-    // }
-    // const sourceExists = this.sources.some(source => 
-    //   source.nome.toLowerCase === this.editedItem.nome.toLowerCase || source.url.toLowerCase === this.editedItem.url.toLowerCase
-    // );
-      
-    //   console.log("sourceExists: " + sourceExists)
-    //   if (sourceExists) {
-    //     this.snackbarMessage = 'Fonte duplicada! Por favor, escolha um nome ou URL diferente';  
-    //     this.snackbar = true;
-    //     return;
-    //   }      
+      const sourceExists = this.sources.some(source => 
+        source.nome.toLowerCase() === this.editedItem.nome.toLowerCase() || source.url.toLowerCase() === this.editedItem.url.toLowerCase()
+      );
+      if (sourceExists) {
+        this.snackbarMessage = 'Fonte duplicada! Por favor, escolha um nome ou URL diferente';  
+        this.snackbar = true;
+        return;
+      }      
       try {
         if (!this.editedItem.url) {
           this.snackbarMessage = 'A URL é obrigatória.';

@@ -67,7 +67,7 @@
       v-model="selectedPortal"
       :items="portais"
       label="Selecione o Portal"
-      item-text="nome"
+      item-title="nome"
       item-value="id"
       solo
       hide-details

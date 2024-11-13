@@ -77,6 +77,13 @@ WHERE id = 6;
 INSERT INTO tb_portal_noticia (nome, url, parametrizacao)
 VALUES ('PODER 360', 'https://www.poder360.com.br/', '{"URL": "div.sectionGrid__grid__columnTwo article a","titulo": "h1.title","conteudo": "p.bullet","autor": "a.solar-author-name","data": "div.solar-date time"}');
 
+INSERT INTO tb_portal_noticia (nome, url, parametrizacao)
+VALUES 
+('VEJA', 'https://veja.abril.com.br/', '{"URL": "div.col-s-12 a","titulo": "h1.title","conteudo": "section.content p span","autor": "span.author strong span","data": "span.date-post"}'),
+('Estadão', 'https://www.estadao.com.br/', '{"URL": "div.noticia-content-block a","titulo": "div.container-news-informs h1","conteudo": "p.styles__ParagraphStyled-sc-6adecn-0","autor": "div.names a","data": "div.principal-dates span time"}'),
+('INFOMONEY', 'https://www.infomoney.com.br/', '{"URL": "h2.font-im-sans a","titulo": "h1.text-3xl","conteudo": "article.im-article p","autor": "a.text-base","data": "p.im-mob-core-description time"}');
+
+
 SET SQL_SAFE_UPDATES = 0;
 
 UPDATE tb_portal_noticia 
@@ -84,6 +91,8 @@ SET nome = 'BBCBRASIL',
     url = 'https://www.bbc.com/', 
     parametrizacao = '{"URL": "div._evt h2 a","titulo": "h1.content-head__title","conteudo": "p.content-text__container","autor": "p.content-publication-data__from","data": "p.content-publication-data__updated time"}'
 WHERE id = 5;
+
+
 
 INSERT INTO tb_portal_noticia (nome, url, parametrizacao)
 VALUES ('CNN Brasil', 'https://www.cnnbrasil.com.br/', '{"URL": "h1.single-header__title","titulo": "h1.single-header__title","conteudo": "p.single-header__excerpt","autor": "p.author__name a","data": "time.single-header__time"}');

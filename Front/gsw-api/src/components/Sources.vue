@@ -276,6 +276,7 @@ export default {
     async save() {
       if (!this.editedItem.nome.trim() || !this.editedItem.url.trim()) {
       this.snackbarMessage = 'Os campos Nome e URL não podem estar vazios!';
+      this.snackbarColor = 'yellow'
       this.snackbar = true;
       return;
     }
@@ -284,12 +285,14 @@ export default {
       );
       if (sourceExists) {
         this.snackbarMessage = 'Fonte duplicada! Por favor, escolha um nome ou URL diferente';  
+        this.snackbarColor = 'red'
         this.snackbar = true;
         return;
       }      
       try {
         if (!this.editedItem.url) {
           this.snackbarMessage = 'A URL é obrigatória.';
+          this.snackbarColor = 'yellow'
           this.showSnackbar = true;
           return; 
         }

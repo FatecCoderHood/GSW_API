@@ -34,7 +34,7 @@ public class ApiController {
 
     @GetMapping
     public List<Api> getAllApis() {
-        return apiRepository.findAll();
+        return apiRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
     }
 
 

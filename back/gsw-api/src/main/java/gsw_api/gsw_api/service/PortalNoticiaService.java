@@ -47,7 +47,7 @@ public class PortalNoticiaService {
 
     // Método para buscar todos os portais de notícias
     public List<PortalNoticia> findAll() {
-        return portalNoticiaRepository.findAll();
+        return portalNoticiaRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
     }
 
     // Método para buscar todos os portais de notícias filtrando pela periodicidade

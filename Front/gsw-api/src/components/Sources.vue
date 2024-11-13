@@ -83,7 +83,7 @@
     <v-snackbar 
         v-model="snackbar"
         :timeout="5000"
-        color="green"
+        :color=snackbarColor
         elevation="24"
       >
         {{ snackbarMessage }}
@@ -111,6 +111,7 @@ export default {
     dialogDelete: false,
     showSnackbar: false,
     snackbarMessage: '',
+    snackbarColor: 'green',
     headers: [
       { title: 'Nome', align: 'start', key: 'nome' },
       { title: 'URL', key: 'url' },
@@ -212,12 +213,50 @@ export default {
 
     async deleteItemConfirm() {
       const id = this.editedItem.id;
-      await axios.delete(`http://localhost:8080/portais/${id}`);
+
+      if (this.editedItem.type == "Portal")
+        this.deletePortal(id)
+
+      else if (this.editedItem.type == "API")
+        this.deleteAPI(id)
+
       this.sources.splice(this.editedIndex, 1);
       this.filteredSources.splice(this.editedIndex, 1);
       this.closeDelete();
     },
+    async deletePortal(id)
+    {
+      try {
+        await axios.delete(`http://localhost:8080/portais/${id}`);
 
+        this.snackbarMessage = 'Portal excluido com sucesso';
+        this.snackbarColor = 'green'
+      } catch (error)
+      {
+        console.error(`Falha ao excluir Portal (${error})`);
+
+        this.snackbarMessage = 'Falha ao excluir Portal';
+        this.snackbarColor = 'red'
+      } finally {
+        this.snackbar = true;
+      }
+    },
+    async deleteAPI(id)
+    {
+      try{
+        await axios.delete(`http://localhost:8080/api/${id}`);
+
+        this.snackbarMessage = 'API excluida com sucesso';
+        this.snackbarColor = 'green'
+      } catch (error) {
+        console.error(`Falha ao excluir API (${error})`);
+
+        this.snackbarMessage = 'Falha ao excluir API';
+        this.snackbarColor = 'red'
+      } finally {
+        this.snackbar = true;
+      }
+    },
     close() {
       this.dialog = false;
       this.$nextTick(() => {
@@ -240,14 +279,21 @@ export default {
       this.snackbar = true;
       return;
     }
-      const sourceExists = this.sources.some(source => 
-        source.nome.toLowerCase === this.editedItem.nome.toLowerCase || source.url.toLowerCase === this.editedItem.url.toLowerCase
-      );
-      if (sourceExists) {
-        this.snackbarMessage = 'Fonte duplicada! Por favor, escolha um nome ou URL diferente';  
-        this.snackbar = true;
-        return;
-      }      
+    // for (let source in this.sources)
+    // {
+    //   console.log("nome => " + source.nome.toLowerCase() === this.editedItem.nome.toLowerCase())
+    //   console.log("url => " + source.url.toLowerCase() === this.editedItem.url.toLowerCase())
+    // }
+    // const sourceExists = this.sources.some(source => 
+    //   source.nome.toLowerCase === this.editedItem.nome.toLowerCase || source.url.toLowerCase === this.editedItem.url.toLowerCase
+    // );
+      
+    //   console.log("sourceExists: " + sourceExists)
+    //   if (sourceExists) {
+    //     this.snackbarMessage = 'Fonte duplicada! Por favor, escolha um nome ou URL diferente';  
+    //     this.snackbar = true;
+    //     return;
+    //   }      
       try {
         if (!this.editedItem.url) {
           this.snackbarMessage = 'A URL é obrigatória.';
@@ -265,7 +311,8 @@ export default {
           this.editedItem.chaveAcesso = this.editedItem.chaveAcesso || '';
           let endpoint = this.editedItem.type === 'API' ? 'api' : 'portais';
 
-          const response = await axios.post(`http://localhost:8080/${endpoint}`, this.editedItem);
+          let response = await axios.post(`http://localhost:8080/${endpoint}`, this.editedItem);
+          response.data.type = this.editedItem.type
           this.filteredSources.unshift(response.data);
           this.snackbarMessage = 'Cadastrado com sucesso!';
         }

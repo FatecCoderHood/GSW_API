@@ -61,7 +61,7 @@
     </v-dialog>
 
     <!-- Seção de Configurações do Web Scraping -->
-    <h2>Configurações do Web Scraping</h2>
+    <!-- <h2>Configurações do Web Scraping</h2>
     <v-divider class="mb-4"></v-divider>
     <v-select
       v-model="selectedPortal"
@@ -88,7 +88,7 @@
 
     <v-btn class="mt-2" @click="WebScraping" style="width: 200px;" color="primary">
       Ativar WebScraping
-    </v-btn>
+    </v-btn> -->
   </v-container>
 </template>
 
@@ -173,14 +173,14 @@ export default {
           const response = await axios.post('http://localhost:8080/tags', this.editedTag);
           this.tags.push(response.data);
 
-          this.snackbarMessage = 'Tag salva com sucesso';
-          this.snackbarColor = "green"
-          this.snackbar = true;
-
           this.fetchTags();
           this.cancelEdit();
           this.$refs.form.reset();
         }
+
+        this.snackbarMessage = 'Tag salva com sucesso';
+        this.snackbarColor = "green"
+        this.snackbar = true;
       } catch (error) {
         console.error('Erro ao salvar tag:', error);
 
@@ -215,6 +215,10 @@ export default {
         this.fetchTags(); // Atualiza a lista de tags
         this.dialogDelete = false; // Fecha o diálogo
         this.editedTag = { nome: '', id: null, tags: []}; // Limpa o formulário após a exclusão
+
+        this.snackbarMessage = 'Tag excluída com sucesso';
+        this.snackbarColor = "green"
+        this.snackbar = true;
       } catch (error) {
         console.error('Erro ao excluir tag:', error);
       }

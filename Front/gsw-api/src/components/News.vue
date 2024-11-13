@@ -14,7 +14,7 @@
         hide-details
         single-line
         clearable
-        @input="filterItems"
+        @input="filterItemsByTitleOrAuthor"
         class="mx-2"
         style="flex: 1; min-width: 300px;"
       />
@@ -30,7 +30,7 @@
         clearable
         class="mx-2"
         style="flex: 1; min-width: 300px;"
-        @change="filterItems"
+        @change="filterItemsByTags"
       />
     </v-container>
 
@@ -208,11 +208,10 @@ export default {
       }
     },
 
-    filterItems() {
+    filterItemsByTitleOrAuthor() {
       const searchTerm = this.search.toLowerCase();
       this.filteredItems = this.items.filter(item =>
-        (item.titulo.toLowerCase().includes(searchTerm) || item.autor.toLowerCase().includes(searchTerm)) &&
-        (this.selectedTags.length === 0 || item.tags.some(tag => this.selectedTags.includes(tag)))
+        (item.titulo.toLowerCase().includes(searchTerm) || item.autor.toLowerCase().includes(searchTerm))
       );
     },
 
@@ -228,11 +227,6 @@ export default {
       } catch (error) {
         console.error('Erro ao buscar notícias:', error);
       }
-    },
-
-    openModal(item) {
-      this.selectedItem = item;  // pegando a notícia 
-      this.NoticiaModal = true;    // Abrindo o pop-up
     },
 
     async fetchTags() {
@@ -257,37 +251,30 @@ export default {
       }
     },
 
-    async filterItems() {
-      const searchTerm = this.search.toLowerCase();
+    async filterItemsByTags()
+    {
+      if (this.selectedTags.length == 0)
+      {
+        this.filteredItems = this.items
+        return
+      }
+
       console.log("Iniciando filtragem...");
-      console.log("Termo de busca:", searchTerm);
       console.log("Tags selecionadas:", this.selectedTags);
 
-      let allTags = [...this.selectedTags];
-      for (const tag of this.selectedTags) {
+      let allTags = this.selectedTags;
+      for (const tag of this.selectedTags)
+      {
         const synonyms = await this.fetchSynonymsFromDatamuse(tag);
-        allTags = [...new Set([...allTags, ...synonyms])];
+        allTags = [...allTags, ...synonyms];
       }
       console.log("Tags e sinônimos combinados para filtragem:", allTags);
 
-      this.filteredItems = this.items.filter(item => {
-        const matchesSearch = 
-          item.titulo.toLowerCase().includes(searchTerm) || 
-          item.autor.toLowerCase().includes(searchTerm);
-        console.log(`Notícia "${item.titulo}" - corresponde ao termo de busca:`, matchesSearch);
-
-        const itemTags = Array.isArray(item.tags) ? item.tags : JSON.parse(item.tags || '[]');
-        console.log(`Tags da notícia "${item.titulo}":`, itemTags);
-
-        const matchesTags = 
-          allTags.length === 0 || 
-          (itemTags && itemTags.some(tag => allTags.includes(tag)));
-        console.log(`Notícia "${item.titulo}" - corresponde às tags:`, matchesTags);
-
-        return matchesSearch && matchesTags;
-      });
-
-      console.log("Notícias filtradas:", this.filteredItems);
+      this.filteredItems = this.items.filter(item =>
+        item.tags.some(tag =>
+          allTags.includes(tag.nome)
+        )
+      )
     },
 
     openModal(item) {
@@ -298,8 +285,8 @@ export default {
  },
 
   watch: {
-   selectedTags: 'filterItems',
-   search: 'filterItems',
+    selectedTags: 'filterItemsByTags',
+    search: 'filterItemsByTitleOrAuthor',
   }
 
 };

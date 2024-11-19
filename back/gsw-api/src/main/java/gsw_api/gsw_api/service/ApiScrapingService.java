@@ -25,7 +25,7 @@ public class ApiScrapingService {
 
     public List<Noticia> scrapeFromApi(Api api) {
         List<Noticia> noticias = new ArrayList<>();
-
+    
         List<Map<String, Object>> response = restTemplate.getForObject(api.getUrl(), List.class);
     
         if (response != null) {
@@ -33,10 +33,11 @@ public class ApiScrapingService {
                 Noticia noticia = new Noticia();
     
                 if (item.containsKey("setup") && item.containsKey("punchline")) {
-                    noticia.setTitulo((String) item.get("setup")); 
-                    noticia.setConteudo((String) item.get("punchline")); 
-                    
-                    noticia.setAutor("Da API: " + api.getNome()); 
+                    noticia.setTitulo((String) item.get("setup"));
+                    noticia.setConteudo((String) item.get("punchline"));
+                    noticia.setAutor("Da API: " + api.getNome());
+    
+                    noticia.setApi(api);
     
                     noticiaRepository.save(noticia);
                 } else {

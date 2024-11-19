@@ -53,7 +53,7 @@
                 </v-col>
 
                 <v-col cols="12" v-if="editedItem.tipo === 'Portal'">
-                  <v-radio-group v-model="editedItem.periodicidade" label="Periodicidade do Scrap">
+                  <v-radio-group v-model="editedItem.periodicidade" label="Frequência do Scrap">
                     <v-radio label="Diário" value="Diário"></v-radio>
                     <v-radio label="Semanal" value="Semanal"></v-radio>
                     <v-radio label="Quinzenal" value="Quinzenal"></v-radio>
@@ -62,7 +62,7 @@
                 </v-col>
 
                 <v-col cols="12" v-if="editedItem.tipo === 'API'">
-                  <v-radio-group v-model="editedItem.periodicidade" label="Periodicidade do Scrap">
+                  <v-radio-group v-model="editedItem.periodicidade" label="Frequência do Scrap">
                     <v-radio label="Diário" value="Diário"></v-radio>
                     <v-radio label="Semanal" value="Semanal"></v-radio>
                   </v-radio-group>
@@ -135,6 +135,7 @@ export default {
     headers: [
       { title: "Nome", align: "start", key: "nome" },
       { title: "URL", key: "url" },
+      { title: 'Frequência', align: 'start', key: 'periodicidade', value: 'periodicidade' },
       { title: "Tipo", key: "tipo" }, 
       { title: "Ações", key: "actions", sortable: false },
     ],

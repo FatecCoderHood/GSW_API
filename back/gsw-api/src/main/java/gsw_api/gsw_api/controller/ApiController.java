@@ -24,11 +24,13 @@ public class ApiController {
     @Autowired
     private ApiService apiService;
 
-
     @PostMapping
     public ResponseEntity<Api> createApi(@RequestBody DadosApi dados) {
-        Api api = apiService.create(dados);
-        return ResponseEntity.ok(api);
+     if (dados.tipo() == null || dados.tipo().isEmpty()) {
+        return ResponseEntity.badRequest().body(null); 
+     }
+     Api api = apiService.create(dados);
+     return ResponseEntity.ok(api);
     }
 
 

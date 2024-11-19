@@ -75,16 +75,19 @@ public class ApiController {
 
     @GetMapping("/filter")
     public ResponseEntity<Page<Api>> getAllApis(
-            @RequestParam(required = false) String nome,
-            @RequestParam(required = false) String url,
-            @RequestParam(required = false) String chaveAcesso,
-            @RequestParam(required = false) String payload,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size) {
+        @RequestParam(required = false) String nome,
+        @RequestParam(required = false) String url,
+        @RequestParam(required = false) String chaveAcesso,
+        @RequestParam(required = false) String payload,
+        @RequestParam(required = false) String tipo,
+        @RequestParam(required = false) String periodicidade, 
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "5") int size) {
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by("nome"));
-        Page<Api> result = apiService.filterApis(nome, url, chaveAcesso, payload, pageable);
+         Pageable pageable = PageRequest.of(page, size, Sort.by("nome"));
+         Page<Api> result = apiService.filterApis(nome, url, chaveAcesso, payload, tipo, periodicidade, pageable);
 
-        return ResponseEntity.ok(result);
-    }
+         return ResponseEntity.ok(result);
+    } 
+
 }

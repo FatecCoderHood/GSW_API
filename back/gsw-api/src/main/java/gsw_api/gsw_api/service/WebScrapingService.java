@@ -24,7 +24,6 @@ public class WebScrapingService {
     private static final Logger logger = LoggerFactory.getLogger(WebScrapingService.class);
     private Parametrizacao parametrizacao;
 
-    // Método para pegar a parametrização do JSON
     public Parametrizacao getParametrizacaoByJSON(String JSON) {
         parametrizacao = new Parametrizacao(JSON);
         return parametrizacao;
@@ -71,11 +70,21 @@ public class WebScrapingService {
                         noticia.setConteudo(conteudo);
                         noticia.setAutor(autor);
 
+                        noticia.setFonte("Portal");  
+
+                        noticia.setPortalNoticia(portal);
+
                         if (dataStr.length() >= 10) {
-                            dataStr = dataStr.substring(0, 10).replace('/', '-');
-                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                            LocalDate localDate = LocalDate.parse(dataStr, formatter);
-                            noticia.setDataPublicacao(localDate);
+
+                            try {
+                                dataStr = dataStr.substring(0, 10).replace('/', '-');
+                                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                                LocalDate localDate = LocalDate.parse(dataStr, formatter);
+                                noticia.setDataPublicacao(localDate);
+                            } catch (Exception e) {
+                                // TODO: handle exception
+                            }
+
                         }
 
                         noticias.add(noticia);

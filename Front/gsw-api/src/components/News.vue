@@ -8,7 +8,7 @@
         v-model="search"
         density="compact"
         label="Pesquise por Título ou Autor"
-        prepend-inner-icon="mdi-magnify"
+        prepend-inner-icon="mdi-text-box-search-outline"
         variant="solo-filled"
         flat
         hide-details
@@ -23,7 +23,7 @@
         :items="availableTags"
         density="compact"
         label="Filtrar por Tags"
-        prepend-inner-icon="mdi-tag"
+        prepend-inner-icon="mdi-tag-multiple"
         variant="solo-filled"
         flat
         multiple
@@ -32,6 +32,21 @@
         style="flex: 1; min-width: 300px;"
         @change="filterItemsByTags"
       />
+
+      <v-select
+        v-model="selectedSource"
+        :items="availableSources"
+        density="compact"
+        label="Filtrar por Fonte"
+        prepend-inner-icon="mdi-source-branch"
+        variant="solo-filled"
+        flat
+        clearable
+        class="mx-2"
+        style="flex: 1; min-width: 300px;"
+        @change="filterItemsBySource"
+      />
+
     </v-container>
 
     <!-- Lista de notícias -->
@@ -145,6 +160,8 @@ export default {
       snackbarMessage: '',
       snackbarColor: "green",
       snackbar: false,
+      selectedSource: '', // Fonte selecionada (API ou PORTAL)
+      availableSources: ['API', 'Portal'], // Fontes disponíveis para o filtro
     };
   },
   mounted() {
@@ -278,6 +295,17 @@ export default {
       )
     },
 
+    async filterItemsBySource() {
+    if (!this.selectedSource) {
+      // Se nenhuma fonte estiver selecionada, mostre todos os itens
+      this.filteredItems = this.items;
+      return;
+    }
+
+    // Filtra com base na fonte selecionada
+    this.filteredItems = this.items.filter(item => item.fonte === this.selectedSource);
+    },
+
     openModal(item) {
       this.selectedItem = item;
       this.NoticiaModal = true;
@@ -288,6 +316,7 @@ export default {
   watch: {
     selectedTags: 'filterItemsByTags',
     search: 'filterItemsByTitleOrAuthor',
+    selectedSource: 'filterItemsBySource',
   }
 
 };

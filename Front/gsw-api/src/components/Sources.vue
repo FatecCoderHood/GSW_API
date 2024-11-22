@@ -8,7 +8,7 @@
       v-model="search"
       density="compact"
       label="Pesquise"
-      prepend-inner-icon="mdi-magnify"
+      prepend-inner-icon="mdi-text-box-search-outline"
       variant="solo-filled"
       flat
       hide-details

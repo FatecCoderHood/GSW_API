@@ -108,8 +108,8 @@ export default {
       isEditing: false, // Indica se está em modo de edição
       dialogDelete: false, // Controle para diálogo de exclusão
       headers: [
-        { text: 'Nome', value: 'nome' },
-        { text: 'Ações', value: 'actions', sortable: false },
+        { title: 'Nome', value: 'nome' },
+        { title: 'Ações', value: 'actions', sortable: false },
       ],
       // Dados para configuração de scraping
       selectedPortal: null,

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import gsw_api.gsw_api.dao.NoticiaRepository;
 import gsw_api.gsw_api.dao.PortalNoticiaRepository;
+import gsw_api.gsw_api.dao.TagRepository;
 import gsw_api.gsw_api.model.Noticia;
 import gsw_api.gsw_api.model.PortalNoticia;
 import gsw_api.gsw_api.service.PortalNoticiaService;
@@ -33,6 +34,8 @@ public class WebScrapingController {
     @Autowired
     private NoticiaRepository noticiaRepository;
     private WebScrapingService webScrapingService;
+    @Autowired
+    private TagRepository tagRepository;
     
 
     @Operation(summary = "Webscraping de notícias de todos os postais")
@@ -51,6 +54,8 @@ public class WebScrapingController {
         List<PortalNoticia> portais = portalNoticiaService.findAll();
         //Vetor das noticias a serem inseridas no banco
         List<Noticia> noticias = new ArrayList<>();
+
+        webScrapingService.tagList = tagRepository.findAll();
 
         //Rotina que retorna o vetor de noticias gerados via webscraping
         noticias = webScrapingService.gerarNoticiasByPortais(portais);

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import gsw_api.gsw_api.model.Noticia;
 import gsw_api.gsw_api.model.Parametrizacao;
 import gsw_api.gsw_api.model.PortalNoticia;
+import gsw_api.gsw_api.model.Tag;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -23,6 +24,7 @@ public class WebScrapingService {
 
     private static final Logger logger = LoggerFactory.getLogger(WebScrapingService.class);
     private Parametrizacao parametrizacao;
+    public List<Tag> tagList = new ArrayList<>();
 
     public Parametrizacao getParametrizacaoByJSON(String JSON) {
         parametrizacao = new Parametrizacao(JSON);
@@ -86,7 +88,7 @@ public class WebScrapingService {
                             }
 
                         }
-
+                        noticia.getTags().addAll(AssociarTagsScraping(conteudo));
                         noticias.add(noticia);
                     } else if (isDuplicada) {
                         logger.warn("Notícia duplicada ignorada: " + titulo + " - " + autor);
@@ -99,5 +101,18 @@ public class WebScrapingService {
             }
         }
         return noticias;
+    }
+
+    private List<Tag> AssociarTagsScraping(String conteudo){     
+        List<Tag> newTags = new ArrayList<>();
+
+        for (Tag tag : tagList)
+        {
+            if (conteudo.contains(tag.getNome())) {
+                newTags.add(tag);
+            }
+        }
+
+        return newTags;
     }
 }

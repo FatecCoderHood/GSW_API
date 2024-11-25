@@ -80,20 +80,11 @@ export default {
         { title: 'Nome', value: 'nome' },
         { title: 'Ações', value: 'actions', sortable: false },
       ],
-      // Dados para configuração de scraping
-      selectedPortal: null,
-      selectedPeriod: null,
-      portais: [], // Portais carregados da API
-      periodOptions: ['Diário', 'Semanal', 'Quinzenal', 'Mensal'], // Opções de periodicidade
-      snackbarMessage: '',
-      snackbarColor: "green",
-      snackbar: false,
     };
   },
 
   mounted() {
     this.fetchTags();
-    this.fetchPortais(); // Carrega portais ao montar o componente
   },
 
   methods: {
@@ -107,15 +98,6 @@ export default {
       }
     },
 
-    // Método para buscar todos os portais
-    async fetchPortais() {
-      try {
-        const response = await axios.get('http://localhost:8080/portais');
-        this.portais = response.data;
-      } catch (error) {
-        console.error('Erro ao buscar portais:', error);
-      }
-    },
 
     // Método para criar ou editar uma tag
     async sendTag() {
@@ -192,23 +174,6 @@ export default {
         console.error('Erro ao excluir tag:', error);
       }
     },
-
-    // Método para salvar as configurações de scraping
-    saveScrapingConfig() {
-      console.log('Configurações de Web Scraping salvas');
-      // Implementar lógica de salvar as configurações de scraping
-    },
-
-    async WebScraping(){
-      try{
-      const response = await axios.get('http://localhost:8080/web_scrap');
-      console.log('Web scraping executado com sucesso:', response.data);
-      location.reload();
-    } catch (error) {
-      console.error('Erro ao executar o web scraping:', error);
-    }
-    },
-    
   },
 };
 </script>

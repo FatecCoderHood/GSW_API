@@ -1,12 +1,11 @@
 <template>
   <v-container class="pe-2">
-    <h1>Configurações</h1>
+    <h1>Gerenciamento de Tags</h1>
     <v-spacer></v-spacer>
 
     <v-divider class="mb-10"></v-divider>
 
-    <h2>Gerenciamento de Tags</h2>
-    <v-divider class="mb-4"></v-divider>
+ 
 
     <v-snackbar 
         v-model="snackbar"
@@ -59,36 +58,6 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-
-    <!-- Seção de Configurações do Web Scraping -->
-    <!-- <h2>Configurações do Web Scraping</h2>
-    <v-divider class="mb-4"></v-divider>
-    <v-select
-      v-model="selectedPortal"
-      :items="portais"
-      label="Selecione o Portal"
-      item-title="nome"
-      item-value="id"
-      solo
-      hide-details
-    />
-    <v-divider class="mb-4"></v-divider>
-    <v-select
-      v-model="selectedPeriod"
-      :items="periodOptions"
-      label="Selecione a Periodicidade"
-      solo
-    />
-    <v-btn class="mt-2" @click="saveScrapingConfig" style="width: 200px;" color="primary">
-      Salvar Configurações
-    </v-btn>
-
-    <v-divider class="mb-4"></v-divider>
-    <h2>WebScraping</h2>    
-
-    <v-btn class="mt-2" @click="WebScraping" style="width: 200px;" color="primary">
-      Ativar WebScraping
-    </v-btn> -->
   </v-container>
 </template>
 
@@ -132,7 +101,7 @@ export default {
     async fetchTags() {
       try {
         const response = await axios.get('http://localhost:8080/tags');
-        this.tags = response.data;
+        this.tags = response.data.sort((a,b)=> b.id - a.id);
       } catch (error) {
         console.error('Erro ao buscar tags:', error);
       }
@@ -155,7 +124,7 @@ export default {
         this.snackbarColor = "red"
         this.snackbar = true;
         return;
-       }
+      }
 
     const tagExists = this.tags.some(tag => tag.nome.toLowerCase() === this.editedTag.nome.toLowerCase() && tag.id !== this.editedTag.id);
     if (tagExists) {
@@ -171,7 +140,7 @@ export default {
         } else {
           // Cria uma nova tag
           const response = await axios.post('http://localhost:8080/tags', this.editedTag);
-          this.tags.push(response.data);
+          this.tags.unshift(response.data);
 
           this.fetchTags();
           this.cancelEdit();

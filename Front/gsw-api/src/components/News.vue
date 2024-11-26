@@ -172,6 +172,12 @@ export default {
   {
     async addTag()
     {
+      if (this.selectedTagsForm.length === 0) {
+    this.snackbarMessage = 'Por favor, selecione ao menos uma tag para associar.';
+    this.snackbarColor = "red";
+    this.snackbar = true;
+    return; // Sai da função se nenhuma tag foi selecionada
+  }
       try {
         const response = await axios.post(`http://localhost:8080/noticias/vincularTags`, 
           this.selectedTagsForm, // Array de Tag que será enviado no request body

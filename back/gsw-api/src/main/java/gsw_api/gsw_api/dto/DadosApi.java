@@ -1,7 +1,4 @@
 package gsw_api.gsw_api.dto;
 
-
-public record DadosApi(Long id, String nome, String payload, String chaveAcesso, String url) {
-
+public record DadosApi(Long id, String nome, String payload, String chaveAcesso, String url, String tipo, String periodicidade) {
 }
-

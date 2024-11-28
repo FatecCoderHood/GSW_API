@@ -98,4 +98,8 @@ public class ApiService {
             return predicate;
         };
     }
+
+    public List<Api> findAllByPeriodicidade(String periodicidade) {
+        return apiRepository.findByPeriodicidade(periodicidade);
+    }
 }

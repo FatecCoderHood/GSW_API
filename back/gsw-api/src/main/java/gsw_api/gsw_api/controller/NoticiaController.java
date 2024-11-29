@@ -132,22 +132,6 @@ public class NoticiaController {
     })
     @GetMapping("/todas")
     public ResponseEntity<List<Noticia>> getTodasAsNoticias() {
-        List<Noticia> todasAsNoticias = new ArrayList<>(noticiaService.findAll());
-
-        List<Api> apis = apiRepository.findAll();
-        for (Api api : apis) {
-            try {
-                System.out.println("Chamando API: " + api.getNome() + " em URL: " + api.getUrl());
-
-                List<Noticia> noticiasDaApi = apiScrapingService.scrapeFromApi(api);
-                todasAsNoticias.addAll(noticiasDaApi);
-            } catch (Exception e) {
-                System.err.println("Erro ao chamar API " + api.getNome() + ": " + e.getMessage());
-            }
-        }
-
-        return ResponseEntity.ok(todasAsNoticias);
+        return ResponseEntity.ok(new ArrayList<>(noticiaService.findAll()));
     }
 }
-
-

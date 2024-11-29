@@ -1,9 +1,11 @@
 package gsw_api.gsw_api.service;
 
 import gsw_api.gsw_api.dao.ApiRepository;
-import gsw_api.gsw_api.dao.NoticiaRepository; // Importe o repositório de Noticia
+import gsw_api.gsw_api.dao.NoticiaRepository;
 import gsw_api.gsw_api.model.Api;
 import gsw_api.gsw_api.model.Noticia;
+import gsw_api.gsw_api.model.Parametrizacao;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -22,21 +24,29 @@ public class ApiScrapingService {
     private NoticiaRepository noticiaRepository; 
 
     private final RestTemplate restTemplate = new RestTemplate();
+    private Parametrizacao parametrizacao;
+
+    public Parametrizacao getParametrizacaoByJSON(String JSON) {
+        parametrizacao = new Parametrizacao(JSON);
+        return parametrizacao;
+    }
 
     public List<Noticia> scrapeFromApi(Api api) {
         List<Noticia> noticias = new ArrayList<>();
     
         // Fazendo a requisição à API externa
         List<Map<String, Object>> response = restTemplate.getForObject(api.getUrl(), List.class);
+
+        Parametrizacao parametrizacao = getParametrizacaoByJSON(api.getPayload());
     
         if (response != null) {
             for (Map<String, Object> item : response) {
                 Noticia noticia = new Noticia();
     
                 // Verifica se os campos necessários estão presentes
-                if (item.containsKey("setup") && item.containsKey("punchline")) {
-                    noticia.setTitulo((String) item.get("setup"));
-                    noticia.setConteudo((String) item.get("punchline"));
+                if (item.containsKey(parametrizacao.getTitulo()) && item.containsKey(parametrizacao.getConteudo())) {
+                    noticia.setTitulo((String) item.get(parametrizacao.getTitulo()));
+                    noticia.setConteudo((String) item.get(parametrizacao.getConteudo()));
                     noticia.setAutor("Da API: " + api.getNome());
     
                     // Associar a API à notícia

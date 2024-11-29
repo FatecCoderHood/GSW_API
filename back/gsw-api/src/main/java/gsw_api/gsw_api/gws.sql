@@ -57,6 +57,10 @@ ALTER TABLE tb_noticia
 INSERT INTO tb_api (nome, payload, chave_acesso, url)
 VALUES ('Nome da API', 'Conteúdo do payload', 'sua-chave-de-acesso', 'https://suaapi.com');
 
+INSERT INTO tb_api (`id`,`chave_acesso`,`url`,`nome`,`payload`,`periodicidade`,`tipo`) VALUES (9,'','https://official-joke-api.appspot.com/jokes/ten','Piada','{\'titulo\' : \'setup\',\'conteudo\' : \'punchline\'}','Semanal','API');
+INSERT INTO tb_api (`id`,`chave_acesso`,`url`,`nome`,`payload`,`periodicidade`,`tipo`) VALUES (10,'','https://jsonplaceholder.typicode.com/posts?userId=1','jsonplaceholder','{\'titulo\' : \'title\',\'conteudo\' : \'body\'}','Semanal','API');
+INSERT INTO tb_api (`id`,`chave_acesso`,`url`,`nome`,`payload`,`periodicidade`,`tipo`) VALUES (11,'','https://potterapi-fedeperin.vercel.app/pt/spells?max=10','Feitiços','{\'titulo\' : \'spell\',\'conteudo\' : \'use\'}','Semanal','API');
+
 INSERT INTO tb_portal_noticia (nome, url, parametrizacao) VALUES
 ('UOL', 'https://www.uol.com.br/', NULL),
 ('Yahoo', 'https://news.yahoo.com/', NULL),

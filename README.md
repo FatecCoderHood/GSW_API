@@ -179,7 +179,14 @@ por exemplo, previsão do tempo.
 ## Instruções de Execução
 ### Database
 Execute o script abaixo para criação das tabelas no seu DBMS ou SGBD em português.
-> ./back/gsw-ap/src/main/java/gsw_api/gsw_api/gws.sql
+1. DDL
+``` Bash
+./back/gsw-ap/src/main/java/gsw_api/gsw_api/gsw-DDL.sql
+```
+2. DML
+``` Bash
+./back/gsw-ap/src/main/java/gsw_api/gsw_api/gsw-DML.sql
+```
 
 ### Back-end
 ``` Bash

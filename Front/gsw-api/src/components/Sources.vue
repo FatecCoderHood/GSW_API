@@ -245,7 +245,6 @@ export default {
       if (this.editedItem.tipo == "Portal") this.deletePortal(id);
       else if (this.editedItem.tipo == "API") this.deleteAPI(id);
 
-      this.sources.splice(this.editedIndex, 1);
       this.filteredSources.splice(this.editedIndex, 1);
       this.closeDelete();
     },

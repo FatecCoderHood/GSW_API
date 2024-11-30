@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import gsw_api.gsw_api.dao.NoticiaRepository;
+import gsw_api.gsw_api.dao.TagRepository;
 import gsw_api.gsw_api.model.Api;
 import gsw_api.gsw_api.model.Noticia;
 
@@ -26,6 +27,9 @@ public class SchedulerApiService {
 
     @Autowired
     private NoticiaRepository noticiaRepository;
+
+    @Autowired
+    private TagRepository tagRepository;
 
     // @Scheduled(fixedRate = 5000) //Executa a cada 5 segundos
     @Scheduled(cron = expressaoDiaria)
@@ -51,6 +55,7 @@ public class SchedulerApiService {
         // Coletar notícias de cada API
         List<Noticia> todasNoticias = new ArrayList<>();
         for (Api api : apis) {
+            apiScrapingService.tagList = tagRepository.findAll();
             todasNoticias.addAll(apiScrapingService.scrapeFromApi(api));
         }
 

@@ -5,6 +5,7 @@ import gsw_api.gsw_api.dao.NoticiaRepository;
 import gsw_api.gsw_api.model.Api;
 import gsw_api.gsw_api.model.Noticia;
 import gsw_api.gsw_api.model.Parametrizacao;
+import gsw_api.gsw_api.model.Tag;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ public class ApiScrapingService {
 
     private final RestTemplate restTemplate = new RestTemplate();
     private Parametrizacao parametrizacao;
+    public List<Tag> tagList = new ArrayList<>();
 
     public Parametrizacao getParametrizacaoByJSON(String JSON) {
         parametrizacao = new Parametrizacao(JSON);
@@ -55,6 +57,7 @@ public class ApiScrapingService {
                     // Preencher a coluna fonte com "API"
                     noticia.setFonte("API");  // Agora a fonte será preenchida corretamente
     
+                    noticia.getTags().addAll(AssociarTagsScraping(noticia.getConteudo()));
                     // Salvar a notícia
                     noticiaRepository.save(noticia);
                 } else {
@@ -66,5 +69,18 @@ public class ApiScrapingService {
         }
     
         return noticias;
+    }
+
+    private List<Tag> AssociarTagsScraping(String conteudo){     
+        List<Tag> newTags = new ArrayList<>();
+
+        for (Tag tag : tagList)
+        {
+            if (conteudo.contains(tag.getNome())) {
+                newTags.add(tag);
+            }
+        }
+
+        return newTags;
     }
 }

@@ -189,7 +189,11 @@ export default {
         );
         
         this.selectedItem.tags = response.data; // Adiciona a nova tag à lista de tags da notícia
-        response.data.map(tag => this.availableTags.unshift(tag.nome)); // Adiciona a nova tag ao filtro de tags
+        response.data.map(tag => {
+          if (!this.availableTags.includes(tag.nome)) {
+            this.availableTags.unshift(tag.nome);
+          }
+        }); // Adiciona a nova tag ao filtro de tags
 
         this.snackbarMessage = 'Tag salva com sucesso';
         this.snackbarColor = "green"

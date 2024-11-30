@@ -80,6 +80,9 @@ export default {
         { title: 'Nome', value: 'nome' },
         { title: 'Ações', value: 'actions', sortable: false },
       ],
+      snackbar: false,
+      snackbarMessage: '',
+      snackbarColor: '',
     };
   },
 

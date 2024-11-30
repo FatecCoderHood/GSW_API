@@ -83,7 +83,7 @@
         </v-card>
       </v-dialog>
 
-      <v-snackbar v-model="showSnackbar" :timeout="5000" color="green" top right>
+      <v-snackbar v-model="showSnackbar" :timeout="5000" :color="snackbarColor" top right>
         {{ snackbarMessage }}
       </v-snackbar>
 

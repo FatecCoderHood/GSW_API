@@ -91,12 +91,12 @@ public class WebScrapingService {
                         noticia.getTags().addAll(AssociarTagsScraping(conteudo));
                         noticias.add(noticia);
                     } else if (isDuplicada) {
-                        logger.warn("Notícia duplicada ignorada: " + titulo + " - " + autor);
+                        logger.warn("Portal > " + portal.getNome() + "Notícia duplicada ignorada: " + titulo + " - " + autor);
                     } else {
-                        logger.warn("Notícia ignorada por falta de informações obrigatórias: Título, Autor ou Conteúdo.");
+                        logger.warn("Portal > " + portal.getNome() + "Notícia ignorada por falta de informações obrigatórias: Título, Autor ou Conteúdo.");
                     }
                 } catch (IOException e) {
-                    logger.error("Erro ao acessar a notícia: " + headline.absUrl("href"), e);
+                    logger.error("Portal > " + portal.getNome() + "Erro ao acessar a notícia: " + headline.absUrl("href"), e);
                 }
             }
         }

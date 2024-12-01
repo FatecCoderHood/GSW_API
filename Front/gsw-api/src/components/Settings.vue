@@ -165,7 +165,8 @@ export default {
     // Método para excluir a tag
     async deleteTag() {
       try {
-        await axios.delete(`http://localhost:8080/tags/${this.editedTag.id}`);
+        const response = await axios.delete(`http://localhost:8080/tags/${this.editedTag.id}`);
+        
         this.fetchTags(); // Atualiza a lista de tags
         this.dialogDelete = false; // Fecha o diálogo
         this.editedTag = { nome: '', id: null, tags: []}; // Limpa o formulário após a exclusão
@@ -174,7 +175,13 @@ export default {
         this.snackbarColor = "green"
         this.snackbar = true;
       } catch (error) {
-        console.error('Erro ao excluir tag:', error);
+        let msg = "Erro ao excluir tag"
+
+        console.error(`${msg} - ${error.response.status}: ${error.response.data.message}`)
+        
+        this.snackbarMessage = msg
+        this.snackbarColor = "red"
+        this.snackbar = true;
       }
     },
   },

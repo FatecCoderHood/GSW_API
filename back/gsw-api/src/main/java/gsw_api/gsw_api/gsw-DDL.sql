@@ -3,11 +3,11 @@ CREATE DATABASE gswapi;
 USE gswapi;
 
 -- Drop all tables to guarantee a correct creation
-drop table if exists tb_noticia_tag;
-drop table if exists tb_tag;
-drop table if exists tb_noticia;
-drop table if exists tb_api;
-drop table if exists tb_portal_noticia;
+DROP TABLE IF EXISTS tb_noticia_tag;
+DROP TABLE IF EXISTS tb_tag;
+DROP TABLE IF EXISTS tb_noticia;
+DROP TABLE IF EXISTS tb_api;
+DROP TABLE IF EXISTS tb_portal_noticia;
 
 -- Criação da tabela tb_portal_noticia
 CREATE TABLE tb_portal_noticia (
@@ -28,6 +28,8 @@ CREATE TABLE tb_tag (
     ativa BOOLEAN NOT NULL,
     cor VARCHAR(255),
     data_criacao DATE,
+    sinonimo1 VARCHAR(100),  
+    sinonimo2 VARCHAR(100),  
     PRIMARY KEY (id)
 );
 

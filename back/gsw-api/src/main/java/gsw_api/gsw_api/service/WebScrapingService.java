@@ -108,8 +108,10 @@ public class WebScrapingService {
 
         for (Tag tag : tagList)
         {
-            if (conteudo.contains(tag.getNome())) {
-                newTags.add(tag);
+            if (conteudo.contains(tag.getNome()) || 
+            conteudo.contains(tag.getSinonimo1()) || 
+            conteudo.contains(tag.getSinonimo2())) {
+            newTags.add(tag);
             }
         }
 

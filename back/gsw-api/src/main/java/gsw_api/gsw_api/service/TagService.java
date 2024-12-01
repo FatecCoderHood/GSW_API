@@ -23,8 +23,6 @@ public class TagService {
     @Autowired
     private SinonimoService sinonimoService;
 
-    
-
     public List<DadosTag> findAll() {
         return tagRepository.findAll().stream()
                 .map(this::convertToDTO)
@@ -38,13 +36,29 @@ public class TagService {
     }
 
     public DadosTag save(DadosTag dadosTag) {
-        Tag tag = new Tag(dadosTag.nome(), dadosTag.descricao(), dadosTag.ativa(), LocalDate.now());
+        Tag tag = new Tag(
+            dadosTag.nome(),
+            dadosTag.descricao(),
+            dadosTag.ativa(),
+            LocalDate.now(),
+            dadosTag.sinonimo1(),
+            dadosTag.sinonimo2()
+        );
         Tag savedTag = tagRepository.save(tag);
         return convertToDTO(savedTag);
     }
 
     public DadosTag convertToDTO(Tag tag) {
-        return new DadosTag(tag.getId(), tag.getNome(), tag.getDescricao(), tag.getAtiva(), tag.getDataCriacao(), tag.getCor());
+        return new DadosTag(
+            tag.getId(),
+            tag.getNome(),
+            tag.getDescricao(),
+            tag.getAtiva(),
+            tag.getDataCriacao(),
+            tag.getCor(),
+            tag.getSinonimo1(),
+            tag.getSinonimo2()
+        );
     }
 
     public void delete(Long id) {
@@ -79,13 +93,16 @@ public class TagService {
         };
     }
 
-        // Novo método para buscar tags usando sinônimos
-        public List<DadosTag> findTagsByTerm(String termo) {
-            List<String> sinonimos = sinonimoService.buscarSinonimos(termo);
-            sinonimos.add(termo); // Inclui o termo original
-    
-            return tagRepository.findByNomeIn(sinonimos).stream()
-                    .map(this::convertToDTO)
-                    .collect(Collectors.toList());
-        }
+    // Novo método para buscar tags usando sinônimos
+    public List<DadosTag> findTagsByTerm(String termo) {
+        List<String> sinonimos = sinonimoService.buscarSinonimos(termo);
+        sinonimos.add(termo); // Inclui o termo original
+
+        // Busca tags com nome, sinonimo1 ou sinonimo2
+        List<Tag> tags = tagRepository.findByNomeOrSinonimo1OrSinonimo2(termo, termo, termo);
+
+        return tags.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
 }

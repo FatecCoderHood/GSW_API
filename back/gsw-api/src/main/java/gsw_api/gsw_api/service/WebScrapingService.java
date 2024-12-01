@@ -102,19 +102,19 @@ public class WebScrapingService {
         }
         return noticias;
     }
-
-    private List<Tag> AssociarTagsScraping(String conteudo){     
+    
+    private List<Tag> AssociarTagsScraping(String conteudo) {     
         List<Tag> newTags = new ArrayList<>();
-
-        for (Tag tag : tagList)
-        {
-            if (conteudo.contains(tag.getNome()) || 
-            conteudo.contains(tag.getSinonimo1()) || 
-            conteudo.contains(tag.getSinonimo2())) {
-            newTags.add(tag);
+    
+        for (Tag tag : tagList) {
+            if ((tag.getNome() != null && conteudo.contains(tag.getNome())) ||
+                (tag.getSinonimo1() != null && conteudo.contains(tag.getSinonimo1())) ||
+                (tag.getSinonimo2() != null && conteudo.contains(tag.getSinonimo2()))) {
+                newTags.add(tag);
             }
         }
-
+    
         return newTags;
     }
+    
 }

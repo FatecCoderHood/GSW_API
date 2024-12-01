@@ -49,8 +49,8 @@ public class SchedulerService {
         webScrapingGenerico("Semanal");
     }
 
-    @Scheduled(fixedRate = 20000)
-    //@Scheduled(cron = expressaoQuinzenal)
+    // @Scheduled(fixedRate = 20000)
+    @Scheduled(cron = expressaoQuinzenal)
     public void SchQuinzenal() throws IOException {
 
         webScrapingGenerico("Quinzenal");

@@ -14,27 +14,36 @@ Se você já completou as etapas do manual de instalação, siga os passos abaix
     - Menu: Selecione **Ver** > **Terminal** (em inglês: **View** > **Terminal**)
     - Menu: Selecione **Terminal** > **Novo Terminal** (em inglês: **Terminal** > **New Terminal**)
 
-
-**3. Após abrir o terminal, digite o seguinte comando:**
-
+3. Após abrir o terminal, digite o seguinte comando:
 
 ## Instruções de Execução
+
 ### Database
-Execute o script abaixo para criação das tabelas no seu DBMS ou SGBD em português.
-> ./back/gsw-ap/src/main/java/gsw_api/gsw_api/gws.sql
+
+Execute o script abaixo para criação das tabelas no seu DBMS ou SGBD em português:
+```sh
+./back/gsw-ap/src/main/java/gsw_api/gsw_api/gws.sql
+```
+
 ### Back-end
-``` Bash
+
+```sh
 cd back/gsw-api
 mvn clean install
 mvn spring-boot:run
 ```
 
 ### Front-end
-``` Bash
+
+```sh
 cd front/gsw-api
-npm i
+npm install
 npm run dev
-clique na porta 3000 para acessar a aplicação
 ```
 
-## 5. COMO FUNCIONA A APLICAÇÃO RODANDO: [CLIQUE AQUI PARA ENTENDER MAIS O FUNCIONAMENTO DO PROGRAMA GSW](manual-rodar-programa)
+Clique na porta 3000 para acessar a aplicação.
+
+## Funcionamento da Aplicação
+
+Para entender mais sobre o funcionamento do programa GSW, [clique aqui](manual-rodar-programa).
+

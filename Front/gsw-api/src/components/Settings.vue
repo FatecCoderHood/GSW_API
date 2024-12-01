@@ -29,7 +29,7 @@
         <v-col cols="12" md="4"> <!-- Reduzido para md="4" -->
           <v-text-field
             v-model="editedTag.sinonimo1"
-            label="Sinonimo 1"
+            label="Sinônimo 1"
             :rules="[value => !value || value.length <= 100 || 'Máximo 100 caracteres']"
           ></v-text-field>
         </v-col>
@@ -38,7 +38,7 @@
         <v-col cols="12" md="4"> <!-- Reduzido para md="4" -->
           <v-text-field
             v-model="editedTag.sinonimo2"
-            label="Sinonimo 2"
+            label="Sinônimo 2"
             :rules="[value => !value || value.length <= 100 || 'Máximo 100 caracteres']"
           ></v-text-field>
         </v-col>
@@ -97,7 +97,7 @@ export default {
       dialogDelete: false, // Controle para diálogo de exclusão
       headers: [
         { title: 'Nome', value: 'nome' },
-        { title: 'Sinonimos', value: 'sinonimos', sortable: false }, // Nova coluna para sinônimos
+        { title: 'Sinônimos', value: 'sinonimos', sortable: false }, // Nova coluna para sinônimos
         { title: 'Ações', value: 'actions', sortable: false },
       ],
       snackbar: false,
@@ -115,7 +115,7 @@ export default {
     async fetchTags() {
       try {
         const response = await axios.get('http://localhost:8080/tags');
-        this.tags = response.data.sort((a,b) => b.id - a.id);
+        this.tags = response.data.sort((a, b) => b.id - a.id);
       } catch (error) {
         console.error('Erro ao buscar tags:', error);
       }
@@ -130,6 +130,14 @@ export default {
         return;
       }
 
+      // Se a tag tiver nome, mas não tiver sinônimo, aceita o envio
+      if (this.editedTag.sinonimo1.trim() === '' && this.editedTag.sinonimo2.trim() !== '') {
+        this.snackbarMessage = 'Você deve preencher o campo Sinonimo 1 quando preencher o Sinonimo 2!';
+        this.snackbarColor = "red";
+        this.snackbar = true;
+        return;
+      }
+
       const tagExists = this.tags.some(tag => tag.nome.toLowerCase() === this.editedTag.nome.toLowerCase() && tag.id !== this.editedTag.id);
       if (tagExists) {
         this.snackbarMessage = 'Tag duplicada! Por favor, escolha um nome diferente.';
@@ -139,32 +147,34 @@ export default {
       }
 
       try {
+        let response;
         if (this.editedTag.id) {
           // Edita a tag existente
           console.log(`Enviando PATCH para editar a tag ${this.editedTag.id}`);
-          const response = await axios.patch(`http://localhost:8080/tags/${this.editedTag.id}`, this.editedTag);
+          response = await axios.patch(`http://localhost:8080/tags/${this.editedTag.id}`, this.editedTag);
 
           // Atualiza a tag na lista de forma reativa
           const index = this.tags.findIndex(tag => tag.id === this.editedTag.id);
           if (index !== -1) {
             console.log('Atualizando a tag na lista:', response.data);
-            // Atualiza a tag editada diretamente no estado
-            this.$set(this.tags, index, response.data); // Força a reatividade
+            this.tags[index] = response.data; // Atualiza diretamente
           }
 
         } else {
           // Cria uma nova tag
-          const response = await axios.post('http://localhost:8080/tags', this.editedTag);
-          this.tags.unshift(response.data);
+          response = await axios.post('http://localhost:8080/tags', this.editedTag);
+          this.tags.unshift(response.data); // Adiciona no início da lista
 
-          // Não precisa chamar fetchTags após a criação, já que a nova tag já foi adicionada
-          this.cancelEdit();
-          this.$refs.form.reset();
         }
 
+        // Limpa os campos e exibe o snackbar após salvar
         this.snackbarMessage = 'Tag salva com sucesso';
         this.snackbarColor = "green";
         this.snackbar = true;
+
+        // Limpa os campos do formulário
+        this.cancelEdit();
+
       } catch (error) {
         console.error('Erro ao salvar tag:', error);
 
@@ -199,9 +209,11 @@ export default {
       try {
         const response = await axios.delete(`http://localhost:8080/tags/${this.editedTag.id}`);
         
-        this.fetchTags(); // Atualiza a lista de tags
+        // Atualiza a lista de tags removendo a tag deletada
+        this.tags = this.tags.filter(tag => tag.id !== this.editedTag.id);
+
         this.dialogDelete = false; // Fecha o diálogo
-        this.editedTag = { nome: '', id: null, tags: []}; // Limpa o formulário após a exclusão
+        this.editedTag = { nome: '', id: null, tags: [] }; // Limpa o formulário após a exclusão
 
         this.snackbarMessage = 'Tag excluída com sucesso';
         this.snackbarColor = "green";
@@ -219,4 +231,7 @@ export default {
   },
 };
 </script>
+
+
+
 

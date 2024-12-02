@@ -60,6 +60,8 @@ public class ApiController {
         api.setPayload(apiDetails.getPayload());
         api.setChaveAcesso(apiDetails.getChaveAcesso());
         api.setUrl(apiDetails.getUrl());
+        api.setPeriodicidade(apiDetails.getPeriodicidade());
+        api.setTipo(apiDetails.getTipo());
 
         Api updatedApi = apiRepository.save(api);
         return ResponseEntity.ok(updatedApi);

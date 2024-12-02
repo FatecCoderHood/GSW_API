@@ -14,10 +14,13 @@
         hide-details
         single-line
         clearable
+        clear-icon="mdi-close-circle"
+        @click:clear="clearSearch"
         @input="filterItemsByTitleOrAuthor"
         class="mx-2"
         style="flex: 1; min-width: 300px;"
-      />
+      ></v-text-field>
+
       <v-select
         v-model="selectedTags"
         :items="availableTags"
@@ -31,7 +34,7 @@
         class="mx-2"
         style="flex: 1; min-width: 300px;"
         @change="filterItemsByTags"
-      />
+      ></v-select>
 
       <v-select
         v-model="selectedSource"
@@ -45,34 +48,42 @@
         class="mx-2"
         style="flex: 1; min-width: 300px;"
         @change="filterItemsBySource"
-      />
-
+      ></v-select>
     </v-container>
 
     <!-- Lista de notícias -->
     <v-container>
-          <v-card v-for="item in filteredItems" :key="item.idNoticia" elevation="2" rounded @click="openModal(item)" class="d-flex my-3">
-              <v-container>
-                <v-card-title class="card">
-                  {{ item.titulo }}
-                </v-card-title>
-                <v-card-text class="card">
-                  {{ item.autor }}
-                </v-card-text>
-              </v-container>
+      <v-card
+        v-for="item in filteredItems"
+        :key="item.idNoticia"
+        elevation="2"
+        rounded
+        @click="openModal(item)"
+        class="d-flex my-3"
+      >
+        <v-container>
+          <v-card-title class="card">
+            {{ item.titulo }}
+          </v-card-title>
+          <v-card-text class="card">
+            {{ item.autor }}
+          </v-card-text>
+        </v-container>
 
-              <v-spacer/>
-              
-              <TagList :tags=item.tags />
-          
-          </v-card>
+        <v-spacer></v-spacer>
+
+        <TagList :tags="item.tags" />
+      </v-card>
     </v-container>
 
     <!-- Modal -->
     <v-dialog v-model="NoticiaModal" max-width="800px">
       <v-card>
         <v-card-title>
-          <span class="headline" style="word-wrap: break-word; white-space: normal; overflow-wrap: break-word;">
+          <span
+            class="headline"
+            style="word-wrap: break-word; white-space: normal; overflow-wrap: break-word;"
+          >
             {{ selectedItem?.titulo }}
           </span>
         </v-card-title>
@@ -80,11 +91,11 @@
           Autor: {{ selectedItem?.autor }}
         </v-card-subtitle>
 
-        <v-container class="mb-0 pb-0 d-flex" >
-          <TagList :noticiaId=selectedItem.id :tags=selectedItem.tags closable />
-          
-          <v-spacer/>
-          
+        <v-container class="mb-0 pb-0 d-flex">
+          <TagList :noticiaId="selectedItem.id" :tags="selectedItem.tags" closable />
+
+          <v-spacer></v-spacer>
+
           <v-form @submit.prevent="addTag" class="mt-2 pa-0">
             <v-combobox
               v-model="selectedTagsForm"
@@ -98,7 +109,12 @@
               style="flex: 1; min-width: 300px;"
             >
               <template v-slot:append>
-                <v-btn type="Submit" icon="mdi-arrow-right-bold" color="primary" style="width: 40px; border-radius: 0"/>
+                <v-btn
+                  type="Submit"
+                  icon="mdi-arrow-right-bold"
+                  color="primary"
+                  style="width: 40px; border-radius: 0"
+                />
               </template>
               <template v-slot:selection="{ attrs, item, select, selected }">
                 <v-chip
@@ -114,7 +130,6 @@
               </template>
             </v-combobox>
           </v-form>
-
         </v-container>
 
         <v-card-text class="mt-0 pt-0">
@@ -126,7 +141,7 @@
       </v-card>
     </v-dialog>
 
-    <v-snackbar 
+    <v-snackbar
       v-model="snackbar"
       :timeout="5000"
       :color="snackbarColor"
@@ -136,6 +151,7 @@
     </v-snackbar>
   </v-app>
 </template>
+
 
 
 
@@ -241,6 +257,11 @@ export default {
       this.filteredItems = this.items.filter(item =>
         (item.titulo.toLowerCase().includes(searchTerm) || item.autor.toLowerCase().includes(searchTerm))
       );
+    },
+
+    clearSearch() {
+      this.search = '';
+      this.filteredItems = this.items; 
     },
 
     async searchNews() {

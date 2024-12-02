@@ -49,7 +49,6 @@ A imagem abaixo é a tela de início da aplicação, contendo três abas:
 - Edição do nome, sinônimos e possibilidade de atrubuir uma cor para a tag
 
 ![usabilidade 6](https://github.com/user-attachments/assets/250c050f-a275-46ce-926f-fd7b5a7c65f8)
-](IMAGENS/001.GERENCIAMENTO-TAG.jpg)  
 
 - Atribuindo uma cor a tag
   

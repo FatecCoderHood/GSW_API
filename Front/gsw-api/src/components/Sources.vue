@@ -8,7 +8,7 @@
       v-model="search"
       density="compact"
       label="Pesquise"
-      prepend-inner-icon="mdi-magnify"
+      prepend-inner-icon="mdi-text-box-search-outline"
       variant="solo-filled"
       flat
       hide-details
@@ -38,14 +38,34 @@
                   <v-text-field v-model="editedItem.url" label="URL"></v-text-field>
                 </v-col>
                 <v-col cols="12" md="4" sm="6">
-                  <v-combobox v-model="editedItem.type" label="Tipo" :items="['Portal', 'API']"></v-combobox>
+                  <v-combobox v-model="editedItem.tipo" label="Tipo" :items="['Portal', 'API']"></v-combobox>
                 </v-col>
 
-                <v-col cols="12" v-if="editedItem.type === 'API'">
+                <v-col cols="12" v-if="editedItem.tipo === 'Portal'">
+                  <v-text-field v-model="editedItem.parametrizacao" label="Parâmetros do scrap"></v-text-field>
+                </v-col>
+
+                <v-col cols="12" v-if="editedItem.tipo === 'API'">
                   <v-text-field v-model="editedItem.payload" label="Payload"></v-text-field>
                 </v-col>
-                <v-col cols="12" v-if="editedItem.type === 'API'">
+                <v-col cols="12" v-if="editedItem.tipo === 'API'">
                   <v-text-field v-model="editedItem.chaveAcesso" label="Chave de Acesso"></v-text-field>
+                </v-col>
+
+                <v-col cols="12" v-if="editedItem.tipo === 'Portal'">
+                  <v-radio-group v-model="editedItem.periodicidade" label="Frequência do Scrap">
+                    <v-radio label="Diário" value="Diário"></v-radio>
+                    <v-radio label="Semanal" value="Semanal"></v-radio>
+                    <v-radio label="Quinzenal" value="Quinzenal"></v-radio>
+                    <v-radio label="Mensal" value="Mensal"></v-radio>
+                  </v-radio-group>
+                </v-col>
+
+                <v-col cols="12" v-if="editedItem.tipo === 'API'">
+                  <v-radio-group v-model="editedItem.periodicidade" label="Frequência do Scrap">
+                    <v-radio label="Diário" value="Diário"></v-radio>
+                    <v-radio label="Semanal" value="Semanal"></v-radio>
+                  </v-radio-group>
                 </v-col>
               </v-row>
             </v-container>
@@ -63,7 +83,7 @@
         </v-card>
       </v-dialog>
 
-      <v-snackbar v-model="showSnackbar" :timeout="5000" color="green" top right>
+      <v-snackbar v-model="showSnackbar" :timeout="5000" :color="snackbarColor" top right>
         {{ snackbarMessage }}
       </v-snackbar>
 
@@ -81,14 +101,13 @@
     </div>
 
     <v-snackbar 
-        v-model="snackbar"
-        :timeout="5000"
-        color="green"
-        elevation="24"
-      >
-        {{ snackbarMessage }}
+      v-model="snackbar"
+      :timeout="5000"
+      :color="snackbarColor"
+      elevation="24"
+    >
+      {{ snackbarMessage }}
     </v-snackbar>    
-
   </v-container>
 
   <v-container>
@@ -101,39 +120,47 @@
   </v-container>
 </template>
 
+
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   data: () => ({
-    search: '',
+    search: "",
     dialog: false,
     dialogDelete: false,
     showSnackbar: false,
-    snackbarMessage: '',
+    snackbarMessage: "",
+    snackbarColor: "green",
     headers: [
-      { title: 'Nome', align: 'start', key: 'nome' },
-      { title: 'URL', key: 'url' },
-      { title: 'Tipo', key: 'type' },
-      { title: 'Ações', key: 'actions', sortable: false },
+      { title: "Nome", align: "start", key: "nome" },
+      { title: "URL", key: "url" },
+      { title: 'Frequência', align: 'start', key: 'periodicidade', value: 'periodicidade' },
+      { title: "Tipo", key: "tipo" }, 
+      { title: "Ações", key: "actions", sortable: false },
     ],
     sources: [],
     filteredSources: [],
     editedIndex: -1,
     editedItem: {
-      nome: '',
-      url: '',
-      type: '',
-      chaveAcesso: '',
-      payload: '',
+      nome: "",
+      url: "",
+      tipo: "", 
+      chaveAcesso: "",
+      payload: "",
+      parametrizacao: "",
+      periodicidade: "",
     },
     defaultItem: {
-      nome: '',
-      url: '',
-      chaveAcesso: '',
-      payload: '',
+      nome: "",
+      url: "",
+      tipo: "", 
+      chaveAcesso: "",
+      payload: "",
+      parametrizacao: "",
+      periodicidade: "",
     },
-    snackbarMessage: '',
+    snackbarMessage: "",
     snackbar: false,
   }),
 
@@ -143,7 +170,7 @@ export default {
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? 'Inserir Fonte' : 'Editar Fonte';
+      return this.editedIndex === -1 ? "Inserir Fonte" : "Editar Fonte";
     },
   },
 
@@ -157,38 +184,38 @@ export default {
   },
 
   methods: {
-    insertColumnType(sourceArray, typeValue) {
-      sourceArray.forEach(item => {
-        item.type = typeValue;
+    insertColumnType(sourceArray, tipoValue) { 
+      sourceArray.forEach((item) => {
+        item.tipo = tipoValue;
       });
     },
 
     async fetchSources() {
       try {
-        const response = await axios.get('http://localhost:8080/portais');
-        const apiResponse = await axios.get('http://localhost:8080/api');
+        const response = await axios.get("http://localhost:8080/portais");
+        const apiResponse = await axios.get("http://localhost:8080/api");
 
         let portalSources = response.data;
-        this.insertColumnType(portalSources, 'Portal');
+        this.insertColumnType(portalSources, "Portal");
 
         let apiSources = apiResponse.data;
-        this.insertColumnType(apiSources, 'API');
+        this.insertColumnType(apiSources, "API");
 
         let allSources = apiSources.concat(portalSources);
 
         this.sources = allSources;
         this.filteredSources = allSources;
       } catch (error) {
-        console.error('Erro ao buscar fontes:', error);
+        console.error("Erro ao buscar fontes:", error);
       }
     },
 
     filterSources() {
       const searchTerm = this.search.toLowerCase();
-
-      this.filteredSources = this.sources.filter(source =>
-        (source.nome && source.nome.toLowerCase().includes(searchTerm)) ||
-        (source.type && source.type.toLowerCase().includes(searchTerm))
+      this.filteredSources = this.sources.filter(
+        (source) =>
+          (source.nome && source.nome.toLowerCase().includes(searchTerm)) ||
+          (source.tipo && source.tipo.toLowerCase().includes(searchTerm)) 
       );
     },
 
@@ -212,68 +239,119 @@ export default {
 
     async deleteItemConfirm() {
       const id = this.editedItem.id;
-      await axios.delete(`http://localhost:8080/portais/${id}`);
-      this.sources.splice(this.editedIndex, 1);
+
+      console.log(`Deleting item with ID: ${id}`);
+
+      if (this.editedItem.tipo == "Portal") this.deletePortal(id);
+      else if (this.editedItem.tipo == "API") this.deleteAPI(id);
+
       this.filteredSources.splice(this.editedIndex, 1);
       this.closeDelete();
     },
 
+    async deletePortal(id) {
+      console.log(`Deleting Portal with ID: ${id}`);
+      try {
+        await axios.delete(`http://localhost:8080/portais/${id}`);
+        this.snackbarMessage = "Fonte excluída com sucesso!";
+        this.showSnackbar = true;
+      } catch (error) {
+        console.error("Erro ao excluir portal:", error);
+        this.snackbarMessage = "Erro ao excluir fonte";
+        this.snackbarColor = "red";
+        this.showSnackbar = true;
+      }
+    },
+
+    async deleteAPI(id) {
+      console.log(`Deleting API with ID: ${id}`);
+      try {
+        await axios.delete(`http://localhost:8080/api/${id}`);
+        this.snackbarMessage = "Fonte excluída com sucesso!";
+        this.showSnackbar = true;
+      } catch (error) {
+        console.error("Erro ao excluir API:", error);
+        this.snackbarMessage = "Erro ao excluir fonte";
+        this.snackbarColor = "red";
+        this.showSnackbar = true;
+      }
+    },
+
     close() {
       this.dialog = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
     },
 
     closeDelete() {
       this.dialogDelete = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
     },
 
     async save() {
-      if (!this.editedItem.nome.trim() || !this.editedItem.url.trim()) {
-      this.snackbarMessage = 'Os campos Nome e URL não podem estar vazios!';
-      this.snackbar = true;
-      return;
-    }
-      const sourceExists = this.sources.some(source => 
-        source.nome.toLowerCase === this.editedItem.nome.toLowerCase || source.url.toLowerCase === this.editedItem.url.toLowerCase
-      );
-      if (sourceExists) {
-        this.snackbarMessage = 'Fonte duplicada! Por favor, escolha um nome ou URL diferente';  
-        this.snackbar = true;
-        return;
-      }      
+      const sourceData = { ...this.editedItem };
+
+      
+      if (sourceData.tipo === "API") {
+        delete sourceData.parametrizacao;
+      }
+
       try {
-        if (!this.editedItem.url) {
-          this.snackbarMessage = 'A URL é obrigatória.';
-          this.showSnackbar = true;
-          return; 
-        }
-
         if (this.editedIndex > -1) {
-          const id = this.filteredSources[this.editedIndex].id;
-          await axios.put(`http://localhost:8080/portais/${id}`, this.editedItem);
-          Object.assign(this.filteredSources[this.editedIndex], this.editedItem);
-          this.snackbarMessage = 'Editado com sucesso!';
+          await this.updateSource(sourceData);
         } else {
-          this.editedItem.payload = this.editedItem.payload || '';
-          this.editedItem.chaveAcesso = this.editedItem.chaveAcesso || '';
-          let endpoint = this.editedItem.type === 'API' ? 'api' : 'portais';
-
-          const response = await axios.post(`http://localhost:8080/${endpoint}`, this.editedItem);
-          this.filteredSources.unshift(response.data);
-          this.snackbarMessage = 'Cadastrado com sucesso!';
+          await this.createSource(sourceData);
         }
-
-        this.showSnackbar = true;
-        this.close();
       } catch (error) {
-        console.error('Erro ao salvar fonte:', error);
+        console.error("Erro ao salvar fonte:", error);
+        this.snackbarMessage = "Erro ao salvar fonte!";
+        this.snackbarColor = "red";
+        this.showSnackbar = true;
+      }
+
+      this.close();
+    },
+
+    async createSource(sourceData) {
+      console.log(`Creating source: ${JSON.stringify(sourceData)}`);
+      try {
+        if (sourceData.tipo === "Portal") {
+          await axios.post("http://localhost:8080/portais", sourceData);
+        } else if (sourceData.tipo === "API") {
+          await axios.post("http://localhost:8080/api", sourceData);
+        }
+        this.snackbarMessage = "Fonte salva com sucesso!";
+        this.snackbarColor = "green";
+        this.showSnackbar = true;
+        this.fetchSources();
+      } catch (error) {
+        console.error("Erro ao criar fonte:", error);
+        this.snackbarMessage = "Erro ao criar fonte!";
+        this.snackbarColor = "red";
+        this.showSnackbar = true;
+      }
+    },
+
+    async updateSource(sourceData) {
+      console.log(`Updating source with ID: ${sourceData.id}`);
+      try {
+        if (sourceData.tipo === "Portal") {
+          await axios.put(
+            `http://localhost:8080/portais/${sourceData.id}`,
+            sourceData
+          );
+        } else if (sourceData.tipo === "API") {
+          await axios.put(
+            `http://localhost:8080/api/${sourceData.id}`,
+            sourceData
+          );
+        }
+        this.snackbarMessage = "Fonte atualizada com sucesso!";
+        this.snackbarColor = "green";
+        this.showSnackbar = true;
+        this.fetchSources();
+      } catch (error) {
+        console.error("Erro ao atualizar fonte:", error);
+        this.snackbarMessage = "Erro ao atualizar fonte!";
+        this.snackbarColor = "red";
+        this.showSnackbar = true;
       }
     },
   },

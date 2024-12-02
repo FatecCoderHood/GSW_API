@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import gsw_api.gsw_api.model.Noticia;
 import gsw_api.gsw_api.model.Parametrizacao;
 import gsw_api.gsw_api.model.PortalNoticia;
+import gsw_api.gsw_api.model.Tag;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -23,8 +24,8 @@ public class WebScrapingService {
 
     private static final Logger logger = LoggerFactory.getLogger(WebScrapingService.class);
     private Parametrizacao parametrizacao;
+    public List<Tag> tagList = new ArrayList<>();
 
-    // Método para pegar a parametrização do JSON
     public Parametrizacao getParametrizacaoByJSON(String JSON) {
         parametrizacao = new Parametrizacao(JSON);
         return parametrizacao;
@@ -71,24 +72,49 @@ public class WebScrapingService {
                         noticia.setConteudo(conteudo);
                         noticia.setAutor(autor);
 
-                        if (dataStr.length() >= 10) {
-                            dataStr = dataStr.substring(0, 10).replace('/', '-');
-                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                            LocalDate localDate = LocalDate.parse(dataStr, formatter);
-                            noticia.setDataPublicacao(localDate);
-                        }
+                        noticia.setFonte("Portal");  
 
+                        noticia.setPortalNoticia(portal);
+
+                        if (dataStr.length() >= 10) {
+
+                            try {
+                                dataStr = dataStr.substring(0, 10).replace('/', '-');
+                                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                                LocalDate localDate = LocalDate.parse(dataStr, formatter);
+                                noticia.setDataPublicacao(localDate);
+                            } catch (Exception e) {
+                                // TODO: handle exception
+                            }
+
+                        }
+                        noticia.getTags().addAll(AssociarTagsScraping(conteudo));
                         noticias.add(noticia);
                     } else if (isDuplicada) {
-                        logger.warn("Notícia duplicada ignorada: " + titulo + " - " + autor);
+                        logger.warn("Portal > " + portal.getNome() + "Notícia duplicada ignorada: " + titulo + " - " + autor);
                     } else {
-                        logger.warn("Notícia ignorada por falta de informações obrigatórias: Título, Autor ou Conteúdo.");
+                        logger.warn("Portal > " + portal.getNome() + "Notícia ignorada por falta de informações obrigatórias: Título, Autor ou Conteúdo.");
                     }
                 } catch (IOException e) {
-                    logger.error("Erro ao acessar a notícia: " + headline.absUrl("href"), e);
+                    logger.error("Portal > " + portal.getNome() + "Erro ao acessar a notícia: " + headline.absUrl("href"), e);
                 }
             }
         }
         return noticias;
     }
+    
+    private List<Tag> AssociarTagsScraping(String conteudo) {     
+        List<Tag> newTags = new ArrayList<>();
+    
+        for (Tag tag : tagList) {
+            if ((tag.getNome() != null && conteudo.contains(tag.getNome())) ||
+                (tag.getSinonimo1() != null && conteudo.contains(tag.getSinonimo1())) ||
+                (tag.getSinonimo2() != null && conteudo.contains(tag.getSinonimo2()))) {
+                newTags.add(tag);
+            }
+        }
+    
+        return newTags;
+    }
+    
 }

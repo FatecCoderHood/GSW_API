@@ -26,13 +26,17 @@ public class PortalNoticia {
     @Column(name = "periodicidade")
     private String periodicidade;
 
+    @Column(name = "tipo", nullable = false) // Adicionando a nova coluna "tipo"
+    private String tipo;
+
     // Construtores
     public PortalNoticia() {}
 
-    public PortalNoticia(String nome, String url, String parametrizacao, String periodicidade) {
+    public PortalNoticia(String nome, String url, String parametrizacao, String periodicidade, String tipo) {
         this.nome = nome;
         this.url = url;
         this.parametrizacao = parametrizacao;
         this.periodicidade = periodicidade;
+        this.tipo = tipo; 
     }
 }

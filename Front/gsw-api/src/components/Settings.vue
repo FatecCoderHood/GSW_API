@@ -1,34 +1,49 @@
 <template>
   <v-container class="pe-2">
-    <h1>Configurações</h1>
+    <h1>Gerenciamento de Tags</h1>
     <v-spacer></v-spacer>
 
     <v-divider class="mb-10"></v-divider>
 
-    <h2>Gerenciamento de Tags</h2>
-    <v-divider class="mb-4"></v-divider>
-
     <v-snackbar 
-        v-model="snackbar"
-        :timeout="5000"
-        :color="snackbarColor"
-        elevation="24"
-      >
-        {{ snackbarMessage }}
+      v-model="snackbar"
+      :timeout="5000"
+      :color="snackbarColor"
+      elevation="24"
+    >
+      {{ snackbarMessage }}
     </v-snackbar>    
-
 
     <!-- Formulário de Cadastro e Edição de Tags -->
     <v-form ref="form" @submit.prevent="sendTag">
       <v-row>
-        <v-col cols="12" md="6">
+        <v-col cols="12" md="4"> <!-- Reduzido para md="4" -->
           <v-text-field
             v-model="editedTag.nome"
             label="Nome da Tag"
             required
           ></v-text-field>
         </v-col>
-        <v-col cols="12" md="6" class="d-flex align-center">
+
+        <!-- Novo campo para Sinonimo 1 -->
+        <v-col cols="12" md="4"> <!-- Reduzido para md="4" -->
+          <v-text-field
+            v-model="editedTag.sinonimo1"
+            label="Sinônimo 1"
+            :rules="[value => !value || value.length <= 100 || 'Máximo 100 caracteres']"
+          ></v-text-field>
+        </v-col>
+
+        <!-- Novo campo para Sinonimo 2 -->
+        <v-col cols="12" md="4"> <!-- Reduzido para md="4" -->
+          <v-text-field
+            v-model="editedTag.sinonimo2"
+            label="Sinônimo 2"
+            :rules="[value => !value || value.length <= 100 || 'Máximo 100 caracteres']"
+          ></v-text-field>
+        </v-col>
+
+        <v-col cols="12" md="4" class="d-flex align-center"> <!-- Reduzido para md="4" -->
           <ColorPicker v-if="isEditing" v-model="editedTag.cor" :selectedColor="editedTag.cor" class="mr-4"/>
           <v-btn color="primary" type="submit" class="mr-4">Salvar</v-btn>
           <v-btn color="error" v-if="isEditing" @click="cancelEdit">Cancelar Edição</v-btn>
@@ -45,6 +60,10 @@
         <v-icon small class="mr-2" @click="editTag(item)">mdi-pencil</v-icon>
         <v-icon small @click="confirmDelete(item)">mdi-delete</v-icon>
       </template>
+      <!-- Exibindo os sinônimos na tabela -->
+      <template v-slot:item.sinonimos="{ item }">
+        <span>{{ item.sinonimo1 || 'N/A' }}</span> / <span>{{ item.sinonimo2 || 'N/A' }}</span>
+      </template>
     </v-data-table>
 
     <!-- Diálogo de Exclusão -->
@@ -59,43 +78,12 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-
-    <!-- Seção de Configurações do Web Scraping -->
-    <h2>Configurações do Web Scraping</h2>
-    <v-divider class="mb-4"></v-divider>
-    <v-select
-      v-model="selectedPortal"
-      :items="portais"
-      label="Selecione o Portal"
-      item-text="nome"
-      item-value="id"
-      solo
-      hide-details
-    />
-    <v-divider class="mb-4"></v-divider>
-    <v-select
-      v-model="selectedPeriod"
-      :items="periodOptions"
-      label="Selecione a Periodicidade"
-      solo
-    />
-    <v-btn class="mt-2" @click="saveScrapingConfig" style="width: 200px;" color="primary">
-      Salvar Configurações
-    </v-btn>
-
-    <v-divider class="mb-4"></v-divider>
-    <h2>WebScraping</h2>    
-
-    <v-btn class="mt-2" @click="WebScraping" style="width: 200px;" color="primary">
-      Ativar WebScraping
-    </v-btn>
   </v-container>
 </template>
 
 <script>
 import axios from 'axios';
 import ColorPicker from './ColorPicker.vue';
-
 
 export default {
   components: {
@@ -104,27 +92,22 @@ export default {
   data() {
     return {
       tags: [], // Lista de tags
-      editedTag: { nome: '', id: null }, // Tag que está sendo editada ou nova tag
+      editedTag: { nome: '', sinonimo1: '', sinonimo2: '', id: null }, // Tag que está sendo editada ou nova tag
       isEditing: false, // Indica se está em modo de edição
       dialogDelete: false, // Controle para diálogo de exclusão
       headers: [
-        { text: 'Nome', value: 'nome' },
-        { text: 'Ações', value: 'actions', sortable: false },
+        { title: 'Nome', value: 'nome' },
+        { title: 'Sinônimos', value: 'sinonimos', sortable: false }, // Nova coluna para sinônimos
+        { title: 'Ações', value: 'actions', sortable: false },
       ],
-      // Dados para configuração de scraping
-      selectedPortal: null,
-      selectedPeriod: null,
-      portais: [], // Portais carregados da API
-      periodOptions: ['Diário', 'Semanal', 'Quinzenal', 'Mensal'], // Opções de periodicidade
-      snackbarMessage: '',
-      snackbarColor: "green",
       snackbar: false,
+      snackbarMessage: '',
+      snackbarColor: '',
     };
   },
 
   mounted() {
     this.fetchTags();
-    this.fetchPortais(); // Carrega portais ao montar o componente
   },
 
   methods: {
@@ -132,19 +115,9 @@ export default {
     async fetchTags() {
       try {
         const response = await axios.get('http://localhost:8080/tags');
-        this.tags = response.data;
+        this.tags = response.data.sort((a, b) => b.id - a.id);
       } catch (error) {
         console.error('Erro ao buscar tags:', error);
-      }
-    },
-
-    // Método para buscar todos os portais
-    async fetchPortais() {
-      try {
-        const response = await axios.get('http://localhost:8080/portais');
-        this.portais = response.data;
-      } catch (error) {
-        console.error('Erro ao buscar portais:', error);
       }
     },
 
@@ -152,54 +125,77 @@ export default {
     async sendTag() {
       if (!this.editedTag.nome.trim()) {
         this.snackbarMessage = 'O campo Nome da Tag não pode estar vazio!';
-        this.snackbarColor = "red"
+        this.snackbarColor = "red";
         this.snackbar = true;
         return;
-       }
+      }
 
-    const tagExists = this.tags.some(tag => tag.nome.toLowerCase() === this.editedTag.nome.toLowerCase() && tag.id !== this.editedTag.id);
-    if (tagExists) {
-      this.snackbarMessage = 'Tag duplicada! Por favor, escolha um nome diferente.';
-      this.snackbarColor = "red"
-      this.snackbar = true;
-      return;
-    }
+      // Se a tag tiver nome, mas não tiver sinônimo, aceita o envio
+      if (this.editedTag.sinonimo1.trim() === '' && this.editedTag.sinonimo2.trim() !== '') {
+        this.snackbarMessage = 'Você deve preencher o campo Sinonimo 1 quando preencher o Sinonimo 2!';
+        this.snackbarColor = "red";
+        this.snackbar = true;
+        return;
+      }
+
+      const tagExists = this.tags.some(tag => tag.nome.toLowerCase() === this.editedTag.nome.toLowerCase() && tag.id !== this.editedTag.id);
+      if (tagExists) {
+        this.snackbarMessage = 'Tag duplicada! Por favor, escolha um nome diferente.';
+        this.snackbarColor = "red";
+        this.snackbar = true;
+        return;
+      }
+
       try {
+        let response;
         if (this.editedTag.id) {
           // Edita a tag existente
-          await axios.patchForm(`http://localhost:8080/tags/${this.editedTag.id}`, this.editedTag);
+          console.log(`Enviando PATCH para editar a tag ${this.editedTag.id}`);
+          response = await axios.patch(`http://localhost:8080/tags/${this.editedTag.id}`, this.editedTag);
+
+          // Atualiza a tag na lista de forma reativa
+          const index = this.tags.findIndex(tag => tag.id === this.editedTag.id);
+          if (index !== -1) {
+            console.log('Atualizando a tag na lista:', response.data);
+            this.tags[index] = response.data; // Atualiza diretamente
+          }
+
         } else {
           // Cria uma nova tag
-          const response = await axios.post('http://localhost:8080/tags', this.editedTag);
-          this.tags.push(response.data);
+          response = await axios.post('http://localhost:8080/tags', this.editedTag);
+          this.tags.unshift(response.data); // Adiciona no início da lista
 
-          this.snackbarMessage = 'Tag salva com sucesso';
-          this.snackbarColor = "green"
-          this.snackbar = true;
-
-          this.fetchTags();
-          this.cancelEdit();
-          this.$refs.form.reset();
         }
+
+        // Limpa os campos e exibe o snackbar após salvar
+        this.snackbarMessage = 'Tag salva com sucesso';
+        this.snackbarColor = "green";
+        this.snackbar = true;
+
+        // Limpa os campos do formulário
+        this.cancelEdit();
+
       } catch (error) {
         console.error('Erro ao salvar tag:', error);
 
         this.snackbarMessage = 'Erro ao salvar tag';
-        this.snackbarColor = "red"
+        this.snackbarColor = "red";
         this.snackbar = true;
       }
     },
 
     // Método para preencher o formulário de edição
     editTag(tag) {
+      console.log('Iniciando edição da tag:', tag);
       this.editedTag = { ...tag };
       this.isEditing = true;
     },
 
     // Método para cancelar a edição e limpar o formulário
     cancelEdit() {
-      this.editedTag = { nome: '', id: null };
+      this.editedTag = { nome: '', sinonimo1: '', sinonimo2: '', id: null };
       this.isEditing = false;
+      console.log('Edição cancelada, formulário resetado');
     },
 
     // Método para confirmar a exclusão de uma tag
@@ -211,31 +207,31 @@ export default {
     // Método para excluir a tag
     async deleteTag() {
       try {
-        await axios.delete(`http://localhost:8080/tags/${this.editedTag.id}`);
-        this.fetchTags(); // Atualiza a lista de tags
+        const response = await axios.delete(`http://localhost:8080/tags/${this.editedTag.id}`);
+        
+        // Atualiza a lista de tags removendo a tag deletada
+        this.tags = this.tags.filter(tag => tag.id !== this.editedTag.id);
+
         this.dialogDelete = false; // Fecha o diálogo
-        this.editedTag = { nome: '', id: null, tags: []}; // Limpa o formulário após a exclusão
+        this.editedTag = { nome: '', id: null, tags: [] }; // Limpa o formulário após a exclusão
+
+        this.snackbarMessage = 'Tag excluída com sucesso';
+        this.snackbarColor = "green";
+        this.snackbar = true;
       } catch (error) {
-        console.error('Erro ao excluir tag:', error);
+        let msg = "Erro ao excluir tag";
+
+        console.error(`${msg} - ${error.response.status}: ${error.response.data.message}`);
+        
+        this.snackbarMessage = msg;
+        this.snackbarColor = "red";
+        this.snackbar = true;
       }
     },
-
-    // Método para salvar as configurações de scraping
-    saveScrapingConfig() {
-      console.log('Configurações de Web Scraping salvas');
-      // Implementar lógica de salvar as configurações de scraping
-    },
-
-    async WebScraping(){
-      try{
-      const response = await axios.get('http://localhost:8080/web_scrap');
-      console.log('Web scraping executado com sucesso:', response.data);
-      location.reload();
-    } catch (error) {
-      console.error('Erro ao executar o web scraping:', error);
-    }
-    },
-    
   },
 };
 </script>
+
+
+
+

@@ -19,7 +19,7 @@
   <a href="#bookmark-tecnologias-utilizadas"> Tecnologias Utilizadas </a>
 </p>
 <p align="center">
-  <a href="#instruções-de-execução"> Instruções de Execução </a>
+  <a href="#manual-do-usuário"> Manual do Usuário </a>
 </p>
 
 
@@ -76,9 +76,9 @@ por exemplo, previsão do tempo.
 | ------------- | ------------- | ------------- | ------------- | ------------- |
 | --  | KickOff   | 26/08   | 30/08 | Ok |
 |  1  | Sprint 1   | 09/09   | 29/09 | Ok |
-|  2  | Sprint 2   | 30/09   | 20/10 |    |
-|  3  | Sprint 3   | 21/10   | 10/11 |    |
-|  4  | Sprint 4   | 11/11   | 01/12 |    |
+|  2  | Sprint 2   | 30/09   | 20/10 | Ok |
+|  3  | Sprint 3   | 21/10   | 10/11 | Ok |
+|  4  | Sprint 4   | 11/11   | 01/12 | Ok |
 |  5  | Feira de Soluções  | 12/12 |    |
 
 
@@ -156,8 +156,37 @@ por exemplo, previsão do tempo.
 
 ## :chart_with_upwards_trend: Gráfico Burndown
 <div align="center">
-    <img src="documentacao\Burndown\sprint3\burndown_sprint3_2024-11-10.png" alt="Gráfico Burndown" alt="Gráfico Burndown" width="75%">
+    <img src="documentacao\Burndown\sprint4\burndown_sprint4_2024-11-25.png" alt="Gráfico Burndown" alt="Gráfico Burndown" width="75%">
 </div>
+
+
+</h4>
+
+## Manual do usuário
+
+
+Bem-vindo ao manual do GSW. Este documento foi elaborado para guiá-lo através dos passos necessários para a instalação, execução e compreensão do funcionamento do Programa GSW. Siga as instruções detalhadas em cada seção para garantir uma configuração e operação bem-sucedidas.
+
+### Seções do Manual  
+
+
+- [**Primeiro passo: Instalação dos Programas Necessários**](https://github.com/FatecCoderHood/GSW_API/blob/manual-criacao/documentacao/Manual/MANUAL-INSTALACAO.md)
+  
+    - Nesta seção, você encontrará todas as informações sobre os programas que precisam ser instalados antes de começar a usar o GSW, incluindo links para download e instruções detalhadas de instalação.
+      
+
+- [**Segundo passo: Comandos necessários para configuração da aplicação GSW**](https://github.com/FatecCoderHood/GSW_API/blob/manual-criacao/documentacao/Manual/manual-rodar-programa.md)
+  
+    - Aqui, você aprenderá sobre os comandos essenciais para iniciar e operar o GSW. Esta seção inclui exemplos práticos e explicações para garantir que você possa executar o programa sem problemas.
+
+      
+- [**Terceiro passo: Funcionamento do Programa GSW**](https://github.com/FatecCoderHood/GSW_API/blob/manual-criacao/documentacao/Manual/APLICACAO-RODANDO.md)
+ 
+    - Esta parte do manual oferece uma visão detalhada do funcionamento interno do GSW, explicando suas principais funcionalidades e como utilizá-las para obter o máximo de desempenho e eficiência.
+      
+
+Esperamos que este manual seja útil e que você tenha uma experiência produtiva com o Programa GSW. Se precisar de mais assistência, consulte a seção de suporte ou entre em contato com nossa equipe técnica.
+
 
 ## :bookmark: Tecnologias Utilizadas
 <h4 align="center">
@@ -174,23 +203,5 @@ por exemplo, previsão do tempo.
 ![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white)
 ![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white)
 
-</h4>
 
-## Instruções de Execução
-### Database
-Execute o script abaixo para criação das tabelas no seu DBMS ou SGBD em português.
-> ./back/gsw-ap/src/main/java/gsw_api/gsw_api/gws.sql
 
-### Back-end
-``` Bash
-cd back/gsw-api
-mvn clean install
-mvn spring-boot:run
-```
-
-### Front-end
-``` Bash
-cd front/gsw-api
-npm i
-npm run dev
-```

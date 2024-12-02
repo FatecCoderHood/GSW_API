@@ -33,18 +33,10 @@ public class Noticia {
     @Column(name = "autor")
     private String autor;
 
-    @Column(name = "fonte")  
-    private String fonte;
-
     @ManyToOne
     @JoinColumn(name = "api_id", nullable = true)
     @JsonBackReference
     private Api api;
-
-    @ManyToOne
-    @JoinColumn(name = "id_portal_noticia", nullable = true)
-    @JsonBackReference
-    private PortalNoticia portalNoticia; 
 
     @ManyToMany
     @JoinTable(

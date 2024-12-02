@@ -91,7 +91,7 @@ public class NoticiaService {
     }
 
     public List<Noticia> findAll() {
-        return noticiaRepository.findAllLimit100();
+        return noticiaRepository.findAll();
     }
 
     @Transactional

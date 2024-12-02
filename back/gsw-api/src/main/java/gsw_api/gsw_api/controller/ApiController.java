@@ -24,19 +24,17 @@ public class ApiController {
     @Autowired
     private ApiService apiService;
 
+
     @PostMapping
     public ResponseEntity<Api> createApi(@RequestBody DadosApi dados) {
-     if (dados.tipo() == null || dados.tipo().isEmpty()) {
-        return ResponseEntity.badRequest().body(null); 
-     }
-     Api api = apiService.create(dados);
-     return ResponseEntity.ok(api);
+        Api api = apiService.create(dados);
+        return ResponseEntity.ok(api);
     }
 
 
     @GetMapping
     public List<Api> getAllApis() {
-        return apiRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
+        return apiRepository.findAll();
     }
 
 
@@ -60,8 +58,6 @@ public class ApiController {
         api.setPayload(apiDetails.getPayload());
         api.setChaveAcesso(apiDetails.getChaveAcesso());
         api.setUrl(apiDetails.getUrl());
-        api.setPeriodicidade(apiDetails.getPeriodicidade());
-        api.setTipo(apiDetails.getTipo());
 
         Api updatedApi = apiRepository.save(api);
         return ResponseEntity.ok(updatedApi);
@@ -79,19 +75,16 @@ public class ApiController {
 
     @GetMapping("/filter")
     public ResponseEntity<Page<Api>> getAllApis(
-        @RequestParam(required = false) String nome,
-        @RequestParam(required = false) String url,
-        @RequestParam(required = false) String chaveAcesso,
-        @RequestParam(required = false) String payload,
-        @RequestParam(required = false) String tipo,
-        @RequestParam(required = false) String periodicidade, 
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "5") int size) {
+            @RequestParam(required = false) String nome,
+            @RequestParam(required = false) String url,
+            @RequestParam(required = false) String chaveAcesso,
+            @RequestParam(required = false) String payload,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
 
-         Pageable pageable = PageRequest.of(page, size, Sort.by("nome"));
-         Page<Api> result = apiService.filterApis(nome, url, chaveAcesso, payload, tipo, periodicidade, pageable);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("nome"));
+        Page<Api> result = apiService.filterApis(nome, url, chaveAcesso, payload, pageable);
 
-         return ResponseEntity.ok(result);
-    } 
-
+        return ResponseEntity.ok(result);
+    }
 }

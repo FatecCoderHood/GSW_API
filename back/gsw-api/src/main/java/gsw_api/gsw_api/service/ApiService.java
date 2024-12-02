@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+
 @Service
 public class ApiService {
 
@@ -43,7 +44,7 @@ public class ApiService {
             throw new IllegalArgumentException("API já cadastrado com este nome ou URL.");
         }
 
-        Api api = new Api(dadosApi.nome(), dadosApi.url(), dadosApi.chaveAcesso(), dadosApi.payload(), dadosApi.tipo(), dadosApi.periodicidade());
+        Api api = new Api(dadosApi.nome(), dadosApi.url(), dadosApi.chaveAcesso(), dadosApi.payload());
         return apiRepository.save(api);
     }
 
@@ -58,16 +59,14 @@ public class ApiService {
         api.setPayload(apiDetails.getPayload());
         api.setChaveAcesso(apiDetails.getChaveAcesso());
         api.setUrl(apiDetails.getUrl());
-        api.setTipo(apiDetails.getTipo());
-        api.setPeriodicidade(apiDetails.getPeriodicidade());
         return apiRepository.save(api);
     }
 
-    public Page<Api> filterApis(String nome, String url, String chaveAcesso, String payload, String tipo, String periodicidade, Pageable pageable) {
-        return apiRepository.findAll(createSpecification(nome, url, chaveAcesso, payload, tipo, periodicidade), pageable);
+    public Page<Api> filterApis(String nome, String url, String chaveAcesso, String payload, Pageable pageable) {
+        return apiRepository.findAll(createSpecification(nome, url, chaveAcesso, payload), pageable);
     }
 
-    private Specification<Api> createSpecification(String nome, String url, String chaveAcesso, String payload, String tipo, String periodicidade) {
+    private Specification<Api> createSpecification(String nome, String url, String chaveAcesso, String payload) {
         return (root, query, criteriaBuilder) -> {
             Predicate predicate = criteriaBuilder.conjunction();
 
@@ -87,19 +86,9 @@ public class ApiService {
                 predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("payload"), payload));
             }
 
-            if (tipo != null && !tipo.isEmpty()) {
-                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("tipo"), tipo));
-            }
-
-            if (periodicidade != null && !periodicidade.isEmpty()) {
-                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("periodicidade"), periodicidade));
-            }
 
             return predicate;
         };
     }
-
-    public List<Api> findAllByPeriodicidade(String periodicidade) {
-        return apiRepository.findByPeriodicidade(periodicidade);
-    }
 }
+

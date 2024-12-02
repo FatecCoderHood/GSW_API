@@ -17,10 +17,9 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-
 
 import gsw_api.gsw_api.dao.TagRepository;
 import gsw_api.gsw_api.dto.DadosTag;
@@ -57,32 +56,10 @@ public class TagController {
             }
 
             if (tagRepository.existsByNome(dadosTag.nome())) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).build(); 
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(null); // 409 Conflict
             }
 
-            Tag tag = new Tag(
-                dadosTag.nome(),
-                dadosTag.descricao(),
-                dadosTag.ativa(),
-                dadosTag.dataCriacao(),
-                dadosTag.sinonimo1(),
-                dadosTag.sinonimo2()
-            );
-
-            Tag savedTag = tagRepository.save(tag);
-
-            DadosTag createdTag = new DadosTag(
-                savedTag.getId(),
-                savedTag.getNome(),
-                savedTag.getDescricao(),
-                savedTag.getAtiva(),
-                savedTag.getDataCriacao(),
-                savedTag.getCor(),
-                savedTag.getSinonimo1(),
-                savedTag.getSinonimo2()
-            );
-
-            // Retornar a tag criada com status CREATED (201)
+            DadosTag createdTag = tagService.save(dadosTag);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdTag);
         } catch (Exception e) {
             e.printStackTrace();
@@ -97,7 +74,12 @@ public class TagController {
     }
 
     @PatchMapping(value = "/{id}")
-    public ResponseEntity<Tag> updateTag(@PathVariable Long id, @RequestBody DadosTag dadosTag) {
+    public ResponseEntity<Tag> updateTag(@PathVariable Long id,
+                                         @RequestParam(required = false) String nome,
+                                         @RequestParam(required = false) String descricao,
+                                         @RequestParam(required = false) Boolean ativa,
+                                         @RequestParam(required = false) String cor) {
+
         Optional<Tag> optionalTag = tagRepository.findById(id);
 
         if (!optionalTag.isPresent()) {
@@ -106,27 +88,21 @@ public class TagController {
 
         Tag existingTag = optionalTag.get();
 
-        // Atualiza os campos se os valores não forem nulos
-        if (dadosTag.nome() != null)
-            existingTag.setNome(dadosTag.nome());
+        if (nome != null)
+            existingTag.setNome(nome);
 
-        if (dadosTag.descricao() != null)
-            existingTag.setDescricao(dadosTag.descricao());
+        if (descricao != null)
+            existingTag.setDescricao(descricao);
 
-        if (dadosTag.ativa() != null)
-            existingTag.setAtiva(dadosTag.ativa());
+        if (ativa != null)
+            existingTag.setAtiva(ativa);
+        
+        if (cor != null)
+            existingTag.setCor(cor);
 
-        if (dadosTag.cor() != null)
-            existingTag.setCor(dadosTag.cor());
-
-        if (dadosTag.sinonimo1() != null)
-            existingTag.setSinonimo1(dadosTag.sinonimo1());
-
-        if (dadosTag.sinonimo2() != null)
-            existingTag.setSinonimo2(dadosTag.sinonimo2());
+        System.out.println("RTX ==== COR ====> " + cor);
 
         Tag updatedTag = tagRepository.save(existingTag);
-
         return ResponseEntity.ok(updatedTag);
     }
 
@@ -142,14 +118,13 @@ public class TagController {
         Pageable pageable = PageRequest.of(page, size);
         Page<Tag> tagPage = tagService.filterTags(nome, ativa, descricao, dataCriacao, pageable);
 
-        Page<DadosTag> dadosTagPage = tagPage.map(tag -> new DadosTag(tag.getId(), tag.getNome(), tag.getDescricao(), tag.getAtiva(), tag.getDataCriacao(), tag.getCor(), tag.getSinonimo1(), tag.getSinonimo2()));
+        Page<DadosTag> dadosTagPage = tagPage.map(tag -> new DadosTag(tag.getId(), tag.getNome(), tag.getDescricao(), tag.getAtiva(), tag.getDataCriacao(), tag.getCor()));
 
         return ResponseEntity.ok(dadosTagPage);
     }
-
-    @GetMapping("/search")
-    public ResponseEntity<List<DadosTag>> searchTags(@RequestParam String termo) {
-        List<DadosTag> tagsRelacionadas = tagService.findTagsByTerm(termo);
-        return ResponseEntity.ok(tagsRelacionadas);
-    }
+        @GetMapping("/search")
+        public ResponseEntity<List<DadosTag>> searchTags(@RequestParam String termo) {
+            List<DadosTag> tagsRelacionadas = tagService.findTagsByTerm(termo);
+            return ResponseEntity.ok(tagsRelacionadas);
+        }
 }

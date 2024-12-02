@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import gsw_api.gsw_api.service.WebScrapingService;
 import gsw_api.gsw_api.dao.NoticiaRepository;
 import gsw_api.gsw_api.dao.PortalNoticiaRepository;
-import gsw_api.gsw_api.dao.TagRepository;
 import gsw_api.gsw_api.model.Noticia;
 import gsw_api.gsw_api.model.PortalNoticia;
 import gsw_api.gsw_api.service.NoticiaService;
@@ -32,8 +31,6 @@ public class SchedulerService {
     @Autowired
     private NoticiaRepository noticiaRepository;
     private WebScrapingService webScrapingService;
-    @Autowired
-    private TagRepository tagRepository;
 
     // @Scheduled(fixedRate = 5000) //Executa a cada 5 segundos
     @Scheduled(cron = expressaoDiaria)
@@ -72,9 +69,6 @@ public class SchedulerService {
         List<PortalNoticia> portais = portalNoticiaService.findAllByPeriodicidade(periodicidade);
         //Vetor das noticias a serem inseridas no banco
         List<Noticia> noticias = new ArrayList<>();
-
-        webScrapingService.tagList = tagRepository.findAll();
-
         //Rotina que retorna o vetor de noticias gerados via webscraping
         noticias = webScrapingService.gerarNoticiasByPortais(portais);
 

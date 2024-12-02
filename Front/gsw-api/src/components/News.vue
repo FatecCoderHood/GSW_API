@@ -8,82 +8,56 @@
         v-model="search"
         density="compact"
         label="Pesquise por Título ou Autor"
-        prepend-inner-icon="mdi-text-box-search-outline"
+        prepend-inner-icon="mdi-magnify"
         variant="solo-filled"
         flat
         hide-details
         single-line
         clearable
-        clear-icon="mdi-close-circle"
-        @click:clear="clearSearch"
-        @input="filterItemsByTitleOrAuthor"
+        @input="filterItems"
         class="mx-2"
         style="flex: 1; min-width: 300px;"
-      ></v-text-field>
-
+      />
       <v-select
         v-model="selectedTags"
         :items="availableTags"
         density="compact"
         label="Filtrar por Tags"
-        prepend-inner-icon="mdi-tag-multiple"
+        prepend-inner-icon="mdi-tag"
         variant="solo-filled"
         flat
         multiple
         clearable
         class="mx-2"
         style="flex: 1; min-width: 300px;"
-        @change="filterItemsByTags"
-      ></v-select>
-
-      <v-select
-        v-model="selectedSource"
-        :items="availableSources"
-        density="compact"
-        label="Filtrar por Fonte"
-        prepend-inner-icon="mdi-source-branch"
-        variant="solo-filled"
-        flat
-        clearable
-        class="mx-2"
-        style="flex: 1; min-width: 300px;"
-        @change="filterItemsBySource"
-      ></v-select>
+        @change="filterItems"
+      />
     </v-container>
 
     <!-- Lista de notícias -->
     <v-container>
-      <v-card
-        v-for="item in filteredItems"
-        :key="item.idNoticia"
-        elevation="2"
-        rounded
-        @click="openModal(item)"
-        class="d-flex my-3"
-      >
-        <v-container>
-          <v-card-title class="card">
-            {{ item.titulo }}
-          </v-card-title>
-          <v-card-text class="card">
-            {{ item.autor }}
-          </v-card-text>
-        </v-container>
+          <v-card v-for="item in filteredItems" :key="item.idNoticia" elevation="2" rounded @click="openModal(item)" class="d-flex my-3">
+              <v-container>
+                <v-card-title class="card">
+                  {{ item.titulo }}
+                </v-card-title>
+                <v-card-text class="card">
+                  {{ item.autor }}
+                </v-card-text>
+              </v-container>
 
-        <v-spacer></v-spacer>
-
-        <TagList :tags="item.tags" />
-      </v-card>
+              <v-spacer/>
+              
+              <TagList :tags=item.tags />
+          
+          </v-card>
     </v-container>
 
     <!-- Modal -->
     <v-dialog v-model="NoticiaModal" max-width="800px">
       <v-card>
         <v-card-title>
-          <span
-            class="headline"
-            style="word-wrap: break-word; white-space: normal; overflow-wrap: break-word;"
-          >
+          <span class="headline" style="word-wrap: break-word; white-space: normal; overflow-wrap: break-word;">
             {{ selectedItem?.titulo }}
           </span>
         </v-card-title>
@@ -91,11 +65,11 @@
           Autor: {{ selectedItem?.autor }}
         </v-card-subtitle>
 
-        <v-container class="mb-0 pb-0 d-flex">
-          <TagList :noticiaId="selectedItem.id" :tags="selectedItem.tags" closable />
-
-          <v-spacer></v-spacer>
-
+        <v-container class="mb-0 pb-0 d-flex" >
+          <TagList :noticiaId=selectedItem.id :tags=selectedItem.tags closable />
+          
+          <v-spacer/>
+          
           <v-form @submit.prevent="addTag" class="mt-2 pa-0">
             <v-combobox
               v-model="selectedTagsForm"
@@ -109,12 +83,7 @@
               style="flex: 1; min-width: 300px;"
             >
               <template v-slot:append>
-                <v-btn
-                  type="Submit"
-                  icon="mdi-arrow-right-bold"
-                  color="primary"
-                  style="width: 40px; border-radius: 0"
-                />
+                <v-btn type="Submit" icon="mdi-arrow-right-bold" color="primary" style="width: 40px; border-radius: 0"/>
               </template>
               <template v-slot:selection="{ attrs, item, select, selected }">
                 <v-chip
@@ -130,6 +99,7 @@
               </template>
             </v-combobox>
           </v-form>
+
         </v-container>
 
         <v-card-text class="mt-0 pt-0">
@@ -141,7 +111,7 @@
       </v-card>
     </v-dialog>
 
-    <v-snackbar
+    <v-snackbar 
       v-model="snackbar"
       :timeout="5000"
       :color="snackbarColor"
@@ -151,7 +121,6 @@
     </v-snackbar>
   </v-app>
 </template>
-
 
 
 
@@ -176,8 +145,6 @@ export default {
       snackbarMessage: '',
       snackbarColor: "green",
       snackbar: false,
-      selectedSource: '', // Fonte selecionada (API ou PORTAL)
-      availableSources: ['API', 'Portal'], // Fontes disponíveis para o filtro
     };
   },
   mounted() {
@@ -188,12 +155,6 @@ export default {
   {
     async addTag()
     {
-      if (this.selectedTagsForm.length === 0) {
-    this.snackbarMessage = 'Por favor, selecione ao menos uma tag para associar.';
-    this.snackbarColor = "red";
-    this.snackbar = true;
-    return; // Sai da função se nenhuma tag foi selecionada
-  }
       try {
         const response = await axios.post(`http://localhost:8080/noticias/vincularTags`, 
           this.selectedTagsForm, // Array de Tag que será enviado no request body
@@ -204,12 +165,7 @@ export default {
           }
         );
         
-        this.selectedItem.tags = response.data; // Adiciona a nova tag à lista de tags da notícia
-        response.data.map(tag => {
-          if (!this.availableTags.includes(tag.nome)) {
-            this.availableTags.unshift(tag.nome);
-          }
-        }); // Adiciona a nova tag ao filtro de tags
+        this.selectedItem.tags = response.data; // Adiciona a nova tag à lista
 
         this.snackbarMessage = 'Tag salva com sucesso';
         this.snackbarColor = "green"
@@ -252,16 +208,12 @@ export default {
       }
     },
 
-    filterItemsByTitleOrAuthor() {
+    filterItems() {
       const searchTerm = this.search.toLowerCase();
       this.filteredItems = this.items.filter(item =>
-        (item.titulo.toLowerCase().includes(searchTerm) || item.autor.toLowerCase().includes(searchTerm))
+        (item.titulo.toLowerCase().includes(searchTerm) || item.autor.toLowerCase().includes(searchTerm)) &&
+        (this.selectedTags.length === 0 || item.tags.some(tag => this.selectedTags.includes(tag)))
       );
-    },
-
-    clearSearch() {
-      this.search = '';
-      this.filteredItems = this.items; 
     },
 
     async searchNews() {
@@ -276,6 +228,11 @@ export default {
       } catch (error) {
         console.error('Erro ao buscar notícias:', error);
       }
+    },
+
+    openModal(item) {
+      this.selectedItem = item;  // pegando a notícia 
+      this.NoticiaModal = true;    // Abrindo o pop-up
     },
 
     async fetchTags() {
@@ -300,41 +257,37 @@ export default {
       }
     },
 
-    async filterItemsByTags()
-    {
-      if (this.selectedTags.length == 0)
-      {
-        this.filteredItems = this.items
-        return
-      }
-
+    async filterItems() {
+      const searchTerm = this.search.toLowerCase();
       console.log("Iniciando filtragem...");
+      console.log("Termo de busca:", searchTerm);
       console.log("Tags selecionadas:", this.selectedTags);
 
-      let allTags = this.selectedTags;
-      for (const tag of this.selectedTags)
-      {
+      let allTags = [...this.selectedTags];
+      for (const tag of this.selectedTags) {
         const synonyms = await this.fetchSynonymsFromDatamuse(tag);
-        allTags = [...allTags, ...synonyms];
+        allTags = [...new Set([...allTags, ...synonyms])];
       }
       console.log("Tags e sinônimos combinados para filtragem:", allTags);
 
-      this.filteredItems = this.items.filter(item =>
-        item.tags.some(tag =>
-          allTags.includes(tag.nome)
-        )
-      )
-    },
+      this.filteredItems = this.items.filter(item => {
+        const matchesSearch = 
+          item.titulo.toLowerCase().includes(searchTerm) || 
+          item.autor.toLowerCase().includes(searchTerm);
+        console.log(`Notícia "${item.titulo}" - corresponde ao termo de busca:`, matchesSearch);
 
-    async filterItemsBySource() {
-    if (!this.selectedSource) {
-      // Se nenhuma fonte estiver selecionada, mostre todos os itens
-      this.filteredItems = this.items;
-      return;
-    }
+        const itemTags = Array.isArray(item.tags) ? item.tags : JSON.parse(item.tags || '[]');
+        console.log(`Tags da notícia "${item.titulo}":`, itemTags);
 
-    // Filtra com base na fonte selecionada
-    this.filteredItems = this.items.filter(item => item.fonte === this.selectedSource);
+        const matchesTags = 
+          allTags.length === 0 || 
+          (itemTags && itemTags.some(tag => allTags.includes(tag)));
+        console.log(`Notícia "${item.titulo}" - corresponde às tags:`, matchesTags);
+
+        return matchesSearch && matchesTags;
+      });
+
+      console.log("Notícias filtradas:", this.filteredItems);
     },
 
     openModal(item) {
@@ -345,9 +298,8 @@ export default {
  },
 
   watch: {
-    selectedTags: 'filterItemsByTags',
-    search: 'filterItemsByTitleOrAuthor',
-    selectedSource: 'filterItemsBySource',
+   selectedTags: 'filterItems',
+   search: 'filterItems',
   }
 
 };

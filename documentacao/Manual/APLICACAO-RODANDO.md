@@ -2,7 +2,7 @@
 
 ## Detalhamento da aplicação GSW_API
 
--Este manual visa auxiliar os usuários na utilização da aplicação GSW_API.
+- Este manual visa auxiliar os usuários na utilização da aplicação GSW_API.
 
 ## 1. Tela Inicial  
 

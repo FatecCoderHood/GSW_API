@@ -4,7 +4,7 @@ Bem-vindo ao manual do GSW. Este documento foi elaborado para guiá-lo através 
 
 ## Seções do Manual
 
-- [**Primeiro passo: Instalação dos Programas Necessários**](manual-instalacao.md)
+- [**Primeiro passo: Instalação dos Programas Necessários**](MANUAL-INSTALACAO.md)
     - Nesta seção, você encontrará todas as informações sobre os programas que precisam ser instalados antes de começar a usar o GSW, incluindo links para download e instruções detalhadas de instalação.
 
 - [**Segundo passo: Comandos necessários para a execução do Programa GSW**](manual-rodar-programa.md)

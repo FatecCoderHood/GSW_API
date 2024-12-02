@@ -76,7 +76,7 @@ Título: Normalmente, o primeiro campo textual de interesse. Neste caso, o campo
 Conteúdo: Geralmente o campo que complementa o título e tem maior quantidade de texto ou significado direto. Aqui, o campo punchline.  
 
 
-## Passo 2: Definindo o Padrão de Payload
+## Passo 3: Definindo o Padrão de Payload
 O objetivo é transformar os dados retornados em um padrão que sua aplicação entenda. Vamos usar o seguinte formato para nossa aplicação:  
 
 
@@ -91,7 +91,7 @@ No exemplo acima:
 setup será mapeado para titulo.
 punchline será mapeado para conteudo.  
 
-## Passo 3: Transformando os Dados  
+## Passo 4: Transformando os Dados  
 
 Agora, ajustamos os dados retornados para o formato desejado:  
 

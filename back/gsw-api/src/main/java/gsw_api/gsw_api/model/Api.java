@@ -37,10 +37,6 @@ public class Api {
     @Column(name = "periodicidade", nullable = false)
     private String periodicidade;  // Nova coluna 'periodicidade'
 
-    @OneToMany(mappedBy = "api", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<Noticia> noticias = new ArrayList<>();
-
     public Api() {}
 
     public Api(String nome, String url, String chaveAcesso, String payload, String tipo, String periodicidade) {
